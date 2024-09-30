@@ -30,6 +30,51 @@
   border: 1px solid #e6e6ef;
 }
 
+.card-french {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #f5f8ff -2.88%,
+    #e1e8ff 103.53%
+  );
+  border: 1px solid #e7e6ef;
+}
+
+.card-spanish {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #fff8f5 -2.88%,
+    #ffece1 103.53%
+  );
+  border: 1px solid #efe9e6;
+}
+
+.card-hindi {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #f5f5ff -2.88%,
+    #e5e1ff 103.53%
+  );
+  border: 1px solid #e7e6ef;
+}
+
+.card-germen {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #f7fff5 -2.88%,
+    #e3ffe1 103.53%
+  );
+  border: 1px solid #e7e6ef;
+}
+
+.card-telugu {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #f5fbff -2.88%,
+    #e1f1ff 103.53%
+  );
+  border: 1px solid #e7e6ef;
+}
+
 .tags-math {
   background: -webkit-linear-gradient(20deg, #fff1e1 -2.88%, #feeacd 103.53%);
   color: #b58440;
@@ -43,4 +88,49 @@
 .tags-english {
   background: -webkit-linear-gradient(20deg, #d7f7ff -2.88%, #cdeffe 103.53%);
   color: #4096b5;
+}
+
+.tags-french {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #e1eaff -2.88%,
+    #e1e8ff 103.53%
+  );
+  color: #405fb5;
+}
+
+.tags-spanish {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #ffe7d7 -2.88%,
+    #fee4cd 103.53%
+  );
+  color: #b56740;
+}
+
+.tags-hindi {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #e1e2ff -2.88%,
+    #e2e1ff 103.53%
+  );
+  color: #5d59c5;
+}
+
+.tags-germen {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #dfffd7 -2.88%,
+    #d0fecd 103.53%
+  );
+  color: #47b540;
+}
+
+.tags-telugu {
+  background: -webkit-linear-gradient(
+    123.74deg,
+    #d7f0ff -2.88%,
+    #cde7fe 103.53%
+  );
+  color: #3b7da3;
 }

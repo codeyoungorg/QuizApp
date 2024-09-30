@@ -5,11 +5,16 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import ClipLoader from "react-spinners/ClipLoader";
 
-type TagColors = {
+export type TagColors = {
   math: string;
   science: string;
   english: string;
   coding: string;
+  french: string;
+  spanish: string;
+  hindi: string;
+  germen: string;
+  telugu: string;
 };
 
 const SubjectCard = ({
@@ -19,6 +24,7 @@ const SubjectCard = ({
   cardClassName,
   status,
   loading,
+  isLanguage,
 }: {
   subjectName: string;
   rank: number | null;
@@ -26,6 +32,7 @@ const SubjectCard = ({
   cardClassName: keyof TagColors;
   status: boolean;
   loading: boolean;
+  isLanguage?: boolean;
 }) => {
   const router = useRouter();
   const tagColors = {
@@ -33,6 +40,11 @@ const SubjectCard = ({
     science: "#40b59b",
     english: "#4096b5",
     coding: "#b58440",
+    french: "#eaeffe",
+    spanish: "#4096b5",
+    hindi: "#b58440",
+    germen: "#40b59b",
+    telugu: "#4096b5",
   };
 
   const handleGetStarted = (subjectName: string) => {
@@ -45,12 +57,16 @@ const SubjectCard = ({
       label3: null,
       label4: null,
     });
-    router.push(`/subject-dashboard?subject=${subjectName}`);
+    if (isLanguage) {
+      router.push(`/languages?lang=${subjectName}`);
+    } else {
+      router.push(`/subject-dashboard?subject=${subjectName}`);
+    }
   };
 
   return (
     <div
-      className={`rounded-[16px] xs:w-[343px] md:w-[340px] lg:w-[548px] shadow-[0px_2px_8px_0px_#00000029] card-${cardClassName} md:m-5 xs:mt-5 xs:ml-auto xs:mr-auto`}
+      className={`rounded-[16px] xs:w-[343px] md:w-full lg:w-full shadow-[0px_2px_8px_0px_#00000029] card-${cardClassName} md:m-0 xs:ml-auto xs:mr-auto`}
     >
       <div className="flex justify-between flex-row">
         <div className="flex justify-center flex-col">
