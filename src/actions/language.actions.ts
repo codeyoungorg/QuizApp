@@ -64,3 +64,122 @@ export const getTopicContent = async ({
 
   return data;
 };
+
+type QuizSubmission = {
+  questionId: number;
+  answer: string;
+  isCorrect: boolean;
+};
+
+export const saveQuizData = async ({
+  userId,
+  total,
+  correct,
+  submission,
+  language,
+  topicId,
+  levelId,
+}: {
+  userId: string;
+  total: number;
+  correct: number;
+  submission: QuizSubmission[];
+  language: string;
+  topicId: number;
+  levelId: number;
+}) => {
+  const supabase = createServerSupabaseClient();
+
+  const languageData = await fetchLanguageIdfromSlug(language);
+  const { data, error } = await supabase
+    .from("languages_quiz")
+    .insert({
+      user_id: userId,
+      total,
+      correct,
+      submission,
+      language_id: languageData?.id,
+      topic_id: topicId,
+      level_id: levelId,
+    })
+    .select("*")
+    .single();
+
+  if (error) {
+    console.log(error);
+  }
+  return data;
+};
+
+export const fetchLanguageIdfromSlug = async (slug: string) => {
+  const supabase = createServerSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("subject")
+    .select("id,subject_name")
+    .eq("subject_name", slug.toLowerCase())
+    .single();
+  return data;
+};
+
+export const fetchQuizResult = async (quizId: number) => {
+  const supabase = createServerSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("languages_quiz")
+    .select("*")
+    .eq("id", quizId)
+    .single();
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
+};
+
+type LearningSubmission = {
+  questionId: number;
+  answer: string;
+  isCorrect: boolean;
+};
+
+export const saveLearningData = async ({
+  userId,
+  total,
+  correct,
+  submission,
+  language,
+  topicId,
+  levelId,
+}: {
+  userId: string;
+  total: number;
+  correct: number;
+  submission: LearningSubmission[];
+  language: string;
+  topicId: number;
+  levelId: number;
+}) => {
+  const supabase = createServerSupabaseClient();
+
+  const languageData = await fetchLanguageIdfromSlug(language);
+  const { data, error } = await supabase
+    .from("languages_learning")
+    .insert({
+      user_id: userId,
+      total,
+      correct,
+      submission,
+      language_id: languageData?.id,
+      topic_id: topicId,
+      level_id: levelId,
+    })
+    .select("*")
+    .single();
+
+  if (error) {
+    console.log(error);
+  }
+  return data;
+};

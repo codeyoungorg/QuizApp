@@ -127,11 +127,10 @@ export default function TopicSlider({
                 .map((item, index) => (
                   <TopicCard
                     key={index}
-                    title={item.title}
-                    icon={item.icon}
                     cards={item.flashcards}
                     lock={level.level === 1 ? false : true}
                     topic={item}
+                    levelId={level.id}
                   />
                 ))}
             </Slider>

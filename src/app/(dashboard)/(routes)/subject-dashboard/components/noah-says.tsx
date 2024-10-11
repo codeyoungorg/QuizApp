@@ -1,13 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./subject-dashboard.css";
 import Image from "next/image";
 import NoahImage from "@/assets/Images/noah_doubt_solve_dp.svg";
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
-import { createQuizBySubject } from "@/actions/quiz.client";
+import { createQuizBySubject, getUserQuizHistory } from "@/actions/quiz.client";
 import { grey } from "@mui/material/colors";
 import saveGTMEvents from "@/lib/gtm";
+import { motion, AnimatePresence } from "framer-motion";
+
+const TypewriterEffect = ({ text }: { text: string }) => {
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        {text.split("").map((char, index) => (
+          <motion.span
+            key={index}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: index * 0.02 }}
+          >
+            {char}
+          </motion.span>
+        ))}
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
 const NoahHeader = ({
   subjectId,
@@ -22,16 +46,39 @@ const NoahHeader = ({
   const grade = parseInt(getCookie("grade")!);
   const studentName = getCookie("userName");
   const [isMount, setIsMount] = React.useState(false);
-  const [welcomeMessage, setWelcomeMessage] = React.useState("");
+  const [personalizedMessage, setPersonalizedMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
+  const [showTypewriter, setShowTypewriter] = useState(false);
 
   useEffect(() => {
     setIsMount(true);
+    fetchQuizHistory();
+  }, []);
+
+  const fetchQuizHistory = async () => {
+    setIsLoading(true);
+    if (userId) {
+      const quizHistory = await getUserQuizHistory(userId, subjectId);
+      if (quizHistory) {
+        const message = generatePersonalizedMessage(quizHistory, subjectName);
+        setPersonalizedMessage(message);
+      } else {
+        setPersonalizedMessage(getDefaultWelcomeMessage());
+      }
+    } else {
+      setPersonalizedMessage(getDefaultWelcomeMessage());
+    }
+    setIsLoading(false);
+    setShowTypewriter(true);
+  };
+
+  const getDefaultWelcomeMessage = () => {
     const message =
       welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
-    setWelcomeMessage(message.text);
-  }, []);
+    return message.text.replace(/{name}/g, studentName?.split(" ")[0] || "");
+  };
 
   const redirectToInsights = () => {
     saveGTMEvents({
@@ -68,10 +115,98 @@ const NoahHeader = ({
     }
   };
 
+  const generatePersonalizedMessage = (
+    quizHistory: any[],
+    subjectName: string | null
+  ) => {
+    const completedQuizzes = quizHistory.filter((quiz) => quiz.complete).length;
+    const totalQuestions = quizHistory.reduce(
+      (sum, quiz) => sum + quiz.questions.length,
+      0
+    );
+    const correctAnswers = quizHistory.reduce(
+      (sum, quiz) =>
+        sum + quiz.submissions.filter((sub: any) => sub.isCorrect).length,
+      0
+    );
+
+    const accuracy =
+      totalQuestions > 0
+        ? ((correctAnswers / totalQuestions) * 100).toFixed(1)
+        : 0;
+
+    const recentQuizzes = quizHistory.slice(0, 3);
+    const recentAccuracy =
+      recentQuizzes.reduce(
+        (sum, quiz) =>
+          sum +
+          quiz.submissions.filter((sub: any) => sub.is_correct).length /
+            quiz.questions.length,
+        0
+      ) / recentQuizzes.length;
+
+    const improvementRate = recentAccuracy - Number(accuracy) / 100;
+
+    const topicPerformance = quizHistory.reduce((acc, quiz) => {
+      const topicId = quiz.metadata?.topic;
+      if (topicId) {
+        if (!acc[topicId]) {
+          acc[topicId] = { correct: 0, total: 0 };
+        }
+        acc[topicId].correct += quiz.submissions.filter(
+          (sub: any) => sub.is_correct
+        ).length;
+        acc[topicId].total += quiz.questions.length;
+      }
+      return acc;
+    }, {});
+
+    const weakestTopic = Object.entries(topicPerformance).reduce<{
+      topicId: string | null;
+      accuracy: number;
+    }>(
+      (weakest, [topicId, performance]) => {
+        const topicAccuracy =
+          (performance as { correct: number; total: number }).correct /
+          (performance as { correct: number; total: number }).total;
+        return topicAccuracy < weakest.accuracy
+          ? { topicId, accuracy: topicAccuracy }
+          : weakest;
+      },
+      { topicId: null, accuracy: Infinity }
+    );
+
+    if (completedQuizzes === 0) {
+      return `Welcome to ${subjectName}! I'm excited to help you start your learning journey. Let's begin with a quiz to see where you stand!`;
+    } else if (completedQuizzes === 1) {
+      return `Great job on completing your first ${subjectName} quiz! You answered ${correctAnswers} out of ${totalQuestions} questions correctly. That's a solid start! Ready to improve your score?`;
+    } else if (Number(accuracy) > 80) {
+      return `Wow! Your overall accuracy of ${accuracy}% in ${subjectName} is impressive. In your recent quizzes, you've ${
+        improvementRate > 0 ? "improved" : "maintained a strong performance"
+      }. Keep up the excellent work! Why not challenge yourself with some harder topics?`;
+    } else if (Number(accuracy) > 60) {
+      return `You're doing well in ${subjectName} with an overall accuracy of ${accuracy}%. ${
+        improvementRate > 0
+          ? `I've noticed improvement in your recent quizzes - great job!`
+          : `There's still room for improvement.`
+      } Let's focus on strengthening your knowledge in ${
+        weakestTopic.topicId
+      } to boost your overall performance.`;
+    } else {
+      return `You've completed ${completedQuizzes} quizzes in ${subjectName}, which shows great dedication! Your current accuracy is ${accuracy}%. ${
+        improvementRate > 0
+          ? "I see improvement in your recent quizzes - keep it up!"
+          : "Let's work on improving your accuracy."
+      } We'll focus on ${
+        weakestTopic.topicId
+      } to help you build a stronger foundation. Remember, practice makes perfect!`;
+    }
+  };
+
   if (!isMount) return null;
   return (
-    <div className="noah-heading-wrapper">
-      <div className="noah-image-fact-wrap">
+    <div className="noah-heading-wrapper flex items-center">
+      <div className="noah-image-fact-wrap flex items-center">
         <div className="noah-image-txtContainer">
           <Image
             src={NoahImage}
@@ -85,9 +220,12 @@ const NoahHeader = ({
         <div className="fact-card-container">
           <div className="fact-card">
             <div className="fact-card-txt">
-              {welcomeMessage.replace(
-                /{name}/g,
-                studentName?.split(" ")[0] || ""
+              {isLoading ? (
+                <CircularProgress size={20} sx={{ color: grey[500] }} />
+              ) : (
+                showTypewriter && (
+                  <TypewriterEffect text={personalizedMessage} />
+                )
               )}
             </div>
           </div>

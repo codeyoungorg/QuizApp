@@ -8,19 +8,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Lock from "@/public/images/icons/lock-white.png";
 
 type TopicCardProps = {
-  title: string;
-  icon: React.ReactNode;
   lock: boolean;
   cards: number;
   topic: { id: number; name: string };
+  levelId: number;
 };
 
 export default function TopicCard({
-  title,
-  icon,
   cards,
   lock,
   topic,
+  levelId,
 }: TopicCardProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -71,9 +69,7 @@ export default function TopicCard({
           <CardFooter className="flex justify-between p-6 pt-6 gap-6">
             <Button
               disabled={lock}
-              onClick={() =>
-                router.push(`/languages/learn?lang=${lang}&topic=${topic.id}`)
-              }
+              onClick={() => {}}
               className="bg-[#C3B8AC] hover:bg-[#C3B8AC]/80 disabled:opacity-1000 rounded-lg text-white w-fit items-center flex"
             >
               Start Learning{" "}
@@ -90,7 +86,9 @@ export default function TopicCard({
           <CardFooter className="flex justify-between p-6 pt-6 gap-6">
             <Button
               onClick={() =>
-                router.push(`/languages/learn?lang=${lang}&topic=${topic.id}`)
+                router.push(
+                  `/languages/learn?lang=${lang}&topic=${topic.id}&level=${levelId}`
+                )
               }
               className="bg-[#F0A919] hover:bg-yellow-500 text-white w-full"
             >
@@ -98,7 +96,9 @@ export default function TopicCard({
             </Button>
             <Button
               onClick={() =>
-                router.push(`/languages/quiz?lang=${lang}&topic=${topic.id}`)
+                router.push(
+                  `/languages/quiz?lang=${lang}&topic=${topic.id}&level=${levelId}`
+                )
               }
               className="bg-[#E98451] hover:bg-orange-500 text-white w-full"
             >

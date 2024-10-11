@@ -6,12 +6,12 @@ import { FlashcardData } from "../../learn/_types";
 import { cn } from "@/lib/utils";
 
 type QuizCardProps = {
-  data: FlashcardData;
+  data: FlashcardData & { id: number }; // Add id to FlashcardData
   currentCard: number;
   totalCards: number;
   onNextCard: () => void;
   onPrevCard: () => void;
-  onAnswer: (isCorrect: boolean) => void;
+  onAnswer: (answer: string, isCorrect: boolean) => void;
 };
 
 export const SelectCard: React.FC<QuizCardProps> = ({
@@ -42,7 +42,7 @@ export const SelectCard: React.FC<QuizCardProps> = ({
   const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer(answer);
     const correct = answer === data.correctAnswer;
-    onAnswer(correct);
+    onAnswer(answer, correct);
   };
 
   const progressBar = Math.round((currentCard / totalCards) * 100).toFixed(0);

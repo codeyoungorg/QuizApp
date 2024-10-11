@@ -149,7 +149,7 @@ const PageContent = () => {
           </div>
           <NoahHeader
             subjectId={subjectId}
-            subjectName={subject}
+            subjectName={sub}
             quizPath={quizPath}
           />
           <div className="flex lg:flex-row xs:flex-col justify-center gap-8 lg:mt-14 md:mt-6 xs:mt-12 mb-10">

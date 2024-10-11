@@ -7,12 +7,13 @@ import NoahImage from "@/assets/Images/noah_doubt_solve_dp.svg";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function ScoreCard({ lang }: { lang: string }) {
-  const [result, setResult] = useState({ total: 0, correct: 0 });
-  useEffect(() => {
-    console.log(localStorage.getItem("result"));
-    setResult(JSON.parse(localStorage.getItem("result")!));
-  }, []);
+export default function ScoreCard({
+  lang,
+  quizResult,
+}: {
+  lang: string;
+  quizResult: any;
+}) {
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <Card
@@ -57,17 +58,11 @@ export default function ScoreCard({ lang }: { lang: string }) {
               </Link>
             </div>
           </div>
-          <div
-            className="text-[#569090] bg-white/60 p-4 grid place-items-center rounded-lg"
-            // style={{
-            //   background:
-            //     "linear-gradient(133.16deg, #FCF7ED -0.38%, #FDF2F9 100%)",
-            // }}
-          >
+          <div className="text-[#569090] bg-white/60 p-4 grid place-items-center rounded-lg">
             <p className="mb-1">Your Score</p>
             <p className="text-4xl font-bold">
-              {result.correct}
-              <span className="text-xl">/{result.total}</span>
+              {quizResult?.correct}
+              <span className="text-xl">/{quizResult?.total}</span>
             </p>
           </div>
         </CardContent>

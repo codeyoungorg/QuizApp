@@ -624,3 +624,24 @@ export async function getTopicNameFromDB({
 
   return data?.topic_name;
 }
+
+// Add this function to the existing file
+
+export async function getUserQuizHistory(userId: string, subjectId: number) {
+  const supabase = createClientComponentClient();
+
+  const { data, error } = await supabase
+    .from("quiz")
+    .select("complete, created_at, questions, submissions")
+    .eq("userid", userId)
+    .eq("subject_id", subjectId)
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  if (error) {
+    console.error("Error fetching user quiz history:", error);
+    return null;
+  }
+
+  return data;
+}
