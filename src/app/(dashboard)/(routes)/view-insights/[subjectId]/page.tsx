@@ -3,7 +3,9 @@ import React, { Suspense } from "react";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getDashboard, getInsight } from "@/app/supabase-server";
+import { getDashboard } from "@/app/supabase-server";
+import apiService from "@/lib/apiService";
+import Loader from "./_components/loader";
 
 type Props = {
   subjectId: number;
@@ -11,11 +13,20 @@ type Props = {
 
 const PageContent = async (props: Props) => {
   const user_Id = getCookie("userId", { cookies });
-  const grade = getCookie("grade", { cookies });
-  const [dashboardData, insightData] = await Promise.all([
+
+  const [dashboardData, insightResponse] = await Promise.all([
     getDashboard(user_Id!, props.subjectId),
-    getInsight(user_Id!, props.subjectId, parseInt(grade!)),
+    apiService.get(
+      `/insights/subject?studentId=${user_Id}&subjectId=${props.subjectId}`
+    ),
   ]);
+
+  const insightData = insightResponse.data.response;
+
+  if (!insightData || !dashboardData) {
+    return <Loader />;
+  }
+
   return (
     <div className="p-5 md:p-12 w-full md:max-w-5xl mx-auto bg-[#FFF] !important">
       <QuizScore dashboardData={dashboardData} insights={insightData} />
@@ -25,17 +36,11 @@ const PageContent = async (props: Props) => {
 
 const Page = ({ params: { subjectId } }: { params: { subjectId: number } }) => {
   return (
-    <div className="p-5 md:px-12 w-full md:max-w-7xl mx-auto bg-[#FFF] !important">
-      <Suspense
-        fallback={
-          <div className="flex justify-center items-center h-[90vh]">
-            <CircularProgress size={40} />
-          </div>
-        }
-      >
+    <Suspense fallback={<Loader />}>
+      <div className="p-5 md:px-12 w-full md:max-w-7xl mx-auto bg-[#FFF] !important">
         <PageContent subjectId={subjectId} />
-      </Suspense>
-    </div>
+      </div>
+    </Suspense>
   );
 };
 

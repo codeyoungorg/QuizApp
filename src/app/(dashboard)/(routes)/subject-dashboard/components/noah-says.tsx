@@ -91,7 +91,7 @@ const NoahHeader = ({
               )}
             </div>
           </div>
-          {/* <button className="insights-btn" onClick={redirectToInsights}>
+          <button className="insights-btn" onClick={redirectToInsights}>
             <span className="flex flex-row justify-center items-center gap-[0.5px]">
               View detailed insights
               <Image
@@ -101,7 +101,7 @@ const NoahHeader = ({
                 height={20}
               />
             </span>
-          </button> */}
+          </button>
         </div>
       </div>
       <div className="noah-subject-wrap">

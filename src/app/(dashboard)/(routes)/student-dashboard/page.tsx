@@ -1,6 +1,6 @@
 "use client";
 import Activity from "@/components/activity/activity";
-import SubjectCard from "./components/subject-card";
+import SubjectCard, { TagColors } from "./components/subject-card";
 import "./components/student-dashboard.css";
 import GlobalLeaderboard from "@/components/leaderboard";
 import { useEffect, useState } from "react";
@@ -11,8 +11,19 @@ import {
 } from "@/lib/student-dashboard/apiClient";
 import constants from "../../../../constants/constants";
 
+interface SubjectInfo {
+  subjectId: number;
+  subjectName: string;
+  rank: number | null;
+  answeredCount: number | null;
+}
+
+interface SubjectData {
+  [key: string]: SubjectInfo;
+}
+
 const PageContent = () => {
-  const [subjectData, setSubjectData] = useState({
+  const [subjectData, setSubjectData] = useState<SubjectData>({
     math: {
       subjectId: constants.SUBJECT_IDS.MATH,
       subjectName: "Mathematics",
@@ -31,12 +42,42 @@ const PageContent = () => {
       rank: null,
       answeredCount: null,
     },
-    coding: {
-      subjectId: constants.SUBJECT_IDS.CODING,
-      subjectName: "Coding",
+    french: {
+      subjectId: constants.SUBJECT_IDS.FRENCH,
+      subjectName: "French",
       rank: null,
       answeredCount: null,
     },
+    spanish: {
+      subjectId: constants.SUBJECT_IDS.SPANISH,
+      subjectName: "Spanish",
+      rank: null,
+      answeredCount: null,
+    },
+    hindi: {
+      subjectId: constants.SUBJECT_IDS.HINDI,
+      subjectName: "Hindi",
+      rank: null,
+      answeredCount: null,
+    },
+    germen: {
+      subjectId: constants.SUBJECT_IDS.GERMAN,
+      subjectName: "Germen",
+      rank: null,
+      answeredCount: null,
+    },
+    telugu: {
+      subjectId: constants.SUBJECT_IDS.TELUGU,
+      subjectName: "Telugu",
+      rank: null,
+      answeredCount: null,
+    },
+    // coding: {
+    //   subjectId: constants.SUBJECT_IDS.CODING,
+    //   subjectName: "Coding",
+    //   rank: null,
+    //   answeredCount: null,
+    // },
   });
   const [leaderboardData, setLeaderboardData] = useState({
     studentMeta: {},
@@ -48,6 +89,7 @@ const PageContent = () => {
   const [avatar, setAvatar] = useState<string>("");
   const [subjectWiseLoader, setSubjectWiseLoader] = useState<boolean>(false);
   const [dashboardLoader, setDashboardLoader] = useState<boolean>(false);
+  const languages = ["french", "spanish", "hindi", "germen", "telugu"];
 
   useEffect(() => {
     const userId = getCookie("userId");
@@ -120,6 +162,8 @@ const PageContent = () => {
     fetchData();
   }, []);
 
+  const subjects = Object.keys(subjectData);
+
   return (
     <div className={`font-sans`}>
       <div className="w-full flex justify-center">
@@ -135,43 +179,19 @@ const PageContent = () => {
           <div className="text-[#5B8989] lg:text-xl xs:text-base font-semibold leading-[24.2px] text-center lg:mt-12 md:mt-10 xs:mt-10">
             Choose a subject to get started
           </div>
-          <div className="md:mt-4 xs:mt-0">
-            <div className="flex justify-center md:flex-row xs:flex-col">
+          <div className="mt-4 md:mt-8 grid md:grid-cols-2 gap-6 md:gap-10 justify-center place-items-center mx-auto w-full max-w-[700px] lg:max-w-[1100px]">
+            {subjects.map((subject: string) => (
               <SubjectCard
-                subjectName={subjectData["math"].subjectName}
-                rank={subjectData["math"].rank}
-                answeredCount={subjectData["math"].answeredCount}
+                key={subject}
+                subjectName={subjectData[subject].subjectName}
+                rank={subjectData[subject].rank}
+                answeredCount={subjectData[subject].answeredCount}
                 status={true}
-                cardClassName={"math"}
+                cardClassName={subject as keyof TagColors}
                 loading={subjectWiseLoader}
+                isLanguage={languages.includes(subject)}
               />
-              <SubjectCard
-                subjectName={subjectData["science"].subjectName}
-                rank={subjectData["science"].rank}
-                answeredCount={subjectData["science"].answeredCount}
-                status={true}
-                cardClassName={"science"}
-                loading={subjectWiseLoader}
-              />
-            </div>
-            <div className="flex justify-center md:flex-row xs:flex-col">
-              <SubjectCard
-                subjectName={subjectData["english"].subjectName}
-                rank={subjectData["english"].rank}
-                answeredCount={subjectData["english"].answeredCount}
-                status={true}
-                cardClassName={"english"}
-                loading={subjectWiseLoader}
-              />
-              <SubjectCard
-                subjectName={subjectData["coding"].subjectName}
-                rank={subjectData["coding"].rank}
-                answeredCount={subjectData["coding"].answeredCount}
-                status={false}
-                cardClassName={"coding"}
-                loading={subjectWiseLoader}
-              />
-            </div>
+            ))}
           </div>
           <div className="lg:text-4xl md:text-2xl xs:text-[19px] font-semibold leading-[38.73px] text-center lg:mt-20 md:mt-18 xs:mt-16">
             <span className="text-[#5B8989]">Practice</span>
@@ -214,3 +234,14 @@ const Page = () => {
 };
 
 export default Page;
+
+{
+  /* <SubjectCard
+                subjectName={subjectData["coding"].subjectName}
+                rank={subjectData["coding"].rank}
+                answeredCount={subjectData["coding"].answeredCount}
+                status={false}
+                cardClassName={"coding"}
+                loading={subjectWiseLoader}
+              /> */
+}
