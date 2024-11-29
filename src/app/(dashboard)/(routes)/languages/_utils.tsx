@@ -1,3 +1,5 @@
+import { Icons } from "./_icons";
+
 export const getCardIcon = (topic: string) => {
   switch (topic) {
     case "Animals and Nature":
@@ -9,15 +11,15 @@ export const getCardIcon = (topic: string) => {
     case "Family Members":
       return "👪";
     case "Food and Drinks":
-      return "🍔";
+      return Icons.burger;
     case "Colors and Shapes":
       return "🌈";
     case "Greetings and Introductions":
-      return "👋";
+      return Icons.greetings;
     case "School and Classroom":
-      return "🏫";
+      return Icons.school;
     case "Numbers and Time":
-      return "🔢";
+      return Icons.numbers;
     case "Shopping and Money":
       return "💰";
     case "Weather and Seasons":
@@ -27,7 +29,7 @@ export const getCardIcon = (topic: string) => {
     case "Holidays and Celebrations":
       return "🎉";
     case "Making Friends":
-      return "👫";
+      return Icons.makefriends;
     case "Music and Arts":
       return "🎸";
     case "Travel and Transportation":
