@@ -2,7 +2,6 @@
 
 /** @type {import('next').NextConfig} */
 
-import 'newrelic';
 import nrExternals from "newrelic/load-externals.js";
 
 const nextConfig = {

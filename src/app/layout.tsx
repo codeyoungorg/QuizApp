@@ -1,3 +1,4 @@
+import "newrelic";
 import Script from "next/script";
 import newrelic from "newrelic";
 import type { Metadata } from "next";
