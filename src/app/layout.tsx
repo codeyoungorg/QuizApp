@@ -40,6 +40,7 @@ export default async function RootLayout({
         </Providers>
         <Script
           id="nr-browser-agent"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: browserTimingHeader }}
         />
       </body>
