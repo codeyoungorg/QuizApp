@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "NODE_OPTIONS='-r newrelic' next build",
     "start": "NODE_OPTIONS='-r newrelic' next start",
     "lint": "next lint"
   },
