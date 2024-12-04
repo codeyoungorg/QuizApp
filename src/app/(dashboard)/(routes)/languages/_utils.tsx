@@ -38,9 +38,5 @@ export const getCardIcon = (topic: string) => {
       return "🍴";
     case "Sports and Games":
       return "🏊";
-    case "Colors":
-      return "🌈";
-    case "Shapes":
-      return "🔶";
   }
 };

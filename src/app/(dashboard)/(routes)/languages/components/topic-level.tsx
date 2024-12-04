@@ -77,14 +77,12 @@ export default function TopicLevel({ level, data }: Props) {
         <div className="w-fit">
           {isLevelUnlocked ? (
             <p className="text-[#5B8989] font-medium text-sm md:text-base flex items-center gap-2">
-            <span className="inline-flex items-center">
-              {Icons.coin}
-            </span>
-            <span>
-              {userPoints}/{totalLevelPoints}
-            </span>
-            <span>done</span>
-          </p>
+              <span className="inline-flex items-center">{Icons.coin}</span>
+              <span>
+                {userPoints}/{totalLevelPoints}
+              </span>
+              <span>done</span>
+            </p>
           ) : (
             <p className="bg-[#E6EFEF] text-[#5B8989] px-2 py-1 text-sm rounded-md">
               Complete 85% of Level {level.level - 1} to unlock level{" "}
