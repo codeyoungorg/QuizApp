@@ -1,4 +1,9 @@
+"use strict";
+
 /** @type {import('next').NextConfig} */
+
+import nrExternals from "newrelic/load-externals.js";
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -15,6 +20,13 @@ const nextConfig = {
         hostname: "user-assets.codeyoung.com",
       },
     ],
+  },
+  experimental: {
+    serverComponentsExternalPackages: ["newrelic"],
+  },
+  webpack: (config) => {
+    nrExternals(config);
+    return config;
   },
 };
 
