@@ -21,9 +21,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ["newrelic"],
-  },
   webpack: (config) => {
     nrExternals(config);
     return config;

@@ -1,4 +1,3 @@
-import newrelic from "newrelic";
 import Script from "next/script";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
@@ -22,18 +21,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const browserTimingHeader = newrelic.getBrowserTimingHeader({
-    hasToRemoveScriptWrapper: true,
-  });
-
   return (
     <html lang="en">
       <head>
-        <Script
-          id="nr-browser-agent"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: browserTimingHeader }}
-        />
+        <Script src="/newrelic-browser-agent.js" strategy="beforeInteractive" />
         <link
           href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap"
           rel="stylesheet"
