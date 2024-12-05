@@ -95,6 +95,11 @@ body {
   height: 100%;
 }
 
+.slick-prev::before,
+.slick-next::before {
+  display: none;
+}
+
 /* Hide arrows on mobile */
 @media (max-width: 500px) {
   .carousel-buttons {
