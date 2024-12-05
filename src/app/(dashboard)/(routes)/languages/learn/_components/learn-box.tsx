@@ -9,6 +9,7 @@ import { LanguageDB } from "../_types";
 import { saveLearningData } from "@/actions/language.actions";
 import { CompletionCard } from "./completion-card";
 import saveGTMEvents from "@/lib/gtm";
+import { saveStreak } from "@/lib/quiz/apiClient";
 
 type LearningSubmission = {
   questionId: number;
@@ -132,6 +133,7 @@ export default function LearnBox({
         topicId,
         levelId,
       });
+
       if (data) {
         setIsCompleted(true);
       }
@@ -144,15 +146,21 @@ export default function LearnBox({
       const userType = userId ? "student" : "guest";
       saveGTMEvents({
         eventAction: "learn_completed",
-        label: userType,          
-        label1: userId||null,        
-        label2: lang,            
-        label3: topicName||null,        
+        label: userType,
+        label1: userId || null,
+        label2: lang,
+        label3: topicName || null,
         label4: null,
       });
-     
+
+      saveStreakData();
     }
   }, [isCompleted]);
+
+  const saveStreakData = async () => {
+    const res = await saveStreak();
+    console.log(res, "ressss");
+  };
 
   return (
     <div className="">
