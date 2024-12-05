@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 export const getQuizStats = async (quizId: string) => {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .select("*")
     .eq("id", quizId)
     .single();
@@ -20,7 +20,7 @@ export const getNumberOfCompletedQuiz = async (
 ) => {
   const supabase = createClient();
   const { data: allQuizes, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .select("questions, submissions")
     .eq("userid", userid)
     .eq("complete", true)
@@ -157,7 +157,7 @@ export const getInsight = async (
 ) => {
   const supabase = createClient();
   const { data: allQuizes, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .select()
     .eq("userid", userid)
     .eq("complete", true)
@@ -213,7 +213,7 @@ const getLast10Quizes = async ({
 }) => {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .select("*")
     .eq("complete", "true")
     .eq("userid", userid)
@@ -255,7 +255,7 @@ const getAccuracy = (completedQuizes: any[]) => {
 export const getDashboard = async (userid: string, subjectId: number) => {
   const supabase = createClient();
   // const { data: allQuizes, error } = await supabase
-  //   .from("quiz")
+  //   .from("new_quiz_db")
   //   .select("questions", "submissions")
   //   .eq("userid", userid)
   //   .eq("complete", "true")
@@ -287,7 +287,7 @@ export async function getInCompletedQuiz(userId: string) {
   const supabase = createClient();
   const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000); // Calculate the timestamp for 2 hours ago
   const { data, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .select("*")
     .eq("userid", userId)
     .eq("start", true)
@@ -341,7 +341,7 @@ export async function recentChat(userId: string) {
 export const getNumberOfSubmittedAnswers = async (userid: string) => {
   const supabase = createClient();
   const { data: allQuizes, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .select("questions, submissions")
     .eq("userid", userid);
 

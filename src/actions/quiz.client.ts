@@ -17,8 +17,8 @@ export async function createQuizBySubject({
     grade: grade,
   };
 
-  const { data: previousQuiz, error: previousQuizError } = await supabase
-    .from("quiz")
+  const { data: previousQuiz } = await supabase
+    .from("new_quiz_db")
     .select("id, userid, subject_id, complete")
     .eq("userid", userId)
     .eq("subject_id", subjectId)
@@ -30,7 +30,7 @@ export async function createQuizBySubject({
   }
 
   const { data, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .insert({
       userid: userId,
       metadata: metadata,
@@ -77,7 +77,7 @@ export async function generateQuiz({
   if (questions.length === 0) return { data: null };
 
   const { data, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .insert({
       userid: userId,
       metadata: metadata,
@@ -131,7 +131,7 @@ export async function updateQuiz({
   }
 
   const { data, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .update({
       questions,
       start: true,
@@ -220,8 +220,7 @@ export const getQuestions = async ({
     );
   } else {
     grade = user_grade;
-    if (grade > 8) grade = 8;
-    if (subjectId === 2 && grade < 3) grade = 3;
+    if (grade > 9) grade = 9;
     topicData = await generateRandomTopic({ grade, subjectId });
   }
 
@@ -273,13 +272,13 @@ const fetchQuestionsByLevel = async (
 
   let rpc_function;
   if (subjectId === 1) {
-    rpc_function = "db_math_rpc_topicid";
+    rpc_function = "new_math_db_rpc";
   } else if (subjectId === 2) {
-    rpc_function = "db_science_rpc_topicid";
+    rpc_function = "new_science_db_rpc";
   } else if (subjectId === 3) {
-    rpc_function = "db_english_rpc_topicid";
+    rpc_function = "new_english_db_rpc";
   } else if (subjectId === 4) {
-    rpc_function = "db_coding_rpc_topicid";
+    return [];
   }
 
   if (!rpc_function) return console.log("Invalid subjectId");
@@ -320,7 +319,7 @@ const getIdFromTopic = async (
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from("topic")
+    .from("new_topic_list")
     .select("id, topic_name")
     .eq("topic_name", topic)
     .eq("grade", grade)
@@ -350,8 +349,8 @@ const generateRandomTopic = async ({
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from(`topic`)
-    .select("id, topic_name")
+    .from("new_topic_list")
+    .select("topic_name, topic_id")
     .eq("grade", grade)
     .eq("subject_id", subjectId);
 
@@ -362,7 +361,7 @@ const generateRandomTopic = async ({
   const allTopics = Array.from(
     new Set(
       data?.map((topic: any) => {
-        return { id: topic.id, topic: topic.topic_name };
+        return { id: topic.topic_id, topic: topic.topic_name };
       })
     )
   );
@@ -382,7 +381,7 @@ export const updateQuizToComplete = async ({
 }) => {
   const supabase = createClient();
   const { error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .update({
       complete: true,
     })
@@ -410,7 +409,7 @@ export const fetchCorrectSubmissions = async ({
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from("correct_submissions")
+    .from("new_correct_submissions")
     .select("questionid")
     .eq("userid", userId)
     .eq("topic_id", topicId)
@@ -446,7 +445,7 @@ export async function storeCorrectSubmission({
 }) {
   const supabase = createClient();
 
-  const { error } = await supabase.from("correct_submissions").insert({
+  const { error } = await supabase.from("new_correct_submissions").insert({
     userid: userId,
     questionid: questionId,
     quiz_id: quizId,
@@ -476,7 +475,7 @@ export async function storeUserSubmission({
   const supabase = createClient();
 
   const { data } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .update({
       submissions: submissions,
     })
@@ -504,7 +503,7 @@ export async function storeUserSubmissionToSubmissions({
   const supabase = createClient();
 
   const { error } = await supabase
-    .from("submissions")
+    .from("new_submissions")
     .insert([
       {
         quiz_id: quizId,
@@ -558,7 +557,7 @@ export const getNumberOfCompletedQuiz = async ({
 }) => {
   const supabase = createClient();
   const { data: allQuizes, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .select("questions, submissions")
     .eq("userid", userId)
     .eq("complete", true)
@@ -591,7 +590,7 @@ export async function getInCompletedQuiz({
   const supabase = createClient();
   const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000); // Calculate the timestamp for 2 hours ago
   const { data, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .select("*")
     .eq("userid", userId)
     .eq("start", true)
@@ -614,7 +613,7 @@ export async function getTopicNameFromDB({
 }) {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("topic")
+    .from("new_topic_list")
     .select("topic_name")
     .eq("id", topicId)
     .eq("subject_id", subjectId)
@@ -632,7 +631,7 @@ export async function getUserQuizHistory(userId: string, subjectId: number) {
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from("quiz")
+    .from("new_quiz_db")
     .select("complete, created_at, questions, submissions")
     .eq("userid", userId)
     .eq("subject_id", subjectId)
