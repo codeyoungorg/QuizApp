@@ -1,6 +1,5 @@
-import "newrelic";
-import Script from "next/script";
 import newrelic from "newrelic";
+import Script from "next/script";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -30,6 +29,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
+        <Script
+          id="nr-browser-agent"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: browserTimingHeader }}
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap"
           rel="stylesheet"
@@ -39,11 +43,6 @@ export default async function RootLayout({
         <Providers>
           <main className="flex flex-col h-screen w-full">{children}</main>
         </Providers>
-        <Script
-          id="nr-browser-agent"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: browserTimingHeader }}
-        />
       </body>
     </html>
   );
