@@ -52,7 +52,7 @@ const SubjectCard = ({
   const handleGetStarted = (subjectName: string) => {
     const userId = getCookie("userId");
     const userRole = getCookie("userRole");
-    console.log(getCookie("grade"));
+
     if (userRole === "guest") {
       router.push(`guest-form?subject=${subjectName}`);
     } else {
