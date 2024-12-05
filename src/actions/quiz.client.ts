@@ -320,7 +320,7 @@ const getIdFromTopic = async (
 
   const { data, error } = await supabase
     .from("new_topic_list")
-    .select("id, topic_name")
+    .select("topic_id, topic_name")
     .eq("topic_name", topic)
     .eq("grade", grade)
     .eq("subject_id", subjectId)
@@ -333,7 +333,7 @@ const getIdFromTopic = async (
 
   if (!data) return null;
   return {
-    id: data.id,
+    id: data.topic_id,
     topic: data.topic_name,
   };
 };
@@ -615,7 +615,7 @@ export async function getTopicNameFromDB({
   const { data, error } = await supabase
     .from("new_topic_list")
     .select("topic_name")
-    .eq("id", topicId)
+    .eq("topic_id", topicId)
     .eq("subject_id", subjectId)
     .single();
   if (error) {
