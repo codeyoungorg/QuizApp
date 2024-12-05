@@ -97,7 +97,7 @@ const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
     label4: null,
   });
   return (
-    <div className="w-full md:max-w-7xl mx-auto bg-[#FFF] pb-10 overflow-hidden !important px-4">
+    <div className="w-full md:max-w-7xl mx-auto bg-[#FFF] pb-10 overflow-hidden !important">
       <div className="font-sans w-full flex justify-center">
         <div className="w-full flex justify-center flex-col">
           <HeadingCard lang={lang as string} />
