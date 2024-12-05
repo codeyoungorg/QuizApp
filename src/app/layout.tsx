@@ -6,6 +6,8 @@ import Providers from "@/components/providers";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const { NEXT_ENABLE_NEWRELIC } = process.env;
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -24,7 +26,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script src="/newrelic-browser-agent.js" strategy="beforeInteractive" />
+        {NEXT_ENABLE_NEWRELIC === "1" && (
+          <Script
+            src="/newrelic-browser-agent.js"
+            strategy="beforeInteractive"
+          />
+        )}
         <link
           href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap"
           rel="stylesheet"
