@@ -92,7 +92,6 @@ body {
 .slick-prev,
 .slick-next {
   z-index: 10;
-  height: 100%;
 }
 
 .slick-prev::before,
