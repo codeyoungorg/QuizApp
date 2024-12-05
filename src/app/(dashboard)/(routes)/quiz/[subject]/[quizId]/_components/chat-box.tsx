@@ -35,6 +35,7 @@ import {
   updateQuizToComplete,
 } from "@/actions/quiz.client";
 import saveGTMEvents from "@/lib/gtm";
+import { saveStreak } from "@/lib/quiz/apiClient";
 
 type ChatProps = {
   quizData: QuizDataType;
@@ -314,6 +315,8 @@ export default function Chat({
     // Update the quiz stats
     await checkScore();
     const { success } = await updateQuizToComplete({ quizId, userId: user.id });
+    const res = await saveStreak();
+
     if (!success) {
       toast({ title: "Something went wrong!", duration: 3000 });
     }
