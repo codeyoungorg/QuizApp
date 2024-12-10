@@ -273,13 +273,13 @@ const fetchQuestionsByLevel = async (
 
   let rpc_function;
   if (subjectId === 1) {
-    rpc_function = "db_math_rpc_topicid";
+    rpc_function = "new_math_db_rpc";
   } else if (subjectId === 2) {
-    rpc_function = "db_science_rpc_topicid";
+    rpc_function = "new_science_db_rpc";
   } else if (subjectId === 3) {
-    rpc_function = "db_english_rpc_topicid";
-  } else if (subjectId === 4) {
-    rpc_function = "db_coding_rpc_topicid";
+    rpc_function = "new_english_db_rpc";
+  } else {
+    return [];
   }
 
   if (!rpc_function) return console.log("Invalid subjectId");
@@ -321,10 +321,11 @@ const getIdFromTopic = async (
 
   const { data, error } = await supabase
     .from("topic")
-    .select("id, topic_name")
+    .select("id, topic_name, topic_id")
     .eq("topic_name", topic)
     .eq("grade", grade)
     .eq("subject_id", subjectId)
+    .not("topic_id", "is", null)
     .limit(1)
     .single();
 
@@ -334,7 +335,7 @@ const getIdFromTopic = async (
 
   if (!data) return null;
   return {
-    id: data.id,
+    id: data.topic_id,
     topic: data.topic_name,
   };
 };
@@ -350,10 +351,11 @@ const generateRandomTopic = async ({
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from(`topic`)
-    .select("id, topic_name")
+    .from("topic")
+    .select("id, topic_name, topic_id")
     .eq("grade", grade)
-    .eq("subject_id", subjectId);
+    .eq("subject_id", subjectId)
+    .not("topic_id", "is", null);
 
   if (error) {
     console.log(error);
@@ -362,7 +364,7 @@ const generateRandomTopic = async ({
   const allTopics = Array.from(
     new Set(
       data?.map((topic: any) => {
-        return { id: topic.id, topic: topic.topic_name };
+        return { id: topic.topic_id, topic: topic.topic_name };
       })
     )
   );
