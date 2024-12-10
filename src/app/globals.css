@@ -99,6 +99,61 @@ body {
   display: none;
 }
 
+/* Loading Screen Styles */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+  width: 100vw;
+  background: #fff;
+  color: #eb9b3a;
+  text-align: center;
+  padding: 1rem;
+}
+
+.loading-text {
+  font-size: 2rem;
+  font-weight: 400;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.loading-icon {
+  height: 4rem;
+  width: auto;
+  margin-bottom: 0.5rem;
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .loading-text {
+    font-size: 1.5rem;
+  }
+  .loading-icon {
+    height: 3.5rem;
+    width: auto;
+  }
+}
+
 /* Hide arrows on mobile */
 @media (max-width: 500px) {
   .carousel-buttons {
@@ -106,5 +161,12 @@ body {
   }
   .carousel-container {
     padding: 0 16px;
+  }
+  .loading-text {
+    font-size: 1rem;
+  }
+  .loading-icon {
+    height: 3rem;
+    width: auto;
   }
 }
