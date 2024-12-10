@@ -162,7 +162,7 @@ export const SelectCard: React.FC<QuizCardProps> = ({
             <Button
               variant="outline"
               onClick={onNextCard}
-              className="bg-[#E98451] text-white cursor-pointer"
+              className="bg-[#E98451] text-white cursor-pointer hover:bg-[#E98451]/80 hover:text-white active:bg-[#E98451]/80 focus:bg-[#E98451]"
             >
               Next
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -193,7 +193,7 @@ export const SelectCard: React.FC<QuizCardProps> = ({
                 }
               }}
               disabled={selectedAnswer === null}
-              className="bg-[#E98451] disabled:bg-[#C3B8AC] text-white cursor-pointer"
+              className="disabled:bg-[#C3B8AC] bg-[#E98451] text-white cursor-pointer hover:bg-[#E98451]/80 hover:text-white active:bg-[#E98451]/80 focus:bg-[#E98451]"
             >
               Check Answer
               <ArrowRight className="ml-2 h-4 w-4" />

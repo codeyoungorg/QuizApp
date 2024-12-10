@@ -176,7 +176,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
               variant="outline"
               onClick={handleNext}
               disabled={!droppedAnswer || !isCorrect}
-              className="bg-[#E98451] disabled:bg-[#C3B8AC] disabled:opacity-100 text-white cursor-pointer"
+              className="bg-[#E98451] disabled:bg-[#C3B8AC] disabled:opacity-100 text-white cursor-pointer hover:bg-[#E98451]/80 hover:text-white active:bg-[#E98451]/80 focus:bg-[#E98451]"
             >
               Next
               <ArrowRight className="ml-2 h-4 w-4" />

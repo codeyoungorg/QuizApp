@@ -30,6 +30,7 @@ import {
 } from "@/actions/gk-quiz";
 import saveGTMEvents from "@/lib/gtm";
 import apiService from "@/lib/apiService";
+import { saveStreak } from "@/lib/quiz/apiClient";
 
 type SubmissionType = {
   questionId: string;
@@ -87,7 +88,7 @@ export default function QuizBox({
   };
 
   useEffect(() => {
-      assignQuiz();
+    assignQuiz();
   }, [hasEnded, user.id]);
 
   const startNewQuiz = async () => {
@@ -124,6 +125,7 @@ export default function QuizBox({
       label3: "Noah",
       label4: null,
     });
+
     router.push(`/`);
   };
 
@@ -148,6 +150,7 @@ export default function QuizBox({
   const endGame = async () => {
     // Update the quiz stats
     const { success } = await updateGKQuizStats(quizId, user.id);
+    const res = await saveStreak();
     if (!success) {
       toast({ title: "Something went wrong!", duration: 3000 });
     }

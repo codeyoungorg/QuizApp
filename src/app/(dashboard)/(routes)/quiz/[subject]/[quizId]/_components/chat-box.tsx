@@ -35,6 +35,7 @@ import {
   updateQuizToComplete,
 } from "@/actions/quiz.client";
 import saveGTMEvents from "@/lib/gtm";
+import { saveStreak } from "@/lib/quiz/apiClient";
 
 type ChatProps = {
   quizData: QuizDataType;
@@ -92,7 +93,7 @@ export default function Chat({
     try {
       setLoader(true);
 
-      const { quiz, previous } = await createQuizBySubject({
+      const { quiz } = await createQuizBySubject({
         userId: user.id,
         grade: user.grade,
         subjectId,
@@ -111,11 +112,7 @@ export default function Chat({
         label3: topic ? "Topic" : "Noah",
         label4: null,
       });
-      if (previous) {
-        router.replace(`/quiz/${subjectName}/${quiz[0].id}?previous=true`);
-      } else {
-        router.replace(`/quiz/${subjectName}/${quiz[0].id}`);
-      }
+      router.replace(`/quiz/${subjectName}/${quiz[0].id}`);
     } catch (error) {
       console.log(error);
     } finally {
@@ -314,6 +311,8 @@ export default function Chat({
     // Update the quiz stats
     await checkScore();
     const { success } = await updateQuizToComplete({ quizId, userId: user.id });
+    const res = await saveStreak();
+
     if (!success) {
       toast({ title: "Something went wrong!", duration: 3000 });
     }

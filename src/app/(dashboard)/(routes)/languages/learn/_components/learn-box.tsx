@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { LanguageDB } from "../_types";
 import { saveLearningData } from "@/actions/language.actions";
 import { CompletionCard } from "./completion-card";
+import saveGTMEvents from "@/lib/gtm";
+import { saveStreak } from "@/lib/quiz/apiClient";
 
 type LearningSubmission = {
   questionId: number;
@@ -38,6 +40,7 @@ const DndProviderWithBackend = ({
 };
 
 type FlashcardPageProps = {
+  topicName: string;
   content: LanguageDB[];
   levelId: number;
   topicId: number;
@@ -47,6 +50,7 @@ type FlashcardPageProps = {
 };
 
 export default function LearnBox({
+  topicName,
   content,
   levelId,
   topicId,
@@ -63,7 +67,6 @@ export default function LearnBox({
   const [answeredQuestions, setAnsweredQuestions] = useState<
     AnsweredQuestion[]
   >([]);
-
   const handleNextCard = () => {
     if (currentCardIndex < content.length - 1) {
       setCurrentCardIndex(currentCardIndex + 1);
@@ -130,12 +133,33 @@ export default function LearnBox({
         topicId,
         levelId,
       });
+
       if (data) {
         setIsCompleted(true);
       }
     } catch (error) {
       console.error("Error saving learning data:", error);
     }
+  };
+  useEffect(() => {
+    if (isCompleted) {
+      const userType = userId ? "student" : "guest";
+      saveGTMEvents({
+        eventAction: "learn_completed",
+        label: userType,
+        label1: userId || null,
+        label2: lang,
+        label3: topicName || null,
+        label4: null,
+      });
+
+      saveStreakData();
+    }
+  }, [isCompleted]);
+
+  const saveStreakData = async () => {
+    const res = await saveStreak();
+    console.log(res, "ressss");
   };
 
   return (

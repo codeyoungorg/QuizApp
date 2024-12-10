@@ -17,18 +17,6 @@ export async function createQuizBySubject({
     grade: grade,
   };
 
-  const { data: previousQuiz, error: previousQuizError } = await supabase
-    .from("quiz")
-    .select("id, userid, subject_id, complete")
-    .eq("userid", userId)
-    .eq("subject_id", subjectId)
-    .eq("complete", false)
-    .order("created_at", { ascending: false });
-
-  if (previousQuiz && previousQuiz.length > 0) {
-    return { quiz: previousQuiz, previous: true };
-  }
-
   const { data, error } = await supabase
     .from("quiz")
     .insert({
@@ -40,10 +28,10 @@ export async function createQuizBySubject({
 
   if (error) {
     console.error(error);
-    return { quiz: null, previous: false };
+    return { quiz: null };
   }
 
-  return { quiz: data, previous: false };
+  return { quiz: data };
 }
 
 // create quiz
@@ -220,8 +208,7 @@ export const getQuestions = async ({
     );
   } else {
     grade = user_grade;
-    if (grade > 8) grade = 8;
-    if (subjectId === 2 && grade < 3) grade = 3;
+    if (grade > 9) grade = 9;
     topicData = await generateRandomTopic({ grade, subjectId });
   }
 
@@ -616,9 +603,9 @@ export async function getTopicNameFromDB({
 }) {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("topic")
+    .from("topic_list")
     .select("topic_name")
-    .eq("id", topicId)
+    .eq("topic_id", topicId)
     .eq("subject_id", subjectId)
     .single();
   if (error) {

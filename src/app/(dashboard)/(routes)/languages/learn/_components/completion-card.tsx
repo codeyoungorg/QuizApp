@@ -1,7 +1,11 @@
+'use client'
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
+import saveGTMEvents from "@/lib/gtm";
+import { getCookie } from "cookies-next";
+
 
 interface CompletionCardProps {
   lang: string;
@@ -21,8 +25,17 @@ export const CompletionCard = ({
   cardState,
 }: CompletionCardProps) => {
   const router = useRouter();
-
+  const userId = getCookie("userId");
   const handleTakeQuiz = () => {
+    
+    saveGTMEvents({
+      eventAction: "learn_language_opened",
+      label: "student",
+      label1: userId?.toString()||null,
+      label2: lang,
+      label3: topicId?.toString()||null,
+      label4: null,
+    });
     router.push(
       `/languages/quiz?lang=${lang}&topic=${topicId}&level=${levelId}&cards=${cardState}`
     );

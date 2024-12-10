@@ -13,6 +13,7 @@ import {
 } from "@/lib/student-dashboard/apiClient";
 import type { LeaderboardResponse } from "@/lib/types/leaderboard";
 import { getCookie } from "cookies-next";
+import saveGTMEvents from "@/lib/gtm";
 
 type Props = {
   levels: {
@@ -79,7 +80,7 @@ const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
     : null;
 
   const leaderboardData = {
-    studentMeta: {},
+    studentMeta: dashboardData?.leaderboard?.studentMeta,
     topTenStudentList:
       dashboardData?.leaderboard?.topTenStudentList?.map((item) => ({
         userid: item.user_id,
@@ -87,9 +88,16 @@ const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
         rank: item.rank,
       })) || [],
   };
-
+  saveGTMEvents({
+    eventAction: "subject_opened",
+    label: userId ? "student" : "guest",
+    label1: userId || null,
+    label2: lang,
+    label3: null,
+    label4: null,
+  });
   return (
-    <div className="w-full md:max-w-7xl mx-auto bg-[#FFF] pb-10 overflow-hidden !important px-4">
+    <div className="w-full md:max-w-7xl mx-auto bg-[#FFF] pb-10 overflow-hidden !important">
       <div className="font-sans w-full flex justify-center">
         <div className="w-full flex justify-center flex-col">
           <HeadingCard lang={lang as string} />
@@ -107,22 +115,19 @@ const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
               to get better at learning
             </h1>
           </div>
-          <div className="flex flex-col justify-center items-center py-4 md:hidden">
+          <div className="flex flex-col justify-center items-center py-4 md:hidden max-w-md mx-auto">
             <h1 className="text-[#5B8989] font-semibold text-xl md:text-2xl lg:text-3xl text-center">
               Practice{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A387FF] via-[#F55472] to-[#F55472]">
                 Daily
               </span>{" "}
-              and track your activity.
-            </h1>
-            <h1 className="text-[#5B8989] font-semibold text-xl md:text-2xl lg:text-3xl text-center">
-              Consistency can be{" "}
+              and track your activity. Consistency can be{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E561CB] from-[61.4%] to-[#FDA521] to-[96.83%]">
                 magical.
               </span>
             </h1>
           </div>
-          <div className="flex lg:flex-row xs:flex-col justify-center gap-8 lg:mt-14 md:mt-6 xs:mt-12 mb-10 px-4">
+          <div className="flex lg:flex-row xs:flex-col justify-center gap-8 lg:mt-14 md:mt-6 xs:mt-12 mb-10">
             <Activity
               subject={lang}
               studentActivity={activityData?.response?.activity || []}

@@ -13,6 +13,8 @@ import NoahStarImage from "@/public/images/icons/noah-lang-stars.svg";
 import NoahStarCompleteImage from "@/public/images/icons/noah-lang-stars-completed.svg";
 import { cn } from "@/lib/utils";
 import { ArrowRightIcon } from "lucide-react";
+import { getCookie } from "cookies-next";
+import saveGTMEvents from "@/lib/gtm";
 
 export default function ScoreCard({
   quizResult,
@@ -30,7 +32,7 @@ export default function ScoreCard({
 }) {
   const [currentScore, setCurrentScore] = useState({ correct: 0, total: 0 });
   const { currentQuizScore } = useQuizStore();
-
+  const userId = getCookie("userId");
   useEffect(() => {
     if (currentQuizScore) {
       setCurrentScore(currentQuizScore);
@@ -38,6 +40,14 @@ export default function ScoreCard({
       const currentQuizPoints = quizResult?.correct * quizResult?.level_id;
       setCurrentScore({ correct: currentQuizPoints, total: quizResult?.total });
     }
+    saveGTMEvents({
+      eventAction: "test_completed",
+      label: userId?"student":"guest",
+      label1: userId?.toString() || null,
+      label2: lang,
+      label3:quizResult?.languages_topics?.name as string || null ,
+      label4: null,
+    });
   }, [currentQuizScore, quizResult]);
 
   // Calculate if level is unlocked (85% or more)
@@ -55,6 +65,7 @@ export default function ScoreCard({
 
   // Add check for level 3 completion
   const isAllLevelsCompleted = quizResult.level_id == 3 && isLevelComplete;
+  
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">

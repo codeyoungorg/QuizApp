@@ -92,7 +92,11 @@ body {
 .slick-prev,
 .slick-next {
   z-index: 10;
-  height: 100%;
+}
+
+.slick-prev::before,
+.slick-next::before {
+  display: none;
 }
 
 /* Hide arrows on mobile */

@@ -48,6 +48,7 @@ const PageContent = () => {
   const userGrade = getCookie("grade");
   const params = useSearchParams();
   const subject = params.get("subject");
+  
 
   let sub = "";
   let subjectId: any = null;
@@ -66,7 +67,7 @@ const PageContent = () => {
     subjectId = constants.SUBJECT_IDS.ENGLISH;
     quizPath = "english";
   }
-
+  
   useEffect(() => {
     setMounted(true);
   }, []);

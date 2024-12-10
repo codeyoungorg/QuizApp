@@ -196,11 +196,12 @@ const HomePage: React.FC<Props> = ({
                 <div className="lg:m-6 md:m-2 lg:p-0 xs:p-4 h-5/6 relative flex flex-col gap-4">
                   <div className="cardTitle">{card.title}</div>
                   <div className="cardSubTitle">{card.subtitle}</div>
+                 <div className="additionalText">  {card.additionalText}</div>
+                  
+                  <div className=" boxContainer flex flex-col gap-4 ">
                   {getCookie("userRole") !== "guest" && (
                     <div className="cardDescription">{card.description}</div>
                   )}
-                  <div className="flex flex-col gap-4 mt-auto">
-                    {card.additionalText}
                     <div className="">
                       <button
                         className="getStartedBtn"

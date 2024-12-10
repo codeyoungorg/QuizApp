@@ -14,6 +14,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import saveGTMEvents from "@/lib/gtm";
+import { getCookie } from "cookies-next";
 
 type TopicCardProps = {
   lock: boolean;
@@ -94,6 +96,43 @@ export default function TopicCard({
 
     return stateWithLowestPoints;
   };
+  const userId = getCookie("userId");
+  const handleLearnButtonClick = () => {
+    saveGTMEvents({
+      eventAction: "learn_language_opened",
+      label: userId?"Student":"Guest",
+      label1: userId?.toString()||null,
+      label2: lang,
+      label3: topic.name||null,
+      label4: null,
+    });
+    router.push(
+      `/languages/learn?lang=${lang}&topic=${topic.id}&level=${levelId}&cards=${
+        hasCompletedAllStates
+          ? selectedState || getStateWithLowestPoints()
+          : nextState
+      }&topicName=${topic.name}`
+    );
+  };
+  const handleClickForQuiz = () => {
+    saveGTMEvents({
+      eventAction: "test_language_opened",
+      label: userId?"Student":"Guest",
+      label1: userId?.toString()||null,
+      label2: lang,
+      label3: topic.name||null,
+      label4: null,
+    });
+    router.push(
+      `/languages/quiz?lang=${lang}&topic=${topic.id}&level=${levelId}&cards=${
+        hasCompletedAllStates
+          ? selectedState || getStateWithLowestPoints()
+          : nextState
+      }`
+    );
+  };
+  
+  
 
   return (
     <div className="px-2 h-full">
@@ -180,17 +219,7 @@ export default function TopicCard({
             )}
             <div className="flex justify-between w-full gap-6">
               <Button
-                onClick={() =>
-                  router.push(
-                    `/languages/learn?lang=${lang}&topic=${
-                      topic.id
-                    }&level=${levelId}&cards=${
-                      hasCompletedAllStates
-                        ? selectedState || getStateWithLowestPoints()
-                        : nextState
-                    }`
-                  )
-                }
+                onClick={handleLearnButtonClick}
                 className="bg-[#F0A919] hover:bg-yellow-500 text-white w-full"
               >
                 Learn{" "}
@@ -199,17 +228,7 @@ export default function TopicCard({
                   `(${getLevelText(selectedState)})`}
               </Button>
               <Button
-                onClick={() =>
-                  router.push(
-                    `/languages/quiz?lang=${lang}&topic=${
-                      topic.id
-                    }&level=${levelId}&cards=${
-                      hasCompletedAllStates
-                        ? selectedState || getStateWithLowestPoints()
-                        : nextState
-                    }`
-                  )
-                }
+                onClick={handleClickForQuiz}
                 className="bg-[#E98451] hover:bg-orange-500 text-white w-full disabled:opacity-50"
               >
                 Practice{" "}
