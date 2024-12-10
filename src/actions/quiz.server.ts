@@ -10,7 +10,7 @@ export const getNumberOfCompletedQuiz = async ({
 }) => {
   const supabase = createClient();
   const { data: allQuizes, error } = await supabase
-    .from("new_quiz_db")
+    .from("quiz")
     .select("questions, submissions")
     .eq("userid", userId)
     .eq("complete", true)
@@ -37,7 +37,7 @@ export const getQuizById = async (id: any) => {
   const supabase = createClient();
   try {
     let { data, error } = await supabase
-      .from("new_quiz_db")
+      .from("quiz")
       .select("*")
       .eq("id", id)
       .limit(1);

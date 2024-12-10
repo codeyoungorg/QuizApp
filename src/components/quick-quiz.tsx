@@ -66,18 +66,14 @@ export default function QuickQuiz() {
     try {
       setLoading(true);
 
-      const { quiz, previous } = await createQuizBySubject({
+      const { quiz } = await createQuizBySubject({
         userId,
         grade,
         subjectId,
       });
 
       if (quiz && quiz.length > 0) {
-        if (previous) {
-          router.push(`/quiz/${quizPath}/${quiz[0].id}?previous=true`);
-        } else {
-          router.push(`/quiz/${quizPath}/${quiz[0].id}`);
-        }
+        router.push(`/quiz/${quizPath}/${quiz[0].id}`);
       }
     } catch (error) {
       console.error("Error creating quiz:", error);
