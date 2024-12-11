@@ -127,7 +127,7 @@ const NoahHeader = ({
     );
     const correctAnswers = quizHistory.reduce(
       (sum, quiz) =>
-        sum + quiz.submissions.filter((sub: any) => sub.isCorrect).length,
+        sum + quiz?.submissions?.filter((sub: any) => sub.isCorrect).length,
       0
     );
 
@@ -141,8 +141,8 @@ const NoahHeader = ({
       recentQuizzes.reduce(
         (sum, quiz) =>
           sum +
-          quiz.submissions.filter((sub: any) => sub.is_correct).length /
-            quiz.questions.length,
+          quiz?.submissions?.filter((sub: any) => sub.is_correct).length /
+            quiz?.questions?.length,
         0
       ) / recentQuizzes.length;
 

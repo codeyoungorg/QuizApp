@@ -127,7 +127,7 @@ const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
               </span>
             </h1>
           </div>
-          <div className="flex lg:flex-row xs:flex-col justify-center gap-8 lg:mt-14 md:mt-6 xs:mt-12 mb-10 px-4">
+          <div className="flex lg:flex-row xs:flex-col justify-center gap-8 lg:mt-14 md:mt-6 xs:mt-12 mb-10">
             <Activity
               subject={lang}
               studentActivity={activityData?.response?.activity || []}
