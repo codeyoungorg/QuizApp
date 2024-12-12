@@ -150,7 +150,7 @@ export default function QuizBox({
   const endGame = async () => {
     // Update the quiz stats
     const { success } = await updateGKQuizStats(quizId, user.id);
-    const res = await saveStreak();
+
     if (!success) {
       toast({ title: "Something went wrong!", duration: 3000 });
     }
@@ -192,7 +192,7 @@ export default function QuizBox({
 
   // Handle the next button click
   const handleNext = useCallback(
-    (index: number) => {
+    async (index: number) => {
       if (!options[index]) {
         toast({ title: "Invalid answer", duration: 3000 });
         return;
@@ -215,6 +215,8 @@ export default function QuizBox({
       ]);
 
       if (allQuestionsAnswered) return;
+
+      const res = await saveStreak();
       // Move to the next question
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },

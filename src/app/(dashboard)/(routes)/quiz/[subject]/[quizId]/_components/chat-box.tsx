@@ -223,7 +223,7 @@ export default function Chat({
 
   // Handle the next button click
   const handleNext = useCallback(
-    (index: number) => {
+    async (index: number) => {
       if (!options[index]) {
         toast({ title: "Invalid answer", duration: 3000 });
         return;
@@ -250,6 +250,7 @@ export default function Chat({
 
       if (allQuestionsAnswered) return;
       // Move to the next question
+      const res = await saveStreak();
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },
     [checkAnswer, questionIndex, questionList]
@@ -311,7 +312,6 @@ export default function Chat({
     // Update the quiz stats
     await checkScore();
     const { success } = await updateQuizToComplete({ quizId, userId: user.id });
-    const res = await saveStreak();
 
     if (!success) {
       toast({ title: "Something went wrong!", duration: 3000 });

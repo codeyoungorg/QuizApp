@@ -81,7 +81,7 @@ export default function LearnBox({
     }
   };
 
-  const handleAnswer = (isCorrect: boolean, selectedAnswer: string) => {
+  const handleAnswer = async (isCorrect: boolean, selectedAnswer: string) => {
     const currentQuestionId = content[currentCardIndex].id;
 
     const filteredAnswers = answeredQuestions.filter(
@@ -113,6 +113,7 @@ export default function LearnBox({
     } else if (isCorrect) {
       setCorrectAnswers((prev) => prev + 1);
     }
+    const res = await saveStreak();
   };
 
   const resetQuiz = () => {
@@ -152,15 +153,8 @@ export default function LearnBox({
         label3: topicName || null,
         label4: null,
       });
-
-      saveStreakData();
     }
   }, [isCompleted]);
-
-  const saveStreakData = async () => {
-    const res = await saveStreak();
-    console.log(res, "ressss");
-  };
 
   return (
     <div className="">
