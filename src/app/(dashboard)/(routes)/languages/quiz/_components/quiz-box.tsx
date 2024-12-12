@@ -110,7 +110,7 @@ export default function QuizBox({
     }
   };
 
-  const handleAnswer = (answer: string, isCorrect: boolean) => {
+  const handleAnswer = async (answer: string, isCorrect: boolean) => {
     const submission: QuizSubmission = {
       questionId: content[currentCardIndex].id,
       answer,
@@ -149,6 +149,7 @@ export default function QuizBox({
         return isCorrect ? prev + 1 : prev;
       }
     });
+    const res = await saveStreak();
   };
 
   const resetQuiz = () => {
@@ -199,8 +200,6 @@ export default function QuizBox({
           levelId,
           state,
         });
-
-        const res = await saveStreak();
 
         if (data) {
           router.replace(`/languages/result?lang=${lang}&quiz=${data.id}`);
