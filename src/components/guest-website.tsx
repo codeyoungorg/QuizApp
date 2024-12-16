@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import { DialogContent } from "@mui/material";
 import { setCookie } from "cookies-next";
 
-const GuestFormPageWebsite = ({
+const GuestWebsite = ({
   open,
   setIsPopupOpen,
 }: {
@@ -82,4 +82,4 @@ const GuestFormPageWebsite = ({
   );
 };
 
-export default GuestFormPageWebsite;
+export default GuestWebsite;
