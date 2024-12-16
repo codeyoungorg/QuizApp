@@ -127,7 +127,11 @@ const PageContent = () => {
   }, []);
   useEffect(() => {
     if (!isWebView && userRole === "guest") {
-      setIsPopupOpen(true);
+      const isPopupShown = localStorage.getItem("popupShown");
+  
+      if (!isPopupShown) {
+        setIsPopupOpen(true);
+      }
     }
   }, [userRole === "guest"]);
 
@@ -274,10 +278,7 @@ const PageContent = () => {
         </div>
       </div>
       {isPopupOpen && (
-        <GuestWebsite
-          open={isPopupOpen}
-          setIsPopupOpen={setIsPopupOpen}
-        />
+        <GuestWebsite open={isPopupOpen} setIsPopupOpen={setIsPopupOpen} />
       )}
     </div>
   );
