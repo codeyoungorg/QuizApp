@@ -4,14 +4,12 @@ import Dialog from "@mui/material/Dialog";
 import { DialogContent } from "@mui/material";
 import { setCookie } from "cookies-next";
 
-interface GuestFormPageWebsiteProps {
-  open: boolean;
-  setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const GuestFormPageWebsite: React.FC<GuestFormPageWebsiteProps> = ({
+const GuestFormPageWebsite = ({
   open,
   setIsPopupOpen,
+}: {
+  open: boolean;
+  setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
 
@@ -27,7 +25,7 @@ const GuestFormPageWebsite: React.FC<GuestFormPageWebsiteProps> = ({
         path: "/",
         domain: ".codeyoung.com",
       });
-      
+
       setIsPopupOpen(false);
     }
   };
