@@ -69,7 +69,7 @@ const GuestWebsite = ({
         <button
           onClick={handleStartLearning}
           disabled={!selectedGrade}
-          className={`mt-6 w-[150px] h-[36px] rounded-[4px] px-4 py-2 font-medium text-[14px] text-center ${
+          className={`mt-15 w-[150px] h-[36px] rounded-[4px] px-4 py-2 font-medium text-[14px] text-center ${
             selectedGrade
               ? "bg-[#E98451] text-white border-[#E98451]"
               : "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed"
