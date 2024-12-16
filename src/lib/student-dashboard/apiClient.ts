@@ -92,9 +92,13 @@ export const getLanguageDashboard = async ({
 export const getStudentActivity = async ({
   studentId,
   subjectId,
+  userType,
+  timeZone
 }: {
   studentId: string | null;
   subjectId: number | null;
+  userType: string 
+  timeZone: string | false;
 }) => {
   try {
     const params = {

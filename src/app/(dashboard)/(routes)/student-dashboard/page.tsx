@@ -11,6 +11,7 @@ import {
   getSubjectWise,
 } from "@/lib/student-dashboard/apiClient";
 import constants from "../../../../constants/constants";
+import GuestFormPageWebsite from "../guest-form-website/page";
 
 interface SubjectInfo {
   subjectId: number;
@@ -97,11 +98,18 @@ const PageContent = () => {
   const [streakData, setStreakData] = useState({});
   const [studentData, setStudentData] = useState(null);
   const [avatar, setAvatar] = useState<string>("");
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [subjectWiseLoader, setSubjectWiseLoader] = useState<boolean>(false);
   const [dashboardLoader, setDashboardLoader] = useState<boolean>(false);
   const languages = ["french", "spanish", "german", "hindi", "telugu"];
   const userId = getCookie("userId");
+  const userRole = getCookie("userRole");
   const [mounted, setMounted] = useState<boolean>(false);
+  const [clientTimezone, setClientTimezone] = useState("");
+  useEffect(() => {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setClientTimezone(tz);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -112,6 +120,11 @@ const PageContent = () => {
       window.open(process.env.NEXT_PUBLIC_SANDBOX_URL, "_self");
     }
   }, []);
+  useEffect(() => {
+    if (!window.ReactNativeWebView && userRole === "guest") {
+      setIsPopupOpen(true);
+    }
+  }, [userRole === "guest"]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -154,6 +167,8 @@ const PageContent = () => {
           const activityData = await getStudentActivity({
             studentId: userId,
             subjectId: null,
+            userType: userRole == "guest" ? "guest" : "student",
+            timeZone: userRole == "guest" && clientTimezone,
           });
 
           if (dashboardData.response.leaderboard) {
@@ -252,6 +267,12 @@ const PageContent = () => {
           </div>
         </div>
       </div>
+      {isPopupOpen && (
+        <GuestFormPageWebsite
+          open={isPopupOpen}
+          setIsPopupOpen={setIsPopupOpen}
+        />
+      )}
     </div>
   );
 };
