@@ -106,6 +106,16 @@ const PageContent = () => {
   const userRole = getCookie("userRole");
   const [mounted, setMounted] = useState<boolean>(false);
   const [clientTimezone, setClientTimezone] = useState("");
+  const [isWebView, setIsWebView] = useState(false);
+
+  useEffect(() => {
+    // Check if we're in a WebView environment
+    const checkWebView = () => {
+      return window.ReactNativeWebView !== undefined;
+    };
+
+    setIsWebView(checkWebView());
+  }, []);
   useEffect(() => {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setClientTimezone(tz);
@@ -121,7 +131,7 @@ const PageContent = () => {
     }
   }, []);
   useEffect(() => {
-    if (!window.ReactNativeWebView && userRole === "guest") {
+    if (!isWebView && userRole === "guest") {
       setIsPopupOpen(true);
     }
   }, [userRole === "guest"]);
