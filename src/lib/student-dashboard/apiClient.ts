@@ -104,6 +104,8 @@ export const getStudentActivity = async ({
     const params = {
       studentId,
       subjectId,
+      userType,
+      timeZone
     };
 
     const response = await apiService.get(`/dashboard/activity`, { params });
