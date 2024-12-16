@@ -3,6 +3,7 @@ import saveGTMEvents from "@/lib/gtm";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 
 export type TagColors = {
@@ -37,6 +38,16 @@ const SubjectCard = ({
   isLanguage?: boolean;
 }) => {
   const router = useRouter();
+  const [isWebView, setIsWebView] = useState(false);
+
+  useEffect(() => {
+    // Check if we're in a WebView environment
+    const checkWebView = () => {
+      return window.ReactNativeWebView !== undefined;
+    };
+
+    setIsWebView(checkWebView());
+  }, []);
   const tagColors = {
     math: "#b58440",
     science: "#40b59b",
@@ -53,7 +64,7 @@ const SubjectCard = ({
     const userId = getCookie("userId");
     const userRole = getCookie("userRole");
 
-    if (userRole === "guest") {
+    if (userRole === "guest" && isWebView) {
       router.push(`guest-form?subject=${subjectName}`);
     } else {
       saveGTMEvents({
