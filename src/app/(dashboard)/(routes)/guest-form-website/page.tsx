@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import { DialogContent } from "@mui/material";
+import { setCookie } from "cookies-next";
 
 interface GuestFormPageWebsiteProps {
   open: boolean;
@@ -22,10 +23,14 @@ const GuestFormPageWebsite: React.FC<GuestFormPageWebsiteProps> = ({
 
   const handleStartLearning = () => {
     if (selectedGrade) {
+      setCookie("grade", selectedGrade, {
+        path: "/",
+        domain: ".codeyoung.com",
+      });
+      
       setIsPopupOpen(false);
     }
   };
-
   return (
     <Dialog
       open={open}
