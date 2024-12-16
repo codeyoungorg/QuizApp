@@ -104,6 +104,7 @@ const PageContent = () => {
   const languages = ["french", "spanish", "german", "hindi", "telugu"];
   const userId = getCookie("userId");
   const userRole = getCookie("userRole");
+  const grade = getCookie("grade");
   const [mounted, setMounted] = useState<boolean>(false);
   const [isWebView, setIsWebView] = useState(false);
 
@@ -126,14 +127,10 @@ const PageContent = () => {
     }
   }, []);
   useEffect(() => {
-    if (!isWebView && userRole === "guest") {
-      const isPopupShown = localStorage.getItem("popupShown");
-  
-      if (!isPopupShown) {
-        setIsPopupOpen(true);
-      }
+    if (!isWebView && userRole === "guest" && grade == "undefined") {
+      setIsPopupOpen(true);
     }
-  }, [userRole === "guest"]);
+  }, [userRole, grade]);
 
   useEffect(() => {
     const fetchData = async () => {

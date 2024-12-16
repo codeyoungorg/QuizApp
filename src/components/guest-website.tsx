@@ -25,7 +25,6 @@ const GuestWebsite = ({
         path: "/",
         domain: ".codeyoung.com",
       });
-      localStorage.setItem("popupShown", "true");
       setIsPopupOpen(false);
     }
   };
