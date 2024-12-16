@@ -55,7 +55,7 @@ const GuestWebsite = ({
             <button
               key={grade}
               onClick={() => handleGradeSelect(grade)}
-              className={`w-[80px] h-[35px] border rounded-[8px] px-4 py-2 text-center font-medium text-[12px] ${
+              className={`w-[110px] h-[35px] border rounded-[8px] px-4 py-2 text-center font-medium text-[12px] ${
                 selectedGrade === grade
                   ? "text-[#E98451] border-[#E98451]"
                   : "text-[#569090] border-[#E0E0E0]"
