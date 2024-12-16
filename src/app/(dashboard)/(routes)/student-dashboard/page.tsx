@@ -12,6 +12,7 @@ import {
 } from "@/lib/student-dashboard/apiClient";
 import constants from "../../../../constants/constants";
 import GuestFormPageWebsite from "../guest-form-website/page";
+import GuestWebsite from "@/components/guest-website";
 
 interface SubjectInfo {
   subjectId: number;
@@ -268,7 +269,7 @@ const PageContent = () => {
         </div>
       </div>
       {isPopupOpen && (
-        <GuestFormPageWebsite
+        <GuestWebsite
           open={isPopupOpen}
           setIsPopupOpen={setIsPopupOpen}
         />
