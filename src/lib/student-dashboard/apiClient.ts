@@ -105,7 +105,7 @@ export const getStudentActivity = async ({
       studentId,
       subjectId,
       userType,
-      timeZone
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
     };
 
     const response = await apiService.get(`/dashboard/activity`, { params });

@@ -105,7 +105,6 @@ const PageContent = () => {
   const userId = getCookie("userId");
   const userRole = getCookie("userRole");
   const [mounted, setMounted] = useState<boolean>(false);
-  const [clientTimezone, setClientTimezone] = useState("");
   const [isWebView, setIsWebView] = useState(false);
 
   useEffect(() => {
@@ -115,10 +114,6 @@ const PageContent = () => {
     };
 
     setIsWebView(checkWebView());
-  }, []);
-  useEffect(() => {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    setClientTimezone(tz);
   }, []);
 
   useEffect(() => {
@@ -168,6 +163,7 @@ const PageContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
         setDashboardLoader(true);
         try {
           const dashboardData = await getStudentDashboard({
@@ -178,7 +174,7 @@ const PageContent = () => {
             studentId: userId,
             subjectId: null,
             userType: userRole == "guest" ? "guest" : "student",
-            timeZone: userRole == "guest" && clientTimezone,
+            timeZone: tz,
           });
 
           if (dashboardData.response.leaderboard) {

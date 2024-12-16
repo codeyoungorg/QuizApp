@@ -32,12 +32,7 @@ type Props = {
 
 const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
   const userId = getCookie("userId");
-  const [clientTimezone, setClientTimezone] = useState("");
   const userRole = getCookie("userRole");
-  useEffect(() => {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    setClientTimezone(tz);
-  }, []);
 
   const { data: dashboardData, isLoading: dashboardLoader } =
     useQuery<LeaderboardResponse>({
@@ -57,7 +52,7 @@ const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
         studentId: userId || null,
         subjectId: langId || null,
         userType: userRole == "guest" ? "guest" : "student",
-        timeZone: userRole == "guest" && clientTimezone,
+        timeZone: "",
       }),
     enabled: !!userId && !!langId,
   });
