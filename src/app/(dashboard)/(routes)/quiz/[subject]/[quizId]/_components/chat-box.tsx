@@ -61,7 +61,7 @@ export default function Chat({
   subjectName,
 }: ChatProps) {
   const queryParams = useSearchParams();
-  const topic = queryParams.get("topic");
+  const topic = queryParams.get("topic_union");
   const [questionIndex, setQuestionIndex] = useState(
     quizData.submissions?.length || 0
   );
@@ -250,7 +250,7 @@ export default function Chat({
 
       if (allQuestionsAnswered) return;
       // Move to the next question
-      const res = await saveStreak();
+      // const res = await saveStreak();
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },
     [checkAnswer, questionIndex, questionList]

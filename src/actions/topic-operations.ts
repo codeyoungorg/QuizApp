@@ -5,9 +5,9 @@ import { createClient } from "@/lib/supabase/server";
 export async function getTopicById(topicId: number) {
   const supabase = createClient();
   const { data } = await supabase
-    .from("topic")
+    .from("topic_union")
     .select("*")
-    .eq("topic_id", topicId)
+    .eq("id", topicId)
     .single();
   return data;
 }
