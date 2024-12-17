@@ -260,11 +260,11 @@ const fetchQuestionsByLevel = async (
 
   let rpc_function;
   if (subjectId === 1) {
-    rpc_function = "new_math_db_rpc";
+    rpc_function = "union_math_db_rpc";
   } else if (subjectId === 2) {
-    rpc_function = "new_science_db_rpc";
+    rpc_function = "union_science_db_rpc";
   } else if (subjectId === 3) {
-    rpc_function = "new_english_db_rpc";
+    rpc_function = "union_english_db_rpc";
   } else {
     return [];
   }
@@ -278,19 +278,6 @@ const fetchQuestionsByLevel = async (
     uuids: questionIds,
     selected_grade: grade,
   });
-
-  if (data.length === 0) {
-    const { data, error } = await supabase.rpc(
-      rpc_function.replace("topicid", "any"),
-      {
-        rows_limit: limit,
-        selected_topic_id: topicId,
-        uuids: questionIds,
-        selected_grade: grade,
-      }
-    );
-    return data;
-  }
 
   if (error) {
     console.log(error);
@@ -307,12 +294,11 @@ const getIdFromTopic = async (
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from("topic")
-    .select("id, topic_name, topic_id")
+    .from("topic_union")
+    .select("id, topic_name")
     .eq("topic_name", topic)
     .eq("grade", grade)
     .eq("subject_id", subjectId)
-    .not("topic_id", "is", null)
     .limit(1)
     .single();
 
@@ -322,7 +308,7 @@ const getIdFromTopic = async (
 
   if (!data) return null;
   return {
-    id: data.topic_id,
+    id: data.id,
     topic: data.topic_name,
   };
 };
@@ -338,11 +324,10 @@ const generateRandomTopic = async ({
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from("topic")
-    .select("id, topic_name, topic_id")
+    .from("topic_union")
+    .select("id, topic_name")
     .eq("grade", grade)
-    .eq("subject_id", subjectId)
-    .not("topic_id", "is", null);
+    .eq("subject_id", subjectId);
 
   if (error) {
     console.log(error);
@@ -351,7 +336,7 @@ const generateRandomTopic = async ({
   const allTopics = Array.from(
     new Set(
       data?.map((topic: any) => {
-        return { id: topic.topic_id, topic: topic.topic_name };
+        return { id: topic.id, topic: topic.topic_name };
       })
     )
   );
