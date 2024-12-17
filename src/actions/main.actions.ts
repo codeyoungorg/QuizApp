@@ -88,7 +88,7 @@ const getTopicWiseLevelScore = async (allQuizes: any[], grade: number) => {
               isCorrect: boolean;
             }) => {
               const response = await supabase
-                .from(`union_math_db`)
+                .from(`db_math`)
                 .select()
                 .eq("uuid", questionId);
               if (response && response.data && !response.data[0]) return;
