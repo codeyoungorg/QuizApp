@@ -250,7 +250,7 @@ export default function Chat({
 
       if (allQuestionsAnswered) return;
       // Move to the next question
-      // const res = await saveStreak();
+      const res = await saveStreak();
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },
     [checkAnswer, questionIndex, questionList]
