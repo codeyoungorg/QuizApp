@@ -17,18 +17,6 @@ export async function createQuizBySubject({
     grade: grade,
   };
 
-  const { data: previousQuiz, error: previousQuizError } = await supabase
-    .from("quiz")
-    .select("id, userid, subject_id, complete")
-    .eq("userid", userId)
-    .eq("subject_id", subjectId)
-    .eq("complete", false)
-    .order("created_at", { ascending: false });
-
-  if (previousQuiz && previousQuiz.length > 0) {
-    return { quiz: previousQuiz, previous: true };
-  }
-
   const { data, error } = await supabase
     .from("quiz")
     .insert({
@@ -40,10 +28,10 @@ export async function createQuizBySubject({
 
   if (error) {
     console.error(error);
-    return { quiz: null, previous: false };
+    return { quiz: null };
   }
 
-  return { quiz: data, previous: false };
+  return { quiz: data };
 }
 
 // create quiz
@@ -220,8 +208,7 @@ export const getQuestions = async ({
     );
   } else {
     grade = user_grade;
-    if (grade > 8) grade = 8;
-    if (subjectId === 2 && grade < 3) grade = 3;
+    if (grade > 9) grade = 9;
     topicData = await generateRandomTopic({ grade, subjectId });
   }
 
@@ -273,13 +260,13 @@ const fetchQuestionsByLevel = async (
 
   let rpc_function;
   if (subjectId === 1) {
-    rpc_function = "db_math_rpc_topicid";
+    rpc_function = "union_math_db_rpc";
   } else if (subjectId === 2) {
-    rpc_function = "db_science_rpc_topicid";
+    rpc_function = "union_science_db_rpc";
   } else if (subjectId === 3) {
-    rpc_function = "db_english_rpc_topicid";
-  } else if (subjectId === 4) {
-    rpc_function = "db_coding_rpc_topicid";
+    rpc_function = "union_english_db_rpc";
+  } else {
+    return [];
   }
 
   if (!rpc_function) return console.log("Invalid subjectId");
@@ -291,19 +278,6 @@ const fetchQuestionsByLevel = async (
     uuids: questionIds,
     selected_grade: grade,
   });
-
-  if (data.length === 0) {
-    const { data, error } = await supabase.rpc(
-      rpc_function.replace("topicid", "any"),
-      {
-        rows_limit: limit,
-        selected_topic_id: topicId,
-        uuids: questionIds,
-        selected_grade: grade,
-      }
-    );
-    return data;
-  }
 
   if (error) {
     console.log(error);
@@ -320,7 +294,7 @@ const getIdFromTopic = async (
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from("topic")
+    .from("topic_union")
     .select("id, topic_name")
     .eq("topic_name", topic)
     .eq("grade", grade)
@@ -350,7 +324,7 @@ const generateRandomTopic = async ({
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from(`topic`)
+    .from("topic_union")
     .select("id, topic_name")
     .eq("grade", grade)
     .eq("subject_id", subjectId);
@@ -614,7 +588,7 @@ export async function getTopicNameFromDB({
 }) {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("topic")
+    .from("topic_union")
     .select("topic_name")
     .eq("id", topicId)
     .eq("subject_id", subjectId)

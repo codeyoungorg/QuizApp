@@ -32,6 +32,7 @@ type Props = {
 
 const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
   const userId = getCookie("userId");
+  const userRole = getCookie("userRole");
 
   const { data: dashboardData, isLoading: dashboardLoader } =
     useQuery<LeaderboardResponse>({
@@ -50,6 +51,8 @@ const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
       getStudentActivity({
         studentId: userId || null,
         subjectId: langId || null,
+        userType: userRole == "guest" ? "guest" : "student",
+        timeZone: "",
       }),
     enabled: !!userId && !!langId,
   });

@@ -15,6 +15,7 @@ import {
 import { Loader2 } from "lucide-react"; // Import the loader icon
 import { useQuery } from "@tanstack/react-query";
 import useQuizStore from "@/store/quiz-store";
+import { saveStreak } from "@/lib/quiz/apiClient";
 
 const DndProviderWithBackend = ({
   children,
@@ -109,7 +110,7 @@ export default function QuizBox({
     }
   };
 
-  const handleAnswer = (answer: string, isCorrect: boolean) => {
+  const handleAnswer = async (answer: string, isCorrect: boolean) => {
     const submission: QuizSubmission = {
       questionId: content[currentCardIndex].id,
       answer,
@@ -148,6 +149,7 @@ export default function QuizBox({
         return isCorrect ? prev + 1 : prev;
       }
     });
+    const res = await saveStreak();
   };
 
   const resetQuiz = () => {
@@ -182,6 +184,7 @@ export default function QuizBox({
           quizId: prevQuiz?.id,
           state: state,
         });
+
         if (data) {
           // Use router.replace for smoother transition
           router.replace(`/languages/result?lang=${lang}&quiz=${data.id}`);
@@ -197,6 +200,7 @@ export default function QuizBox({
           levelId,
           state,
         });
+
         if (data) {
           router.replace(`/languages/result?lang=${lang}&quiz=${data.id}`);
         }

@@ -48,6 +48,12 @@ const PageContent = () => {
   const userGrade = getCookie("grade");
   const params = useSearchParams();
   const subject = params.get("subject");
+  const userRole = getCookie("userRole");
+  const [clientTimezone, setClientTimezone] = useState("");
+  useEffect(() => {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setClientTimezone(tz);
+  }, []);
   
 
   let sub = "";
@@ -98,6 +104,8 @@ const PageContent = () => {
           const activityData = await getStudentActivity({
             studentId: userId,
             subjectId,
+            userType: userRole == "guest" ? "guest" : "student",
+            timeZone: userRole == "guest" && clientTimezone,
           });
 
           if (dashboardData.response.leaderboard) {

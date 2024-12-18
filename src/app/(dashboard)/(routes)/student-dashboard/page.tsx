@@ -11,6 +11,7 @@ import {
   getSubjectWise,
 } from "@/lib/student-dashboard/apiClient";
 import constants from "../../../../constants/constants";
+import GuestWebsite from "@/components/guest-website";
 
 interface SubjectInfo {
   subjectId: number;
@@ -97,11 +98,24 @@ const PageContent = () => {
   const [streakData, setStreakData] = useState({});
   const [studentData, setStudentData] = useState(null);
   const [avatar, setAvatar] = useState<string>("");
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [subjectWiseLoader, setSubjectWiseLoader] = useState<boolean>(false);
   const [dashboardLoader, setDashboardLoader] = useState<boolean>(false);
   const languages = ["french", "spanish", "german", "hindi", "telugu"];
   const userId = getCookie("userId");
+  const userRole = getCookie("userRole");
+  const grade = getCookie("grade");
   const [mounted, setMounted] = useState<boolean>(false);
+  const [isWebView, setIsWebView] = useState(false);
+
+  useEffect(() => {
+    // Check if we're in a WebView environment
+    const checkWebView = () => {
+      return window.ReactNativeWebView !== undefined;
+    };
+
+    setIsWebView(checkWebView());
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -112,6 +126,11 @@ const PageContent = () => {
       window.open(process.env.NEXT_PUBLIC_SANDBOX_URL, "_self");
     }
   }, []);
+  useEffect(() => {
+    if (!isWebView && userRole === "guest" && grade == "undefined") {
+      setIsPopupOpen(true);
+    }
+  }, [userRole, grade]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,6 +164,7 @@ const PageContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
         setDashboardLoader(true);
         try {
           const dashboardData = await getStudentDashboard({
@@ -154,6 +174,8 @@ const PageContent = () => {
           const activityData = await getStudentActivity({
             studentId: userId,
             subjectId: null,
+            userType: userRole == "guest" ? "guest" : "student",
+            timeZone: tz,
           });
 
           if (dashboardData.response.leaderboard) {
@@ -252,6 +274,9 @@ const PageContent = () => {
           </div>
         </div>
       </div>
+      {isPopupOpen && (
+        <GuestWebsite open={isPopupOpen} setIsPopupOpen={setIsPopupOpen} />
+      )}
     </div>
   );
 };
