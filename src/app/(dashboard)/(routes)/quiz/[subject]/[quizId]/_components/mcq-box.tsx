@@ -21,7 +21,7 @@ export default function MCQBox({
   questionIndex: number;
   user: {
     name: string;
-    grade: number;
+    grade: string;
     id: string;
   };
   hasEnded: boolean;

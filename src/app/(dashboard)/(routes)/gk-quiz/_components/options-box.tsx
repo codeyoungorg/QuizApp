@@ -23,7 +23,7 @@ export default function OptionsBox({
   hasEnded: boolean;
   user: {
     name: string;
-    grade: number;
+    grade: string;
     id: string;
   };
 }) {
