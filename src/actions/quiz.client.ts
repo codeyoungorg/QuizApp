@@ -49,14 +49,24 @@ export async function generateQuiz({
   start: boolean;
 }) {
   const supabase = createClient();
+  let userGrade;
+
+  if (grade === "kg") {
+    userGrade = "1";
+  } else if (grade === "algebra-1" || grade === "algebra-2") {
+    userGrade = "9";
+  } else {
+    userGrade = grade;
+  }
 
   const metadata = {
     grade: grade,
     topic: topicId,
+    assignGrade: userGrade,
   };
 
   const { questions } = await getQuestionsByTopicId({
-    grade,
+    grade: userGrade,
     userId,
     subjectId,
     topicId,
@@ -199,6 +209,14 @@ export const getQuestions = async ({
   let grade;
   let topicData;
 
+  if (user_grade === "kg") {
+    grade = "1";
+  } else if (user_grade === "algebra-1" || user_grade === "algebra-2") {
+    grade = "9";
+  } else {
+    grade = user_grade;
+  }
+
   if (!!selectedTopic?.topic) {
     grade = selectedTopic.topic?.grade;
     topicData = await getIdFromTopic(
@@ -207,7 +225,6 @@ export const getQuestions = async ({
       subjectId
     );
   } else {
-    grade = user_grade;
     topicData = await generateRandomTopic({ grade, subjectId });
   }
 
