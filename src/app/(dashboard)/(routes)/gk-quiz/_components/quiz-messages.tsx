@@ -1,12 +1,14 @@
 "use client";
 
-import lucide_trophy from "@/assets/Images/lucide_trophy.png";
-import botIcon from "@/assets/Images/noah_dp.svg";
 import { Button } from "@/components/ui/button";
+import { Dispatch, SetStateAction } from "react";
+import botIcon from "@/assets/Images/noah_dp.svg";
+import lucide_trophy from "@/assets/Images/lucide_trophy.png";
+import Image from "next/image";
 import EastOutlinedIcon from "@mui/icons-material/EastOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
-import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
+
+import { useRouter } from "next/navigation";
 
 if (typeof window !== "undefined") {
 }
@@ -16,7 +18,7 @@ export function InitialChatMessage({
   user,
 }: {
   setStart: Dispatch<SetStateAction<boolean>>;
-  user: { name: string; grade: string; id: string };
+  user: { name: string; grade: number; id: string };
 }) {
   return (
     <div className="max-w-3xl my-2 flex items-start w-full gap-x-2">
@@ -51,11 +53,12 @@ export function EndChatMessage({
   loader,
 }: {
   showQuizScore: Dispatch<SetStateAction<boolean>>;
-  user: { name: string; grade: string; id: string };
+  user: { name: string; grade: number; id: string };
   startNewQuiz: any;
   endQuiz: any;
   loader: boolean;
 }) {
+  const router = useRouter();
   return (
     <div className="max-w-3xl my-2 flex items-start w-full gap-x-2">
       <div className=" w-10 h-10 rounded-full grid place-items-center">

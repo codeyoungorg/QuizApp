@@ -44,7 +44,7 @@ const NoahHeader = ({
   quizPath: string;
 }) => {
   const userId = getCookie("userId");
-  const grade = getCookie("grade");
+  const grade = parseInt(getCookie("grade")!);
   const studentName = getCookie("userName");
   const [isMount, setIsMount] = React.useState(false);
   const [personalizedMessage, setPersonalizedMessage] = useState("");

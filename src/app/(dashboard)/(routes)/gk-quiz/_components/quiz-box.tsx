@@ -1,24 +1,7 @@
 "use client";
 
-import {
-  createGKQuiz,
-  getGKQuestions,
-  storeCorrectSubmissionForGK,
-  storeUserSubmissionInGKQuiz,
-  updateGKQuizStats,
-} from "@/actions/gk-quiz";
-import ion_send from "@/assets/Images/ion_send.png";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Toaster } from "@/components/ui/toaster";
-import { toast } from "@/components/ui/use-toast";
-import apiService from "@/lib/apiService";
-import saveGTMEvents from "@/lib/gtm";
-import { saveStreak } from "@/lib/quiz/apiClient";
-import { QuizDataType } from "@/types/quiz.types";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import MCQBox from "./mcq-box";
 import {
   FormEvent,
   useCallback,
@@ -27,10 +10,27 @@ import {
   useRef,
   useState,
 } from "react";
-import MCQBox from "./mcq-box";
-import { EndChatMessage, InitialChatMessage } from "./quiz-messages";
-import QuizScore from "./quiz-score-dialog";
+import { toast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 import SelectedAnswer from "./selected-answer";
+import { Input } from "@/components/ui/input";
+import ion_send from "@/assets/Images/ion_send.png";
+import Image from "next/image";
+import QuizScore from "./quiz-score-dialog";
+import { EndChatMessage, InitialChatMessage } from "./quiz-messages";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { QuizDataType } from "@/types/quiz.types";
+import {
+  createGKQuiz,
+  getGKQuestions,
+  storeCorrectSubmissionForGK,
+  storeUserSubmissionInGKQuiz,
+  updateGKQuizStats,
+} from "@/actions/gk-quiz";
+import saveGTMEvents from "@/lib/gtm";
+import apiService from "@/lib/apiService";
+import { saveStreak } from "@/lib/quiz/apiClient";
 
 type SubmissionType = {
   questionId: string;
@@ -43,7 +43,7 @@ type Props = {
   quizId: string;
   user: {
     name: string;
-    grade: string;
+    grade: number;
     id: string;
   };
   numberOfCompletedQuizData: any;

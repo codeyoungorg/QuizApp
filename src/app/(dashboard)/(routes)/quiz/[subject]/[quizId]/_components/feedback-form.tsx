@@ -16,7 +16,7 @@ export default function FeedBackForm({
   questionId: string;
   user: {
     name: string;
-    grade: string;
+    grade: number;
     id: string;
   };
   subjectName: string;

@@ -42,7 +42,7 @@ type ChatProps = {
   quizId: string;
   user: {
     name: string;
-    grade: string;
+    grade: number;
     id: string;
   };
   numberOfCompletedQuizData: any;

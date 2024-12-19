@@ -22,7 +22,7 @@ export default function QuickQuiz() {
   const [timeLeft, setTimeLeft] = useState(30);
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const userId = getCookie("userId");
-  const grade = getCookie("grade");
+  const grade = parseInt(getCookie("grade")!);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 

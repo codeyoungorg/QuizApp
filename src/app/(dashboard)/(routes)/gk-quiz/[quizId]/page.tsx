@@ -27,7 +27,7 @@ export default async function QuizPage({
         quizId={quizId}
         user={{
           name: userName!,
-          grade: grade!,
+          grade: parseInt(grade!),
           id: user_Id!,
         }}
         numberOfCompletedQuizData={numberOfCompletedQuizData}

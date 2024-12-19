@@ -17,7 +17,7 @@ export default function ExplainationPopover({
   answer: string;
   user: {
     name: string;
-    grade: string;
+    grade: number;
     id: string;
   };
 }) {

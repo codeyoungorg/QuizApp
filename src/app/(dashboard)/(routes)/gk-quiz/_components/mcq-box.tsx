@@ -19,7 +19,7 @@ export default function MCQBox({
   questionIndex: number;
   user: {
     name: string;
-    grade: string;
+    grade: number;
     id: string;
   };
   hasEnded: boolean;

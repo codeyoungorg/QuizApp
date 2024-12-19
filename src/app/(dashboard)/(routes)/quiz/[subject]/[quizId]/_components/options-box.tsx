@@ -25,7 +25,7 @@ export default function OptionsBox({
   hasEnded: boolean;
   user: {
     name: string;
-    grade: string;
+    grade: number;
     id: string;
   };
   subjectName: string;
