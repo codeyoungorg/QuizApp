@@ -8,7 +8,7 @@ export async function createQuizBySubject({
   userId,
 }: {
   userId: string;
-  grade: number;
+  grade: string;
   subjectId: number;
 }) {
   const supabase = createClient();
@@ -43,7 +43,7 @@ export async function generateQuiz({
   start,
 }: {
   userId: string;
-  grade: number;
+  grade: string;
   subjectId: number;
   topicId: number;
   start: boolean;
@@ -97,7 +97,7 @@ export async function updateQuiz({
   questions: Array<any>;
   topicId: number;
   quizId: string;
-  grade: number;
+  grade: string;
   assignedData?: any;
 }) {
   const supabase = createClient();
@@ -145,7 +145,7 @@ export const getQuestionsByTopicId = async ({
   grade,
   topicId,
 }: {
-  grade: number;
+  grade: string;
   userId: string;
   subjectId: number;
   topicId: number;
@@ -191,7 +191,7 @@ export const getQuestions = async ({
   user_grade,
   selectedTopic,
 }: {
-  user_grade: number;
+  user_grade: string;
   userId: string;
   subjectId: number;
   selectedTopic?: any;
@@ -208,7 +208,6 @@ export const getQuestions = async ({
     );
   } else {
     grade = user_grade;
-    if (grade > 9) grade = 9;
     topicData = await generateRandomTopic({ grade, subjectId });
   }
 
@@ -253,7 +252,7 @@ const fetchQuestionsByLevel = async (
   limit: number,
   topicId: number,
   questionIds: string[],
-  grade: number,
+  grade: string,
   subjectId: number
 ) => {
   const supabase = createClient();
@@ -318,7 +317,7 @@ const generateRandomTopic = async ({
   grade,
   subjectId,
 }: {
-  grade: number;
+  grade: string;
   subjectId: number;
 }) => {
   const supabase = createClient();
@@ -415,7 +414,7 @@ export async function storeCorrectSubmission({
   questionId: string;
   quizId: number;
   topicId: number;
-  grade: number;
+  grade: string;
   subjectId: number;
 }) {
   const supabase = createClient();

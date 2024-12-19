@@ -31,7 +31,7 @@ export default async function ChatPage({
         quizId={quizId}
         user={{
           name: userName!,
-          grade: parseInt(grade!),
+          grade: grade!,
           id: userId!,
         }}
         numberOfCompletedQuizData={numberOfCompletedQuizData}

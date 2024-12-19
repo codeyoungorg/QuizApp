@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       return response.json(
         { error: "Topic not found" },
         {
-          status: 404,
+          status: 500,
           headers: {
             "Access-Control-Allow-Origin": "*",
           },
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     // Generate the quiz
     const quizData = await generateQuiz({
       topicId: topicId,
-      grade: parseInt(topic.grade || "1"),
+      grade: topic.grade,
       subjectId: topic.subject_id,
       userId: userId,
       start: true,

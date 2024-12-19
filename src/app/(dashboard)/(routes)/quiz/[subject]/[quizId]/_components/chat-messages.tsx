@@ -27,7 +27,7 @@ export function InitialChatMessage({
 }: {
   setStart: Dispatch<SetStateAction<boolean>>;
   started: boolean;
-  user: { name: string; grade: number; id: string };
+  user: { name: string; grade: string; id: string };
   setQuestionList: Dispatch<SetStateAction<any[]>>;
   quizId: string;
   setQuizTopic: Dispatch<SetStateAction<string | null>>;
@@ -164,7 +164,7 @@ export function EndChatMessage({
   subjectId,
   topicId,
 }: {
-  user: { name: string; grade: number; id: string };
+  user: { name: string; grade: string; id: string };
   startNewQuiz: any;
   endQuiz: any;
   loader: boolean;
@@ -187,14 +187,9 @@ export function EndChatMessage({
   const startQuizWithSameTopic = async () => {
     try {
       setGeneratingQuiz(true);
-      let grade = user.grade;
-
-      if (subjectName === "science" && user.grade < 3) {
-        grade = 3;
-      }
 
       const data = await generateQuiz({
-        grade: grade,
+        grade: user.grade,
         start: true,
         subjectId,
         topicId,

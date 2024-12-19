@@ -60,7 +60,7 @@ const TopicCard = ({
     try {
       const data = await generateQuiz({
         topicId: topicId,
-        grade: parseInt(userGrade),
+        grade: userGrade,
         subjectId: subjectId,
         userId: userId,
         start: true,

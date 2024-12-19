@@ -23,7 +23,7 @@ export default function NewQuizPage() {
       const topic = await getTopicById(topicId);
       const data = await generateQuiz({
         topicId: topicId,
-        grade: parseInt(topic?.grade || "1"),
+        grade: topic?.grade,
         subjectId: topic?.subject_id,
         userId: userId,
         start: true,
