@@ -62,7 +62,7 @@ export async function generateQuiz({
     topicId,
   });
 
-  if (questions.length === 0) return null;
+  if (questions.length === 0) return { data: null };
 
   const { data, error } = await supabase
     .from("quiz")

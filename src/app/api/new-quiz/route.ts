@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
   try {
     // Get topic details first
-    const topic = await getTopicById(topicId);
+    const topic = await getTopicById(parseInt(topicId));
     if (!topic) {
       return response.json(
         { error: "Topic not found" },
