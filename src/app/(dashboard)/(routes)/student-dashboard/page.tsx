@@ -127,7 +127,7 @@ const PageContent = () => {
     }
   }, []);
   useEffect(() => {
-    if (!isWebView && userRole === "guest" && grade == "undefined") {
+    if (!isWebView && userRole === "guest" && grade === undefined) {
       setIsPopupOpen(true);
     }
   }, [userRole, grade]);
