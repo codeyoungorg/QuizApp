@@ -83,17 +83,22 @@
 
 .cardDescription {
   font-family: var(--font-inter);
-  font-size: 16px;
-  font-weight: 400;
-  color: #a3a3a3;
+  background: linear-gradient(123.74deg, #ecf3f2 -2.88%, #dfeceb 103.53%);
+  height: 33px;
+  border-radius: 6px;
+  font-weight: 500;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  color: #6c9d9d;
 }
-
 .cardSubTitle {
   font-family: var(--font-inter);
   font-size: 16px;
   font-weight: 400;
   color: #6c9d9d;
-  margin-bottom: 15px;
+  min-height: 70px;
 }
 
 .getStartedBtn {
@@ -119,11 +124,11 @@
   .cardLayout {
     min-height: 350px;
   }
-  .boxContainer{
-  position: absolute;
-  bottom: 0;
-  margin-top: 10px;
-}
+  .boxContainer {
+    position: absolute;
+    bottom: 0;
+    margin-top: 10px;
+  }
 }
 /* Subject list screen */
 

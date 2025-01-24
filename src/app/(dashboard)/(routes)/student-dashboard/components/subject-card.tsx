@@ -144,7 +144,7 @@ const SubjectCard = ({
               >
                 {answeredCount && (
                   <span className="lg:text-sm xs:text-[11px] font-medium leading-[16.94px] text-left mt-auto mb-auto">
-                    {answeredCount} answered
+                    {answeredCount} points
                   </span>
                 )}
               </span>

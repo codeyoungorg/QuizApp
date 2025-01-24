@@ -1,5 +1,6 @@
 "use client";
 
+import { LinearProgress } from "@mui/material";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import LanguageImage from "@/public/images/icons/language-card.svg";
@@ -10,15 +11,22 @@ export default function LanguageCard({
   lang,
   langId,
   totalQuestions,
+  completedQuestions = 12,
 }: {
   lang: string;
   langId: number;
   totalQuestions: { id: number; language_id: number }[];
+  completedQuestions?: number;
 }) {
   const router = useRouter();
   const totalQuestionsCount = totalQuestions.filter(
     (item) => item.language_id === langId
   ).length;
+
+  const progress =
+    totalQuestionsCount === 0
+      ? 0
+      : (completedQuestions / totalQuestionsCount) * 100;
 
   return (
     <div className="bg-[#F5F9FF] shadow-[0px_0px_8px_0px_#0053F429] p-8 rounded-xl max-w-xl w-full mx-auto my-10 flex items-center gap-8">
@@ -30,9 +38,29 @@ export default function LanguageCard({
         />
       </div>
       <div className="space-y-4">
-        <h1 className="text-[#5B8989] font-semibold text-lg">
-          You have {totalQuestionsCount} sets of flashcards to practice
-        </h1>
+        {completedQuestions == 0 ? (
+          <h1 className="text-[#5B8989] font-semibold text-lg">
+            You have {totalQuestionsCount} sets of flashcards to practice
+          </h1>
+        ) : (
+          <>
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              className="w-full"
+              sx={{
+                backgroundColor: "rgb(209 213 219)",
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "#F0A919",
+                },
+                height: 18,
+                borderRadius: 1,
+              }}
+            />
+            <p className="text-lg font-semibold text-[#5B8989]">{`Completed ${completedQuestions} of ${totalQuestionsCount} cards`}</p>
+          </>
+        )}
+
         <Button
           onClick={() => router.push("/languages?lang=" + lang + "#topics")}
           className="text-white bg-[#E98451] p-4 rounded-lg hover:bg-[#e69167]"

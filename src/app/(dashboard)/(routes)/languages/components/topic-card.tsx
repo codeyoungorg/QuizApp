@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import Lock from "@/public/images/icons/lock-white.png";
 import { getCardIcon } from "../_utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/tooltip";
 import saveGTMEvents from "@/lib/gtm";
 import { getCookie } from "cookies-next";
+import star from "@/public/images/icons/pointsStar.png";
+import tickIcon from "@/public/images/icons/tickIcon.png";
 
 type TopicCardProps = {
   lock: boolean;
@@ -38,6 +40,26 @@ export default function TopicCard({
   const router = useRouter();
   const lang = searchParams.get("lang");
   const [selectedState, setSelectedState] = useState<string>("");
+  const [correctAnswer, setCorrectAnswer] = useState<number>(0);
+
+  const getNumCorrectSubmissions = (data: any[]) => {
+    let numCorrect = 0;
+    for (const submission of data) {
+      for (const submissionItem of submission.submission) {
+        if (submissionItem.isCorrect) {
+          numCorrect++;
+        }
+      }
+    }
+    return numCorrect;
+  };
+
+  useEffect(() => {
+    // Solution will come here
+    const data = getNumCorrectSubmissions(topic.languages_quiz);
+    console.log(data);
+    setCorrectAnswer(data);
+  }, []);
 
   const quizSubmission = topic?.languages_quiz.sort(
     (a, b) => a.card_state - b.card_state
@@ -73,6 +95,10 @@ export default function TopicCard({
     if (!state || !hasCompletedAllStates) return "";
     return `Level ${Math.ceil(parseInt(state.split("-")[0]) / 5)}`;
   };
+  
+  const getLevelNumber = (index: number) => {
+    return `Level ${index + 1}`;
+  };
 
   const getStatePoints = (stateNumber: number) => {
     const quiz = topic?.languages_quiz.find(
@@ -100,10 +126,10 @@ export default function TopicCard({
   const handleLearnButtonClick = () => {
     saveGTMEvents({
       eventAction: "learn_language_opened",
-      label: userId?"Student":"Guest",
-      label1: userId?.toString()||null,
+      label: userId ? "Student" : "Guest",
+      label1: userId?.toString() || null,
       label2: lang,
-      label3: topic.name||null,
+      label3: topic.name || null,
       label4: null,
     });
     router.push(
@@ -117,10 +143,10 @@ export default function TopicCard({
   const handleClickForQuiz = () => {
     saveGTMEvents({
       eventAction: "test_language_opened",
-      label: userId?"Student":"Guest",
-      label1: userId?.toString()||null,
+      label: userId ? "Student" : "Guest",
+      label1: userId?.toString() || null,
       label2: lang,
-      label3: topic.name||null,
+      label3: topic.name || null,
       label4: null,
     });
     router.push(
@@ -131,8 +157,6 @@ export default function TopicCard({
       }`
     );
   };
-  
-  
 
   return (
     <div className="px-2 h-full">
@@ -152,41 +176,79 @@ export default function TopicCard({
               {topic.name}
             </h3>
           </div>
-          <p className="text-sm text-[#A3A3A3] font-medium">
-            <span className="font-bold">{cards}</span> flash cards available
-          </p>
+          {lock || correctAnswer == 0 ? (
+            <div className="flex flex-row items-center">
+              <Image
+                src={star}
+                alt="new-icon"
+                width={16}
+                height={16}
+                className="w-5 h-5 mr-1"
+              />
+              <p className="text-sm text-[#569090] font-medium">
+                <span className="font-bold">{cards}</span> flash cards available
+              </p>
+            </div>
+          ) : hasCompletedAllStates ? (
+            <div className="text-sm text-[#49AB9E] font-medium flex flex-row items-center">
+              <Image
+                src={tickIcon}
+                alt="new-icon"
+                width={14}
+                height={14}
+                className="w-5 h-5 mr-1"
+              />
+              Completed
+            </div>
+          ) : (
+            <div className="text-sm text-[#569090] font-medium flex flex-row items-center">
+              <Image
+                src={star}
+                alt="new-icon"
+                width={16}
+                height={16}
+                className="w-5 h-5 mr-1"
+              />
+              {correctAnswer}/20
+            </div>
+          )}
           <div className="flex flex-col gap-2 pt-4">
             <div className="flex items-center gap-2">
               {Array.from({ length: Math.ceil(cards / 5) }).map((_, index) => (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div
-                        onClick={() =>
-                          hasCompletedAllStates &&
-                          setSelectedState(stateToRange(index + 1))
-                        }
-                        className={cn(
-                          "w-full max-w-12 h-1.5 rounded-full transition-all duration-200",
-                          hasCompletedAllStates
-                            ? "cursor-pointer hover:opacity-80"
-                            : "cursor-default",
-                          selectedState === stateToRange(index + 1)
-                            ? "bg-[#F0A919]"
-                            : "bg-[#f2c445]",
-                          index < topic?.languages_quiz.length
-                            ? "opacity-100"
-                            : "opacity-30"
-                        )}
-                      />
-                    </TooltipTrigger>
-                    {index < topic?.languages_quiz.length && (
-                      <TooltipContent className="bg-[#517B7B] text-white px-2 py-1 rounded text-xs">
-                        {getStatePoints(index + 1)} pts
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
+                <div className="flex flex-col items-center w-full" key={index}>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          onClick={() =>
+                            hasCompletedAllStates &&
+                            setSelectedState(stateToRange(index + 1))
+                          }
+                          className={cn(
+                            "w-full h-1.5 rounded-full transition-all duration-200",
+                            hasCompletedAllStates
+                              ? "cursor-pointer hover:opacity-80"
+                              : "cursor-default",
+                            selectedState === stateToRange(index + 1)
+                              ? "bg-[#F0A919]"
+                              : "bg-[#f2c445]",
+                            index < topic?.languages_quiz.length
+                              ? "opacity-100"
+                              : "opacity-30"
+                          )}
+                        />
+                      </TooltipTrigger>
+                      {index < topic?.languages_quiz.length && (
+                        <TooltipContent className="bg-[#517B7B] text-white px-2 py-1 rounded text-xs">
+                          {getNumCorrectSubmissions(topic.languages_quiz)} pts
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                  <p className="text-sm text-[#517B7B] mt-1 font-medium">
+                      {getLevelNumber(index)}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
