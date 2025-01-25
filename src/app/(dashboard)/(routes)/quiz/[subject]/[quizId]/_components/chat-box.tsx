@@ -257,7 +257,7 @@ export default function Chat({
           topicId:currentQuestion?.topic_id,
           difficulty:currentQuestion?.difficulty_level,
           quizId: parseInt(quizId),
-          questionId: currentQuestion?.id,
+          questionId: [currentQuestion?.id],
         }
       });
       setQuestionIndex((questionIndex) => questionIndex + 1);
