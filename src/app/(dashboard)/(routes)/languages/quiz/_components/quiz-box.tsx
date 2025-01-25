@@ -205,7 +205,7 @@ export default function QuizBox({
         if (data) {
           await captureEvent({
             data: {
-              type:"language",
+              type:"language-practice",
               subject: lang,
               quizId:data.id,
               topicId,

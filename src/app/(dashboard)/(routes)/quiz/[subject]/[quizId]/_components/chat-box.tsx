@@ -252,7 +252,7 @@ export default function Chat({
       // Move to the next question
       await captureEvent({
         data: {
-          type:"coding-subjects",
+          type:"coding",
           subject:currentQuestion.subject,
           topicId:currentQuestion?.topic_id,
           difficulty:currentQuestion?.difficulty_level,

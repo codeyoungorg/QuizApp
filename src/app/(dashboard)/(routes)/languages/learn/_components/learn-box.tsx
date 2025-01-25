@@ -113,7 +113,6 @@ export default function LearnBox({
     } else if (isCorrect) {
       setCorrectAnswers((prev) => prev + 1);
     }
-    console.log("type 2");
     // const res = await captureEvent({data: {}});
   };
 
@@ -135,8 +134,17 @@ export default function LearnBox({
         topicId,
         levelId,
       });
-
       if (data) {
+        await captureEvent({
+          data: {
+            type:"language-learn",
+            subject: lang,
+            quizId:data.id,
+            topicId,
+            difficulty: levelId,
+            questionId: learningSubmissions.map(row=>row.questionId),
+          }
+        });
         setIsCompleted(true);
       }
     } catch (error) {
