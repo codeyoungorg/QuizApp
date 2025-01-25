@@ -19,7 +19,6 @@ export const captureEvent = async ({ data }) => {
       });
     }
   } catch (error) {
-    // console.error("unab", error);
     // throw error;
   }
 };
