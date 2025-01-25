@@ -216,8 +216,16 @@ export default function QuizBox({
 
       if (allQuestionsAnswered) return;
 
-      console.log("type 1");
-      // const res = await captureEvent({data: {}});
+      await captureEvent({
+        data: {
+          type:"GK",
+          subject:currentQuestion.subject,
+          topic:currentQuestion?.topic,
+          difficulty:currentQuestion?.difficulty_level,
+          quizId: parseInt(quizId),
+          questionId: currentQuestion?.id,
+        }
+      });
       // Move to the next question
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },

@@ -250,9 +250,9 @@ export default function Chat({
 
       if (allQuestionsAnswered) return;
       // Move to the next question
-      const res = await captureEvent({
+      await captureEvent({
         data: {
-          type:4,
+          type:"coding-subjects",
           subject:currentQuestion.subject,
           topicId:currentQuestion?.topic_id,
           difficulty:currentQuestion?.difficulty_level,
