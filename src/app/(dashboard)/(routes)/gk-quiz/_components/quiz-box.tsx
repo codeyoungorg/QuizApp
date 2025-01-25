@@ -30,7 +30,7 @@ import {
 } from "@/actions/gk-quiz";
 import saveGTMEvents from "@/lib/gtm";
 import apiService from "@/lib/apiService";
-import { saveStreak } from "@/lib/quiz/apiClient";
+import { captureEvent } from "@/lib/quiz/apiClient";
 
 type SubmissionType = {
   questionId: string;
@@ -216,7 +216,8 @@ export default function QuizBox({
 
       if (allQuestionsAnswered) return;
 
-      const res = await saveStreak();
+      console.log("type 1");
+      // const res = await captureEvent({data: {}});
       // Move to the next question
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },

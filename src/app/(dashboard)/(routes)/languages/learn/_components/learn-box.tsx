@@ -9,7 +9,7 @@ import { LanguageDB } from "../_types";
 import { saveLearningData } from "@/actions/language.actions";
 import { CompletionCard } from "./completion-card";
 import saveGTMEvents from "@/lib/gtm";
-import { saveStreak } from "@/lib/quiz/apiClient";
+import { captureEvent } from "@/lib/quiz/apiClient";
 
 type LearningSubmission = {
   questionId: number;
@@ -113,7 +113,8 @@ export default function LearnBox({
     } else if (isCorrect) {
       setCorrectAnswers((prev) => prev + 1);
     }
-    const res = await saveStreak();
+    console.log("type 2");
+    // const res = await captureEvent({data: {}});
   };
 
   const resetQuiz = () => {

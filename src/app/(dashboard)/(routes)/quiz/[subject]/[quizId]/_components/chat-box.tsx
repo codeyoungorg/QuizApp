@@ -35,7 +35,7 @@ import {
   updateQuizToComplete,
 } from "@/actions/quiz.client";
 import saveGTMEvents from "@/lib/gtm";
-import { saveStreak } from "@/lib/quiz/apiClient";
+import { captureEvent } from "@/lib/quiz/apiClient";
 
 type ChatProps = {
   quizData: QuizDataType;
@@ -250,7 +250,16 @@ export default function Chat({
 
       if (allQuestionsAnswered) return;
       // Move to the next question
-      const res = await saveStreak();
+      const res = await captureEvent({
+        data: {
+          type:4,
+          subject:currentQuestion.subject,
+          topicId:currentQuestion?.topic_id,
+          difficulty:currentQuestion?.difficulty_level,
+          quizId: parseInt(quizId),
+          questionId: currentQuestion?.id,
+        }
+      });
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },
     [checkAnswer, questionIndex, questionList]
