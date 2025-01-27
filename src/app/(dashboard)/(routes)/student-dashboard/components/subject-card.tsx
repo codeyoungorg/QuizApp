@@ -127,7 +127,7 @@ const SubjectCard = ({
                 )}
               </span>
             )}
-            {points && status && (
+          {/*   {points && status && (
               <span
                 className={`flex flex-row p-[8px] gap-[8px] rounded-[6px] tags-${cardClassName} ml-4`}
               >
@@ -137,14 +137,14 @@ const SubjectCard = ({
                   </span>
                 )}
               </span>
-            )}
+            )} */}
             {(rank || answeredCount) && status && (
               <span
                 className={`flex flex-row p-[8px] gap-[8px] rounded-[6px] tags-${cardClassName} ml-4`}
               >
                 {answeredCount && (
                   <span className="lg:text-sm xs:text-[11px] font-medium leading-[16.94px] text-left mt-auto mb-auto">
-                    {answeredCount} answered
+                    {answeredCount} points
                   </span>
                 )}
               </span>
