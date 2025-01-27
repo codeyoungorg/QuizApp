@@ -16,6 +16,15 @@ import TopicCardCarousel from "./components/topic-card/topic-card-carousel";
 import saveGTMEvents from "@/lib/gtm";
 import TopicCard from "./components/topic-card/topic-card";
 import ClipLoader from "react-spinners/ClipLoader";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  useCarousel,
+} from "@/components/ui/carousel";
+import { cn } from "@/lib/utils";
 
 type TopicCardLayout = {
   badge: string | null;
@@ -37,6 +46,7 @@ const PageContent = () => {
     topTenStudentList: [],
   });
   const [studentActivity, setStudentActivity] = useState([]);
+  const [completedQuestion, setCompletedQuestion] = useState(null);
   const [streakData, setStreakData] = useState({});
   const [studentData, setStudentData] = useState(null);
   const [topicData, setTopicData] = useState<TopicCardLayoutArr>([]);
@@ -54,7 +64,6 @@ const PageContent = () => {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setClientTimezone(tz);
   }, []);
-  
 
   let sub = "";
   let subjectId: any = null;
@@ -73,7 +82,7 @@ const PageContent = () => {
     subjectId = constants.SUBJECT_IDS.ENGLISH;
     quizPath = "english";
   }
-  
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -115,6 +124,7 @@ const PageContent = () => {
             setStudentActivity(activityData.response.activity);
             setStreakData(activityData.response.streak);
           }
+          setCompletedQuestion(activityData.response.correctSubjectCount)
 
           const currentStudent =
             dashboardData.response.leaderboard.topTenStudentList.find(
@@ -181,6 +191,7 @@ const PageContent = () => {
           <div className="flex lg:flex-row xs:flex-col justify-center gap-8 lg:mt-14 md:mt-6 xs:mt-12 mb-10">
             <Activity
               subject={subject}
+              earnedPoints={completedQuestion}
               studentActivity={studentActivity}
               streakData={streakData}
               studentData={studentData}
@@ -209,14 +220,57 @@ const PageContent = () => {
             </div>
           )}
           <div className="lg:mt-20 md:mt-12 md:inline xs:hidden">
-            <TopicCardCarousel
+            {/* <TopicCardCarousel
               items={topicData}
               loading={topicLoader}
               subjectId={subjectId}
               subjectName={quizPath}
               userId={userId!}
               userGrade={userGrade!}
-            />
+            /> */}
+            <Carousel
+              opts={{
+                align: "start",
+                loop: false,
+              }}
+              className="w-full relative hidden sm:flex"
+            >
+              <CarouselContent className="-ml-2">
+                {topicData &&
+                  topicData.map((item, index) => {
+                    return (
+                      <CarouselItem
+                        key={index}
+                        className="md:basis-1/2 lg:basis-1/2 xl:basis-1/3"
+                      >
+                        <div key={index} className="topic-card-wrapper">
+                          <TopicCard
+                            topic={item.topicName}
+                            badge={item.badge}
+                            rating={item.totalScore}
+                            totalQnsAnswered={item.totalQuestion}
+                            subjectId={subjectId}
+                            subjectName={quizPath}
+                            topicId={item.topicId}
+                            userId={userId}
+                            userGrade={userGrade}
+                          />
+                        </div>
+                      </CarouselItem>
+                    );
+                  })}
+              </CarouselContent>
+              <CarouselPrevious
+                className={cn(
+                  "h-full -left-10 rounded-none shadow-md bg-white hover:bg-gray-50 text-[#517B7B] hidden lg:flex"
+                )}
+              />
+              <CarouselNext
+                className={cn(
+                  "h-full -right-10 rounded-none shadow-md bg-white hover:bg-gray-50 text-[#517B7B] hidden lg:flex"
+                )}
+              />
+            </Carousel>
           </div>
           {topicLoader ? (
             <div className="md:hidden flex flex-row justify-center mt-16 mb-16">

@@ -15,6 +15,7 @@ import saveGTMEvents from "@/lib/gtm";
 
 const activity = ({
   subject,
+  earnedPoints,
   studentActivity,
   streakData,
   studentData,
@@ -23,6 +24,7 @@ const activity = ({
   loading,
 }: {
   subject: string | null;
+  earnedPoints: any;
   studentActivity: any;
   streakData: any;
   studentData: any;
@@ -167,9 +169,8 @@ const activity = ({
                       <div className="streakTxt">daily streak</div>
                     </div>
                   </div>
-                  <div className="streakDescription">
-                    <strong>{`${streakData?.totalQuestions}`}</strong> questions
-                    completed
+                  <div className="streakDescription text-[#A3A3A3]">
+                    <strong>{`${earnedPoints}`}</strong> points earned
                   </div>
                 </div>
               </div>

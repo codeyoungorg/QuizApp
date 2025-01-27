@@ -99,6 +99,7 @@ const PageContent = () => {
   });
   const [studentActivity, setStudentActivity] = useState([]);
   const [streakData, setStreakData] = useState({});
+  const [completedQuestion, setCompletedQuestion] = useState(null);
   const [studentData, setStudentData] = useState(null);
   const [avatar, setAvatar] = useState<string>("");
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
@@ -190,6 +191,7 @@ const PageContent = () => {
             setStudentActivity(activityData.response.activity);
             setStreakData(activityData.response.streak);
           }
+          setCompletedQuestion(activityData.response.correctSubjectCount)
 
           const currentStudent =
             dashboardData.response.leaderboard.topTenStudentList.find(
@@ -283,6 +285,7 @@ const PageContent = () => {
           <div className="flex lg:flex-row xs:flex-col justify-center gap-8 lg:mt-14 md:mt-12 xs:mt-6 mb-10">
             <Activity
               subject={null}
+              earnedPoints={completedQuestion}
               studentActivity={studentActivity}
               streakData={streakData}
               studentData={studentData}
