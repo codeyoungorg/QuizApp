@@ -12,6 +12,7 @@ import ActivityStreak from "./activity-streak";
 import ClipLoader from "react-spinners/ClipLoader";
 import { getCookie } from "cookies-next";
 import saveGTMEvents from "@/lib/gtm";
+import star from "@/public/images/icons/pointsStar.png";
 
 const activity = ({
   subject,
@@ -169,7 +170,14 @@ const activity = ({
                       <div className="streakTxt">daily streak</div>
                     </div>
                   </div>
-                  <div className="streakDescription text-[#A3A3A3]">
+                  <div className="flex flex-row gap-[6px] streakDescription text-[#A3A3A3]">
+                    <Image
+                      src={star}
+                      alt="new-icon"
+                      width={16}
+                      height={16}
+                      className="w-5 h-5"
+                    />
                     <strong>{`${earnedPoints}`}</strong> points earned
                   </div>
                 </div>
