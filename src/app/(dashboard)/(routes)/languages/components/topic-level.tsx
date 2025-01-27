@@ -13,6 +13,7 @@ import Lock from "@/public/images/icons/lock.svg";
 import Image from "next/image";
 import { LanguageDB, LanguageQuiz } from "../learn/_types";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 type Props = {
   level: {
@@ -60,6 +61,18 @@ export default function TopicLevel({ level, data }: Props) {
 
   const isLevelUnlocked =
     level.level === 1 || previousLevelPoints >= totalPreviousLevelPoints * 0.85;
+
+  useEffect(() => {
+    let totalCorrect = 0;
+    for (const topic of data) {
+      if (topic.languages_quiz && topic.languages_quiz.length > 0) {
+        for (const quiz of topic.languages_quiz) {
+          totalCorrect += quiz.correct;
+        }
+      }
+    }
+    localStorage.setItem("totalCorrectAnswers", totalCorrect.toString());
+  }, [data]);
 
   return (
     <div className="space-y-4" key={level.id}>

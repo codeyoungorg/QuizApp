@@ -37,6 +37,7 @@ const PageContent = () => {
     topTenStudentList: [],
   });
   const [studentActivity, setStudentActivity] = useState([]);
+  const [completedQuestion, setCompletedQuestion] = useState(null);
   const [streakData, setStreakData] = useState({});
   const [studentData, setStudentData] = useState(null);
   const [topicData, setTopicData] = useState<TopicCardLayoutArr>([]);
@@ -54,7 +55,6 @@ const PageContent = () => {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setClientTimezone(tz);
   }, []);
-  
 
   let sub = "";
   let subjectId: any = null;
@@ -73,7 +73,7 @@ const PageContent = () => {
     subjectId = constants.SUBJECT_IDS.ENGLISH;
     quizPath = "english";
   }
-  
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -115,6 +115,7 @@ const PageContent = () => {
             setStudentActivity(activityData.response.activity);
             setStreakData(activityData.response.streak);
           }
+          setCompletedQuestion(activityData.response.correctSubjectCount);
 
           const currentStudent =
             dashboardData.response.leaderboard.topTenStudentList.find(
@@ -181,6 +182,7 @@ const PageContent = () => {
           <div className="flex lg:flex-row xs:flex-col justify-center gap-8 lg:mt-14 md:mt-6 xs:mt-12 mb-10">
             <Activity
               subject={subject}
+              earnedPoints={completedQuestion}
               studentActivity={studentActivity}
               streakData={streakData}
               studentData={studentData}
