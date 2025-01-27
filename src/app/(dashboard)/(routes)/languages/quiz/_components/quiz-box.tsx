@@ -149,8 +149,6 @@ export default function QuizBox({
         return isCorrect ? prev + 1 : prev;
       }
     });
-    // const res = await captureEvent();
-    // Do this only when quiz is generated
   };
 
   const resetQuiz = () => {
@@ -209,7 +207,7 @@ export default function QuizBox({
               subject: lang,
               quizId:data.id,
               topicId,
-              difficulty: levelId,
+              difficulty: quizSubmissions.map(row=>levelId),
               questionId: quizSubmissions.map(row=>row.questionId),
             }
           });

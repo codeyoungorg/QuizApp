@@ -255,7 +255,7 @@ export default function Chat({
           type:"coding",
           subject:currentQuestion.subject,
           topicId:currentQuestion?.topic_id,
-          difficulty:currentQuestion?.difficulty_level,
+          difficulty: [currentQuestion?.difficulty_level],
           quizId: parseInt(quizId),
           questionId: [currentQuestion?.id],
         }

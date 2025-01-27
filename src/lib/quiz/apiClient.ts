@@ -5,14 +5,9 @@ export const captureEvent = async ({ data }) => {
   const userId = getCookie("userId");
   const userRole = getCookie("userRole");
   try {
-    const types = [
-      "gk",
-      "coding",
-      "language-learn",
-      "language-practice",
-    ];
-    if(types.includes(data.type)){
-      const response = await apiService.post(`quiz/submit`, {
+    const inclusion = [ "gk","coding", "language-practice"]; // "language-learn",
+    if(inclusion.includes(data.type)){
+      await apiService.post(`quiz/submit`, {
         userId,
         userRole,
         ...data
