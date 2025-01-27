@@ -110,6 +110,7 @@ const PageContent = () => {
   const grade = getCookie("grade");
   const [mounted, setMounted] = useState<boolean>(false);
   const [isWebView, setIsWebView] = useState(false);
+  const [totalPoints, setTotalPoints] = useState(0)
 
   useEffect(() => {
     // Check if we're in a WebView environment
@@ -155,6 +156,7 @@ const PageContent = () => {
               : null;
           });
           setSubjectData(updatedSubjectData);
+          setTotalPoints(data.totalPoints)
         } catch (err) {
           console.error("Error fetching data:", err);
         }
@@ -240,7 +242,7 @@ const PageContent = () => {
               height={24}
               className="w-5 h-5 mr-2"
             />
-            You have earned <span className="earned-pts-highlight">“7985 points”</span> so far
+            You have earned <span className="earned-pts-highlight">“{totalPoints} points”</span> so far
             <Image
               src={rocket}
               alt="new-icon"

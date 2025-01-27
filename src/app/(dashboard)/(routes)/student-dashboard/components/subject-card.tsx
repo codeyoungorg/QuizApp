@@ -127,7 +127,7 @@ const SubjectCard = ({
                 )}
               </span>
             )}
-            {points && status && (
+          {/*   {points && status && (
               <span
                 className={`flex flex-row p-[8px] gap-[8px] rounded-[6px] tags-${cardClassName} ml-4`}
               >
@@ -137,7 +137,7 @@ const SubjectCard = ({
                   </span>
                 )}
               </span>
-            )}
+            )} */}
             {(rank || answeredCount) && status && (
               <span
                 className={`flex flex-row p-[8px] gap-[8px] rounded-[6px] tags-${cardClassName} ml-4`}

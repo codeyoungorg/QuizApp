@@ -55,15 +55,28 @@ export default function TopicCard({
   };
 
   useEffect(() => {
-    // Solution will come here
     const data = getNumCorrectSubmissions(topic.languages_quiz);
-    console.log(data);
     setCorrectAnswer(data);
   }, []);
+
+  const getNumCorrectSubmissionsLevelWise = (data: any) => {
+    if (!data) return 0;
+    const totalCorrectAnswers = data.submission.reduce(
+      (acc: any, submission: any) => {
+        if (submission.isCorrect) {
+          return acc + 1;
+        }
+        return acc;
+      },
+      0
+    );
+    return totalCorrectAnswers;
+  };
 
   const quizSubmission = topic?.languages_quiz.sort(
     (a, b) => a.card_state - b.card_state
   )[topic?.languages_quiz.length - 1];
+
 
   const hasCompletedAllStates = topic?.languages_quiz.length === 4;
 
@@ -95,7 +108,7 @@ export default function TopicCard({
     if (!state || !hasCompletedAllStates) return "";
     return `Level ${Math.ceil(parseInt(state.split("-")[0]) / 5)}`;
   };
-  
+
   const getLevelNumber = (index: number) => {
     return `Level ${index + 1}`;
   };
@@ -176,7 +189,7 @@ export default function TopicCard({
               {topic.name}
             </h3>
           </div>
-          {lock || correctAnswer == 0 ? (
+          {lock ? (
             <div className="flex flex-row items-center">
               <Image
                 src={star}
@@ -209,7 +222,7 @@ export default function TopicCard({
                 height={16}
                 className="w-5 h-5 mr-1"
               />
-              {correctAnswer}/20
+              {correctAnswer}/20 done
             </div>
           )}
           <div className="flex flex-col gap-2 pt-4">
@@ -226,27 +239,95 @@ export default function TopicCard({
                           }
                           className={cn(
                             "w-full h-1.5 rounded-full transition-all duration-200",
+                            hasCompletedAllStates &&
+                              getNumCorrectSubmissionsLevelWise(
+                                topic?.languages_quiz[index]
+                              ) < 5 &&
+                              getNumCorrectSubmissionsLevelWise(
+                                topic?.languages_quiz[index + 1]
+                              ) > 0
+                              ? "bg-[#F38C85]"
+                              : getNumCorrectSubmissionsLevelWise(
+                                  topic?.languages_quiz[index]
+                                ) > 0 &&
+                                getNumCorrectSubmissionsLevelWise(
+                                  topic?.languages_quiz[index]
+                                ) < 5 &&
+                                !hasCompletedAllStates
+                              ? "bg-[#E98451]"
+                              : getNumCorrectSubmissionsLevelWise(
+                                  topic?.languages_quiz[index]
+                                ) == 5 && !hasCompletedAllStates
+                              ? "bg-[#49AB9E]"
+                              : "bg-[#E2D4C1]",
                             hasCompletedAllStates
                               ? "cursor-pointer hover:opacity-80"
                               : "cursor-default",
-                            selectedState === stateToRange(index + 1)
+                            selectedState === stateToRange(index + 1) && hasCompletedAllStates
                               ? "bg-[#F0A919]"
-                              : "bg-[#f2c445]",
+                              : hasCompletedAllStates && "bg-[#E2D4C1]",
                             index < topic?.languages_quiz.length
                               ? "opacity-100"
                               : "opacity-30"
                           )}
                         />
                       </TooltipTrigger>
+                      {index < topic?.languages_quiz.length &&
+                        hasCompletedAllStates &&
+                        getNumCorrectSubmissionsLevelWise(
+                          topic?.languages_quiz[index]
+                        ) < 5 &&
+                        getNumCorrectSubmissionsLevelWise(
+                          topic?.languages_quiz[index + 1]
+                        ) > 0 && (
+                          <TooltipContent className="bg-[#FEEDEC] text-[#D0595E] px-2 py-1 rounded text-xs">
+                            {5 -
+                              getNumCorrectSubmissionsLevelWise(
+                                topic?.languages_quiz[index]
+                              )}
+                            flashcards pening
+                          </TooltipContent>
+                        )}
                       {index < topic?.languages_quiz.length && (
                         <TooltipContent className="bg-[#517B7B] text-white px-2 py-1 rounded text-xs">
-                          {getNumCorrectSubmissions(topic.languages_quiz)} pts
+                          {getNumCorrectSubmissionsLevelWise(
+                            topic?.languages_quiz[index]
+                          )}
+                          /5
                         </TooltipContent>
                       )}
                     </Tooltip>
                   </TooltipProvider>
-                  <p className="text-sm text-[#517B7B] mt-1 font-medium">
-                      {getLevelNumber(index)}
+                  <p
+                    className={cn(
+                      "text-sm text-[#517B7B] mt-1 font-medium",
+                      hasCompletedAllStates &&
+                        getNumCorrectSubmissionsLevelWise(
+                          topic?.languages_quiz[index]
+                        ) < 5 &&
+                        getNumCorrectSubmissionsLevelWise(
+                          topic?.languages_quiz[index + 1]
+                        ) > 0
+                        ? "text-[#F38C85]"
+                        : getNumCorrectSubmissionsLevelWise(
+                            topic?.languages_quiz[index]
+                          ) > 0 &&
+                          getNumCorrectSubmissionsLevelWise(
+                            topic?.languages_quiz[index]
+                          ) < 5 &&
+                          !hasCompletedAllStates
+                        ? "text-[#E98451]"
+                        : getNumCorrectSubmissionsLevelWise(
+                            topic?.languages_quiz[index + 1]
+                          ) == 5 && !hasCompletedAllStates
+                        ? "text-[#49AB9E]"
+                        : "text-[#E2D4C1]",
+                        selectedState === stateToRange(index + 1) && hasCompletedAllStates
+                        ? "text-[#F0A919]"
+                        : hasCompletedAllStates && "text-[#E2D4C1]",
+                    )}
+                  >
+                    {getLevelNumber(index)}
                   </p>
                 </div>
               ))}
@@ -270,15 +351,50 @@ export default function TopicCard({
               />
             </Button>
           </CardFooter>
+        ) : hasCompletedAllStates ? (
+          <CardFooter className="flex flex-col px-6 gap-3 mt-auto">
+            <div className="flex justify-between w-full gap-6">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={handleLearnButtonClick}
+                      className="bg-[#F0A919] hover:bg-yellow-500 text-white w-full"
+                    >
+                      Learn{" "}
+                      {hasCompletedAllStates &&
+                        selectedState &&
+                        `(${getLevelText(selectedState)})`}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-[#517B7B] text-white px-2 py-1 rounded text-xs">
+                    Click on any level bar to continue
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={handleClickForQuiz}
+                      className="bg-[#E98451] hover:bg-orange-500 text-white w-full disabled:opacity-50"
+                    >
+                      Practice{" "}
+                      {hasCompletedAllStates &&
+                        selectedState &&
+                        `(${getLevelText(selectedState)})`}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-[#517B7B] text-white px-2 py-1 rounded text-xs">
+                    Click on any level bar to continue
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </CardFooter>
         ) : (
           <CardFooter className="flex flex-col px-6 gap-3 mt-auto">
-            {hasCompletedAllStates && (
-              <div className="mr-auto">
-                <p className="text-sm text-[#517B7B] font-medium">
-                  Click on any level bar to practice again
-                </p>
-              </div>
-            )}
             <div className="flex justify-between w-full gap-6">
               <Button
                 onClick={handleLearnButtonClick}
