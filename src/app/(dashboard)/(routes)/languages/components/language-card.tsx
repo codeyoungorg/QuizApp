@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { LinearProgress } from "@mui/material";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -11,17 +12,21 @@ export default function LanguageCard({
   lang,
   langId,
   totalQuestions,
-  completedQuestions = 12,
 }: {
   lang: string;
   langId: number;
   totalQuestions: { id: number; language_id: number }[];
-  completedQuestions?: number;
 }) {
   const router = useRouter();
+  const [completedQuestions, setCompletedQuestions] = useState(0);
   const totalQuestionsCount = totalQuestions.filter(
     (item) => item.language_id === langId
   ).length;
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem("totalCorrectAnswers");
+    setCompletedQuestions(Number(storedValue));
+  }, []);
 
   const progress =
     totalQuestionsCount === 0
