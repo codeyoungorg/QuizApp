@@ -311,7 +311,7 @@ export default function TopicCard({
           </div>
         </CardContent>
         {lock ? (
-          <CardFooter className="flex justify-between p-6 gap-6 mt-auto">
+          <CardFooter className="flex justify-between px-6 gap-6 mt-auto">
             <Button
               disabled={lock}
               onClick={() => {}}
