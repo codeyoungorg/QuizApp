@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import saveGTMEvents from "@/lib/gtm";
 import { getCookie } from "cookies-next";
-import star from "@/public/images/icons/pointsStar.png";
+import star from "@/public/images/icons/pointsStar.svg";
 import tickIcon from "@/public/images/icons/tickIcon.png";
 
 type TopicCardProps = {
@@ -77,8 +77,9 @@ export default function TopicCard({
     (a, b) => a.card_state - b.card_state
   )[topic?.languages_quiz.length - 1];
 
-
-  const hasCompletedAllStates = topic?.languages_quiz.length === 4;
+  const hasAttemptedAllStates = topic?.languages_quiz.length === 4;
+  const hasCompletedAllStates =
+    getNumCorrectSubmissions(topic.languages_quiz) === 20;
 
   const stateToRange = (state: number) => {
     switch (state) {
@@ -105,7 +106,7 @@ export default function TopicCard({
       : "1-5";
 
   const getLevelText = (state: string | null) => {
-    if (!state || !hasCompletedAllStates) return "";
+    if (!state || !hasAttemptedAllStates) return "";
     return `Level ${Math.ceil(parseInt(state.split("-")[0]) / 5)}`;
   };
 
@@ -121,7 +122,7 @@ export default function TopicCard({
   };
 
   const getStateWithLowestPoints = () => {
-    if (!hasCompletedAllStates) return nextState;
+    if (!hasAttemptedAllStates) return nextState;
 
     let lowestPoints = Infinity;
     let stateWithLowestPoints = "1-5";
@@ -147,7 +148,7 @@ export default function TopicCard({
     });
     router.push(
       `/languages/learn?lang=${lang}&topic=${topic.id}&level=${levelId}&cards=${
-        hasCompletedAllStates
+        hasAttemptedAllStates
           ? selectedState || getStateWithLowestPoints()
           : nextState
       }&topicName=${topic.name}`
@@ -164,7 +165,7 @@ export default function TopicCard({
     });
     router.push(
       `/languages/quiz?lang=${lang}&topic=${topic.id}&level=${levelId}&cards=${
-        hasCompletedAllStates
+        hasAttemptedAllStates
           ? selectedState || getStateWithLowestPoints()
           : nextState
       }`
@@ -211,7 +212,7 @@ export default function TopicCard({
                 height={14}
                 className="w-5 h-5 mr-1"
               />
-              Completed
+              Completed {correctAnswer}/20
             </div>
           ) : (
             <div className="text-sm text-[#569090] font-medium flex flex-row items-center">
@@ -234,60 +235,36 @@ export default function TopicCard({
                       <TooltipTrigger asChild>
                         <div
                           onClick={() =>
-                            hasCompletedAllStates &&
+                            hasAttemptedAllStates &&
                             setSelectedState(stateToRange(index + 1))
                           }
                           className={cn(
                             "w-full h-1.5 rounded-full transition-all duration-200",
-                            hasCompletedAllStates &&
+                            getNumCorrectSubmissionsLevelWise(
+                              topic?.languages_quiz[index]
+                            ) > 0 &&
                               getNumCorrectSubmissionsLevelWise(
                                 topic?.languages_quiz[index]
                               ) < 5 &&
-                              getNumCorrectSubmissionsLevelWise(
-                                topic?.languages_quiz[index + 1]
-                              ) > 0
-                              ? "bg-[#F38C85]"
-                              : getNumCorrectSubmissionsLevelWise(
-                                  topic?.languages_quiz[index]
-                                ) > 0 &&
-                                getNumCorrectSubmissionsLevelWise(
-                                  topic?.languages_quiz[index]
-                                ) < 5 &&
-                                !hasCompletedAllStates
+                              !hasCompletedAllStates
                               ? "bg-[#E98451]"
                               : getNumCorrectSubmissionsLevelWise(
                                   topic?.languages_quiz[index]
-                                ) == 5 && !hasCompletedAllStates
+                                ) == 5 || hasCompletedAllStates
                               ? "bg-[#49AB9E]"
                               : "bg-[#E2D4C1]",
-                            hasCompletedAllStates
+                            hasAttemptedAllStates
                               ? "cursor-pointer hover:opacity-80"
                               : "cursor-default",
-                            selectedState === stateToRange(index + 1) && hasCompletedAllStates
-                              ? "bg-[#F0A919]"
-                              : hasCompletedAllStates && "bg-[#E2D4C1]",
+                            selectedState === stateToRange(index + 1) &&
+                              hasAttemptedAllStates &&
+                              "bg-[#F0A919]",
                             index < topic?.languages_quiz.length
                               ? "opacity-100"
                               : "opacity-30"
                           )}
                         />
                       </TooltipTrigger>
-                      {index < topic?.languages_quiz.length &&
-                        hasCompletedAllStates &&
-                        getNumCorrectSubmissionsLevelWise(
-                          topic?.languages_quiz[index]
-                        ) < 5 &&
-                        getNumCorrectSubmissionsLevelWise(
-                          topic?.languages_quiz[index + 1]
-                        ) > 0 && (
-                          <TooltipContent className="bg-[#FEEDEC] text-[#D0595E] px-2 py-1 rounded text-xs">
-                            {5 -
-                              getNumCorrectSubmissionsLevelWise(
-                                topic?.languages_quiz[index]
-                              )}
-                            flashcards pening
-                          </TooltipContent>
-                        )}
                       {index < topic?.languages_quiz.length && (
                         <TooltipContent className="bg-[#517B7B] text-white px-2 py-1 rounded text-xs">
                           {getNumCorrectSubmissionsLevelWise(
@@ -299,32 +276,31 @@ export default function TopicCard({
                     </Tooltip>
                   </TooltipProvider>
                   <p
+                    onClick={() =>
+                      hasAttemptedAllStates &&
+                      setSelectedState(stateToRange(index + 1))
+                    }
                     className={cn(
                       "text-sm text-[#517B7B] mt-1 font-medium",
-                      hasCompletedAllStates &&
+                      getNumCorrectSubmissionsLevelWise(
+                        topic?.languages_quiz[index]
+                      ) > 0 &&
                         getNumCorrectSubmissionsLevelWise(
                           topic?.languages_quiz[index]
                         ) < 5 &&
-                        getNumCorrectSubmissionsLevelWise(
-                          topic?.languages_quiz[index + 1]
-                        ) > 0
-                        ? "text-[#F38C85]"
-                        : getNumCorrectSubmissionsLevelWise(
-                            topic?.languages_quiz[index]
-                          ) > 0 &&
-                          getNumCorrectSubmissionsLevelWise(
-                            topic?.languages_quiz[index]
-                          ) < 5 &&
-                          !hasCompletedAllStates
+                        !hasCompletedAllStates
                         ? "text-[#E98451]"
                         : getNumCorrectSubmissionsLevelWise(
-                            topic?.languages_quiz[index + 1]
-                          ) == 5 && !hasCompletedAllStates
+                            topic?.languages_quiz[index]
+                          ) == 5 || hasCompletedAllStates
                         ? "text-[#49AB9E]"
                         : "text-[#E2D4C1]",
-                        selectedState === stateToRange(index + 1) && hasCompletedAllStates
-                        ? "text-[#F0A919]"
-                        : hasCompletedAllStates && "text-[#E2D4C1]",
+                      hasAttemptedAllStates
+                        ? "cursor-pointer hover:opacity-80"
+                        : "cursor-default",
+                      selectedState === stateToRange(index + 1) &&
+                        hasAttemptedAllStates &&
+                        "text-[#F0A919]"
                     )}
                   >
                     {getLevelNumber(index)}
@@ -351,7 +327,7 @@ export default function TopicCard({
               />
             </Button>
           </CardFooter>
-        ) : hasCompletedAllStates ? (
+        ) : hasAttemptedAllStates ? (
           <CardFooter className="flex flex-col px-6 gap-3 mt-auto">
             <div className="flex justify-between w-full gap-6">
               <TooltipProvider>
@@ -362,7 +338,7 @@ export default function TopicCard({
                       className="bg-[#F0A919] hover:bg-yellow-500 text-white w-full"
                     >
                       Learn{" "}
-                      {hasCompletedAllStates &&
+                      {hasAttemptedAllStates &&
                         selectedState &&
                         `(${getLevelText(selectedState)})`}
                     </Button>
@@ -381,7 +357,7 @@ export default function TopicCard({
                       className="bg-[#E98451] hover:bg-orange-500 text-white w-full disabled:opacity-50"
                     >
                       Practice{" "}
-                      {hasCompletedAllStates &&
+                      {hasAttemptedAllStates &&
                         selectedState &&
                         `(${getLevelText(selectedState)})`}
                     </Button>
@@ -400,19 +376,13 @@ export default function TopicCard({
                 onClick={handleLearnButtonClick}
                 className="bg-[#F0A919] hover:bg-yellow-500 text-white w-full"
               >
-                Learn{" "}
-                {hasCompletedAllStates &&
-                  selectedState &&
-                  `(${getLevelText(selectedState)})`}
+                Learn
               </Button>
               <Button
                 onClick={handleClickForQuiz}
                 className="bg-[#E98451] hover:bg-orange-500 text-white w-full disabled:opacity-50"
               >
-                Practice{" "}
-                {hasCompletedAllStates &&
-                  selectedState &&
-                  `(${getLevelText(selectedState)})`}
+                Practice
               </Button>
             </div>
           </CardFooter>

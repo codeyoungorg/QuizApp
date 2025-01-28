@@ -84,7 +84,7 @@ export default function TopicLevel({ level, data }: Props) {
             </div>
           )}
           <h1 className="text-[#5B8989] font-semibold text-lg md:text-xl lg:text-2xl">
-            {"Level " + level.level + " - "} {level.name}
+            {"Stage " + level.level + " - "} {level.name}
           </h1>
         </div>
         <div className="w-fit">
@@ -98,7 +98,7 @@ export default function TopicLevel({ level, data }: Props) {
             </p>
           ) : (
             <p className="bg-[#E6EFEF] text-[#5B8989] px-2 py-1 text-sm rounded-md">
-              Complete 85% of Level {level.level - 1} to unlock level{" "}
+              Complete 85% of Stage {level.level - 1} to unlock Stage{" "}
               {level.level}
             </p>
           )}

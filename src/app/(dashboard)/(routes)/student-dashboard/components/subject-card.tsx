@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import star from "@/public/images/icons/pointsStar.png";
+import star from "@/public/images/icons/pointsStar.svg";
 
 export type TagColors = {
   math: string;
