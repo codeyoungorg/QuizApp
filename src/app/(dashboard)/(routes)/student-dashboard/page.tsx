@@ -12,6 +12,9 @@ import {
 } from "@/lib/student-dashboard/apiClient";
 import constants from "../../../../constants/constants";
 import GuestWebsite from "@/components/guest-website";
+import earnedCoins from "@/public/images/icons/earnedCoins.png";
+import rocket from "@/public/images/icons/rocket.png";
+import Image from "next/image";
 
 interface SubjectInfo {
   subjectId: number;
@@ -96,6 +99,7 @@ const PageContent = () => {
   });
   const [studentActivity, setStudentActivity] = useState([]);
   const [streakData, setStreakData] = useState({});
+  const [completedQuestion, setCompletedQuestion] = useState(null);
   const [studentData, setStudentData] = useState(null);
   const [avatar, setAvatar] = useState<string>("");
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
@@ -107,6 +111,7 @@ const PageContent = () => {
   const grade = getCookie("grade");
   const [mounted, setMounted] = useState<boolean>(false);
   const [isWebView, setIsWebView] = useState(false);
+  const [totalPoints, setTotalPoints] = useState(0)
 
   useEffect(() => {
     // Check if we're in a WebView environment
@@ -152,6 +157,7 @@ const PageContent = () => {
               : null;
           });
           setSubjectData(updatedSubjectData);
+          setTotalPoints(data.totalPoints)
         } catch (err) {
           console.error("Error fetching data:", err);
         }
@@ -185,6 +191,7 @@ const PageContent = () => {
             setStudentActivity(activityData.response.activity);
             setStreakData(activityData.response.streak);
           }
+          setCompletedQuestion(activityData.response.correctSubjectCount)
 
           const currentStudent =
             dashboardData.response.leaderboard.topTenStudentList.find(
@@ -228,6 +235,26 @@ const PageContent = () => {
             <span className="text-[#5B8989]">Just for</span>
             <span className="gradient-text-2"> You.</span>
           </div>
+         <div className="flex flex-row justify-center">
+         <div className="total-earned-pts-box">
+            <Image
+              src={earnedCoins}
+              alt="new-icon"
+              width={24}
+              height={24}
+              className="w-5 h-5 mr-2"
+            />
+            You have earned <span className="earned-pts-highlight">“{totalPoints} points”</span> so far
+            <Image
+              src={rocket}
+              alt="new-icon"
+              width={16}
+              height={16}
+              className="w-5 h-5 ml-2"
+            />
+          </div>
+
+         </div>
           <div className="text-[#5B8989] lg:text-xl xs:text-base font-semibold leading-[24.2px] text-center lg:mt-12 md:mt-10 xs:mt-10">
             Choose a subject to get started
           </div>
@@ -258,6 +285,7 @@ const PageContent = () => {
           <div className="flex lg:flex-row xs:flex-col justify-center gap-8 lg:mt-14 md:mt-12 xs:mt-6 mb-10">
             <Activity
               subject={null}
+              earnedPoints={completedQuestion}
               studentActivity={studentActivity}
               streakData={streakData}
               studentData={studentData}

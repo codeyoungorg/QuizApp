@@ -9,6 +9,8 @@ import { createGKQuiz, getGKQuestions } from "@/actions/gk-quiz";
 import { getCookie } from "cookies-next";
 import saveGTMEvents from "@/lib/gtm";
 import NewIcon from "@/public/images/icons/new-icon.png";
+import star from "@/public/images/icons/pointsStar.svg";
+import chatsCompleted from "@/public/images/icons/chatsCompleted.png";
 
 type Props = {
   userId: string;
@@ -59,9 +61,16 @@ const HomePage: React.FC<Props> = ({
       description: (
         <>
           {numberOfCompletedQuiz > 0 && (
-            <span>
-              <strong>{numberOfCompletedQuiz}</strong> questions completed
-            </span>
+            <div className="flex flex-row items-center">
+              <Image
+                src={star}
+                alt="new-icon"
+                width={16}
+                height={16}
+                className="w-5 h-5 mr-1"
+              />
+              {numberOfCompletedQuiz} pts
+            </div>
           )}
         </>
       ),
@@ -72,10 +81,16 @@ const HomePage: React.FC<Props> = ({
         "Test your general knowledge skills across various topics through quizzes",
       description:
         quizData && quizData?.numberOfCompletedQuiz ? (
-          <span>
-            <strong>{quizData.numberOfCompletedQuiz}</strong> questions
-            completed
-          </span>
+          <div className="flex flex-row items-center">
+            <Image
+              src={star}
+              alt="new-icon"
+              width={16}
+              height={16}
+              className="w-5 h-5 mr-1"
+            />
+            {quizData.numberOfCompletedQuiz} pts
+          </div>
         ) : (
           ""
         ),
@@ -85,9 +100,16 @@ const HomePage: React.FC<Props> = ({
       subtitle:
         "Chat with Noah real time to get any of your doubts resolved or discuss any topic",
       description: totalDoubtChats ? (
-        <span>
-          <strong>{totalDoubtChats}</strong> chats completed
-        </span>
+        <div className="flex flex-row items-center">
+          <Image
+            src={chatsCompleted}
+            alt="new-icon"
+            width={14}
+            height={14}
+            className="w-5 h-5 mr-1"
+          />
+          {totalDoubtChats} chats completed
+        </div>
       ) : (
         ""
       ),
@@ -196,12 +218,12 @@ const HomePage: React.FC<Props> = ({
                 <div className="lg:m-6 md:m-2 lg:p-0 xs:p-4 h-5/6 relative flex flex-col gap-4">
                   <div className="cardTitle">{card.title}</div>
                   <div className="cardSubTitle">{card.subtitle}</div>
-                 <div className="additionalText">  {card.additionalText}</div>
-                  
-                  <div className=" boxContainer flex flex-col gap-4 ">
+
                   {getCookie("userRole") !== "guest" && (
                     <div className="cardDescription">{card.description}</div>
                   )}
+                  <div className=" boxContainer flex flex-col gap-4 ">
+                    <div className="additionalText"> {card.additionalText}</div>
                     <div className="">
                       <button
                         className="getStartedBtn"

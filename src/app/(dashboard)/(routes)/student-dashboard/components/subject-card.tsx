@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
+import star from "@/public/images/icons/pointsStar.svg";
 
 export type TagColors = {
   math: string;
@@ -127,7 +128,7 @@ const SubjectCard = ({
                 )}
               </span>
             )}
-            {points && status && (
+            {/*   {points && status && (
               <span
                 className={`flex flex-row p-[8px] gap-[8px] rounded-[6px] tags-${cardClassName} ml-4`}
               >
@@ -137,14 +138,21 @@ const SubjectCard = ({
                   </span>
                 )}
               </span>
-            )}
+            )} */}
             {(rank || answeredCount) && status && (
               <span
-                className={`flex flex-row p-[8px] gap-[8px] rounded-[6px] tags-${cardClassName} ml-4`}
+                className={`flex flex-row p-[8px] gap-[6px] rounded-[6px] tags-${cardClassName} ml-4`}
               >
+                <Image
+                  src={star}
+                  alt="new-icon"
+                  width={16}
+                  height={16}
+                  className="w-5 h-5"
+                />
                 {answeredCount && (
                   <span className="lg:text-sm xs:text-[11px] font-medium leading-[16.94px] text-left mt-auto mb-auto">
-                    {answeredCount} answered
+                    {answeredCount} points
                   </span>
                 )}
               </span>

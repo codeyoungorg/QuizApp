@@ -13,6 +13,7 @@ import Lock from "@/public/images/icons/lock.svg";
 import Image from "next/image";
 import { LanguageDB, LanguageQuiz } from "../learn/_types";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 type Props = {
   level: {
@@ -61,6 +62,18 @@ export default function TopicLevel({ level, data }: Props) {
   const isLevelUnlocked =
     level.level === 1 || previousLevelPoints >= totalPreviousLevelPoints * 0.85;
 
+  useEffect(() => {
+    let totalCorrect = 0;
+    for (const topic of data) {
+      if (topic.languages_quiz && topic.languages_quiz.length > 0) {
+        for (const quiz of topic.languages_quiz) {
+          totalCorrect += quiz.correct;
+        }
+      }
+    }
+    localStorage.setItem("totalCorrectAnswers", totalCorrect.toString());
+  }, [data]);
+
   return (
     <div className="space-y-4" key={level.id}>
       <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center px-4">
@@ -71,7 +84,7 @@ export default function TopicLevel({ level, data }: Props) {
             </div>
           )}
           <h1 className="text-[#5B8989] font-semibold text-lg md:text-xl lg:text-2xl">
-            {"Level " + level.level + " - "} {level.name}
+            {"Stage " + level.level + " - "} {level.name}
           </h1>
         </div>
         <div className="w-fit">
@@ -85,7 +98,7 @@ export default function TopicLevel({ level, data }: Props) {
             </p>
           ) : (
             <p className="bg-[#E6EFEF] text-[#5B8989] px-2 py-1 text-sm rounded-md">
-              Complete 85% of Level {level.level - 1} to unlock level{" "}
+              Complete 85% of Stage {level.level - 1} to unlock Stage{" "}
               {level.level}
             </p>
           )}
