@@ -220,7 +220,9 @@ const HomePage: React.FC<Props> = ({
                   <div className="cardSubTitle">{card.subtitle}</div>
 
                   {getCookie("userRole") !== "guest" && (
-                    <div className="cardDescription">{card.description}</div>
+                    <div className={card.description && "cardDescription"}>
+                      {card.description}
+                    </div>
                   )}
                   <div className=" boxContainer flex flex-col gap-4 ">
                     <div className="additionalText"> {card.additionalText}</div>
