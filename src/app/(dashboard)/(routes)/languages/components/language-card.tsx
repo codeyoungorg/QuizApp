@@ -59,7 +59,7 @@ export default function LanguageCard({
                 },
                 height: 18,
                 borderRadius: 1,
-                width: "100%"
+                width: "100%",
               }}
             />
             <p className="text-lg font-semibold text-[#5B8989] mt-1">{`Completed ${completedQuestions} of ${totalQuestionsCount} cards`}</p>
@@ -70,7 +70,8 @@ export default function LanguageCard({
           onClick={() => router.push("/languages?lang=" + lang + "#topics")}
           className="text-white bg-[#E98451] p-4 rounded-lg hover:bg-[#e69167]"
         >
-          Get Started <ArrowRight className="size-4 ml-2" />
+          {completedQuestions == 0 ? "Get Started" : "Continue Learning"}{" "}
+          <ArrowRight className="size-4 ml-2" />
         </Button>
       </div>
     </div>
