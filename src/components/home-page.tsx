@@ -60,7 +60,7 @@ const HomePage: React.FC<Props> = ({
         "Learn through quizzes on different academic subjects tailored for you",
       description: (
         <>
-          {numberOfCompletedQuiz > 0 && (
+          {numberOfCompletedQuiz > 0 ? (
             <div className="flex flex-row items-center">
               <Image
                 src={star}
@@ -71,6 +71,8 @@ const HomePage: React.FC<Props> = ({
               />
               {numberOfCompletedQuiz} pts
             </div>
+          ):(
+            ""
           )}
         </>
       ),
@@ -220,7 +222,9 @@ const HomePage: React.FC<Props> = ({
                   <div className="cardSubTitle">{card.subtitle}</div>
 
                   {getCookie("userRole") !== "guest" && (
-                    <div className="cardDescription">{card.description}</div>
+                    <div className={card.description && "cardDescription"}>
+                      {card.description}
+                    </div>
                   )}
                   <div className=" boxContainer flex flex-col gap-4 ">
                     <div className="additionalText"> {card.additionalText}</div>
