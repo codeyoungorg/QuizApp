@@ -9,7 +9,7 @@ import { createGKQuiz, getGKQuestions } from "@/actions/gk-quiz";
 import { getCookie } from "cookies-next";
 import saveGTMEvents from "@/lib/gtm";
 import NewIcon from "@/public/images/icons/new-icon.png";
-import star from "@/public/images/icons/pointsStar.png";
+import star from "@/public/images/icons/pointsStar.svg";
 import chatsCompleted from "@/public/images/icons/chatsCompleted.png";
 
 type Props = {

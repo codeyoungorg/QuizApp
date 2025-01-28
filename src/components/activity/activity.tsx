@@ -12,7 +12,7 @@ import ActivityStreak from "./activity-streak";
 import ClipLoader from "react-spinners/ClipLoader";
 import { getCookie } from "cookies-next";
 import saveGTMEvents from "@/lib/gtm";
-import star from "@/public/images/icons/pointsStar.png";
+import star from "@/public/images/icons/pointsStar.svg";
 
 const activity = ({
   subject,

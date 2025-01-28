@@ -42,17 +42,16 @@ export default function LanguageCard({
           className="md:w-[100px] md:h-[100px] w-[80px] h-[80px]"
         />
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 w-full">
         {completedQuestions == 0 ? (
           <h1 className="text-[#5B8989] font-semibold text-lg">
             You have {totalQuestionsCount} sets of flashcards to practice
           </h1>
         ) : (
-          <>
+          <div className="w-full">
             <LinearProgress
               variant="determinate"
               value={progress}
-              className="w-full"
               sx={{
                 backgroundColor: "rgb(209 213 219)",
                 "& .MuiLinearProgress-bar": {
@@ -60,10 +59,11 @@ export default function LanguageCard({
                 },
                 height: 18,
                 borderRadius: 1,
+                width: "100%"
               }}
             />
-            <p className="text-lg font-semibold text-[#5B8989]">{`Completed ${completedQuestions} of ${totalQuestionsCount} cards`}</p>
-          </>
+            <p className="text-lg font-semibold text-[#5B8989] mt-1">{`Completed ${completedQuestions} of ${totalQuestionsCount} cards`}</p>
+          </div>
         )}
 
         <Button
