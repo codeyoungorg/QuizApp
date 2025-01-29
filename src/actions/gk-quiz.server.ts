@@ -22,7 +22,9 @@ export const getNumberOfCompletedGKQuiz = async (userid: string) => {
   }
   let numberOfCompletedQuiz = 0;
   allQuizes?.forEach((quiz: any) => {
-    numberOfCompletedQuiz += quiz.submissions?.length || 0;
+    if (quiz.complete) {
+      numberOfCompletedQuiz++;
+    }
   });
 
   const totalQuiz =
