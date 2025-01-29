@@ -26,9 +26,16 @@ export const getNumberOfCompletedGKQuiz = async (userid: string) => {
   });
 
   const numberOfPointsEarned = allQuizes
-  ? allQuizes.reduce((count: number, quiz: any) => count + (quiz.complete ? 1 : 0), 0)
+  ? allQuizes.reduce((total, quiz) => {
+      if (quiz.submissions) {
+        const correctSubmissions = quiz.submissions.filter(
+          (submission) => submission.isCorrect === true
+        );
+        total += correctSubmissions.length;
+      }
+      return total;
+    }, 0)
   : 0;
-
   const totalQuiz =
     numberOfCompletedQuiz <= 10
       ? 10
