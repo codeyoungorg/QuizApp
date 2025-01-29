@@ -20,16 +20,15 @@ export const getNumberOfCompletedGKQuiz = async (userid: string) => {
   if (error) {
     console.error(error);
   }
-  let numberOfCompletedQuiz = 0;
-  allQuizes?.forEach((quiz: any) => {
-    numberOfCompletedQuiz += quiz.submissions?.length || 0;
-  });
+  const numberOfCompletedQuiz = allQuizes
+  ? allQuizes.reduce((count: number, quiz: any) => count + (quiz.complete ? 1 : 0), 0)
+  : 0;
 
-  const totalQuiz =
-    numberOfCompletedQuiz <= 10
-      ? 10
-      : numberOfCompletedQuiz - (numberOfCompletedQuiz % 10) + 10;
-  const level = totalQuiz / 10;
+const totalQuiz = numberOfCompletedQuiz
+  ? Math.ceil(numberOfCompletedQuiz / 10) * 10
+  : 10; 
+
+const level = totalQuiz / 10;
   return {
     numberOfCompletedQuiz,
     level,
