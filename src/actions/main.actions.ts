@@ -350,12 +350,20 @@ export const getNumberOfSubmittedAnswers = async (userid: string) => {
     console.error(error);
     return 0;
   }
-  console.log(allQuizes);
-  let numberOfCompletedQuiz = 0;
-  allQuizes?.forEach((quiz: any) => {
-    if (quiz.submissions?.length > 0) {
-      numberOfCompletedQuiz += quiz.submissions.length;
-    }
-  });
+  const numberOfCompletedQuiz = allQuizes
+      ? allQuizes.reduce(
+          (count: number, quiz: { submissions?: { is_correct: boolean }[] }) => {
+            if (quiz.submissions && quiz.submissions.length > 0) {
+              const correctCount = quiz.submissions.filter(
+                (submission: { is_correct: boolean }) => submission.is_correct
+              ).length;
+              return count + correctCount;
+            }
+            return count;
+          },
+          0
+        )
+      : 0;
+
   return numberOfCompletedQuiz;
 };
