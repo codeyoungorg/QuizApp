@@ -34,7 +34,7 @@ const HomePage: React.FC<Props> = ({
   const router = useRouter();
 
   const [quizData] = useState<QuizData | null>({
-    numberOfCompletedQuiz: gkQuiz?.value?.numberOfCompletedQuiz || 0,
+    numberOfCompletedQuiz: gkQuiz?.value?.numberOfPointsEarned || 0,
     level: gkQuiz?.value?.level || 1,
     totalQuiz: gkQuiz?.value?.totalQuiz || 0,
   });

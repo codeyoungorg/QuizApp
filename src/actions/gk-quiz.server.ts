@@ -22,10 +22,12 @@ export const getNumberOfCompletedGKQuiz = async (userid: string) => {
   }
   let numberOfCompletedQuiz = 0;
   allQuizes?.forEach((quiz: any) => {
-    if (quiz.complete) {
-      numberOfCompletedQuiz++;
-    }
+    numberOfCompletedQuiz += quiz.submissions?.length || 0;
   });
+
+  const numberOfPointsEarned = allQuizes
+  ? allQuizes.reduce((count: number, quiz: any) => count + (quiz.complete ? 1 : 0), 0)
+  : 0;
 
   const totalQuiz =
     numberOfCompletedQuiz <= 10
@@ -36,6 +38,7 @@ export const getNumberOfCompletedGKQuiz = async (userid: string) => {
     numberOfCompletedQuiz,
     level,
     totalQuiz,
+    numberOfPointsEarned
   };
 };
 
