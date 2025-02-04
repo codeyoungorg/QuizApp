@@ -73,7 +73,7 @@ export default function QuizScore({
             className="w-full mt-2 bg-[#E98451] text-[#FFF] hover:bg-[#E98451]"
             onClick={() => setOpen(false)}
           >
-            Continue Quiz
+            Back
           </Button>
         </DialogContent>
       </Dialog>

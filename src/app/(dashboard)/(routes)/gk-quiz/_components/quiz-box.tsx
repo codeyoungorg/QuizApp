@@ -20,10 +20,12 @@ import QuizScore from "./quiz-score-dialog";
 import { EndChatMessage, InitialChatMessage } from "./quiz-messages";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { QuizDataType } from "@/types/quiz.types";
+import { GKQuizDataType } from "@/types/quiz.types";
 import {
   createGKQuiz,
   getGKQuestions,
+  selectRandomCategoryByGrade,
+  selectRandomTopicOfCategory,
   storeCorrectSubmissionForGK,
   storeUserSubmissionInGKQuiz,
   updateGKQuizStats,
@@ -34,12 +36,12 @@ import { saveStreak } from "@/lib/quiz/apiClient";
 
 type SubmissionType = {
   questionId: string;
-  selected: { text: string; correct: string };
+  selected: { text: string; correct: boolean };
   isCorrect: boolean;
 };
 
 type Props = {
-  quizData: QuizDataType;
+  quizData: GKQuizDataType;
   quizId: string;
   user: {
     name: string;
@@ -94,12 +96,25 @@ export default function QuizBox({
   const startNewQuiz = async () => {
     setLoader(true);
 
-    const { questions: QuestionLists, topics } = await getGKQuestions(user.id);
+    const randomCategory = await selectRandomCategoryByGrade(user?.grade);
+    const { topicId } = await selectRandomTopicOfCategory({
+      category: randomCategory,
+      grade: user?.grade,
+    });
+
+    const { questions: QuestionLists } = await getGKQuestions({
+      topicId,
+      userId: user?.id,
+    });
     if (QuestionLists.length === 0) {
       return;
     }
 
-    const data = await createGKQuiz(user.id, QuestionLists, topics);
+    const data = await createGKQuiz({
+      userId: user.id,
+      questions: QuestionLists,
+      topicId,
+    });
 
     saveGTMEvents({
       eventAction: "next_quiz",
@@ -158,7 +173,7 @@ export default function QuizBox({
 
   // Check if the selected answer is correct
   const checkAnswer = (index: number) => {
-    const isCorrect = options[index!].correct === "true";
+    const isCorrect = options[index!].correct === true;
     return isCorrect;
   };
 
@@ -179,12 +194,12 @@ export default function QuizBox({
     (async () => {
       await storeUserSubmissionInGKQuiz(quizId, user.id, submissions);
       if (currentSubmission?.isCorrect) {
-        await storeCorrectSubmissionForGK(
-          user.id,
-          currentSubmission.questionId,
-          quizData.id,
-          quizData.multiple_topics
-        );
+        await storeCorrectSubmissionForGK({
+          userId: user.id,
+          questionId: currentSubmission.questionId,
+          quizId: quizData.id,
+          topicId: quizData.topic_id,
+        });
       }
       router.refresh();
     })();
@@ -216,7 +231,7 @@ export default function QuizBox({
 
       if (allQuestionsAnswered) return;
 
-      const res = await saveStreak();
+      // const res = await saveStreak();
       // Move to the next question
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },
@@ -277,7 +292,7 @@ export default function QuizBox({
   useEffect(() => {
     // If the quiz is complete, redirect to the home page
     if (isComplete) {
-      router.push("/");
+      // router.push("/");
     }
     setIsMounted(true);
   }, []);
