@@ -231,7 +231,7 @@ export default function QuizBox({
 
       if (allQuestionsAnswered) return;
 
-      // const res = await saveStreak();
+      const res = await saveStreak();
       // Move to the next question
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },
@@ -292,7 +292,7 @@ export default function QuizBox({
   useEffect(() => {
     // If the quiz is complete, redirect to the home page
     if (isComplete) {
-      // router.push("/");
+      router.push("/");
     }
     setIsMounted(true);
   }, []);
