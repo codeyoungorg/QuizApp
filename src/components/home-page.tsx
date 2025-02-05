@@ -39,7 +39,7 @@ const HomePage: React.FC<Props> = ({
   const [showCategoryDialog, setShowCategoryDialog] = useState(false);
 
   const [quizData] = useState<QuizData | null>({
-    numberOfCompletedQuiz: gkQuiz?.value?.numberOfCompletedQuiz || 0,
+    numberOfCompletedQuiz: gkQuiz?.value?.numberOfPointsEarned || 0,
     level: gkQuiz?.value?.level || 1,
     totalQuiz: gkQuiz?.value?.totalQuiz || 0,
   });
@@ -65,7 +65,7 @@ const HomePage: React.FC<Props> = ({
         "Learn through quizzes on different academic subjects tailored for you",
       description: (
         <>
-          {numberOfCompletedQuiz > 0 && (
+          {numberOfCompletedQuiz > 0 ? (
             <div className="flex flex-row items-center">
               <Image
                 src={star}
@@ -76,6 +76,8 @@ const HomePage: React.FC<Props> = ({
               />
               {numberOfCompletedQuiz} pts
             </div>
+          ) : (
+            ""
           )}
         </>
       ),
@@ -199,7 +201,6 @@ const HomePage: React.FC<Props> = ({
               />
             </div>
           </div>
-
           <div className="cardContainer">
             <div className="cardHeading">What do you want to do today?</div>
             <div className="cardsWrapper">
@@ -208,12 +209,14 @@ const HomePage: React.FC<Props> = ({
                   <div className="lg:m-6 md:m-2 lg:p-0 xs:p-4 h-5/6 relative flex flex-col gap-4">
                     <div className="cardTitle">{card.title}</div>
                     <div className="cardSubTitle">{card.subtitle}</div>
-
                     {getCookie("userRole") !== "guest" && (
-                      <div className="cardDescription">{card.description}</div>
+                      <div className={card.description && "cardDescription"}>
+                        {card.description}
+                      </div>
                     )}
                     <div className=" boxContainer flex flex-col gap-4 ">
                       <div className="additionalText">
+                        {" "}
                         {card.additionalText}
                       </div>
                       <div className="">
