@@ -12,9 +12,11 @@ import ActivityStreak from "./activity-streak";
 import ClipLoader from "react-spinners/ClipLoader";
 import { getCookie } from "cookies-next";
 import saveGTMEvents from "@/lib/gtm";
+import star from "@/public/images/icons/pointsStar.svg";
 
 const activity = ({
   subject,
+  earnedPoints,
   studentActivity,
   streakData,
   studentData,
@@ -23,6 +25,7 @@ const activity = ({
   loading,
 }: {
   subject: string | null;
+  earnedPoints: any;
   studentActivity: any;
   streakData: any;
   studentData: any;
@@ -167,9 +170,15 @@ const activity = ({
                       <div className="streakTxt">daily streak</div>
                     </div>
                   </div>
-                  <div className="streakDescription">
-                    <strong>{`${streakData?.totalQuestions}`}</strong> questions
-                    completed
+                  <div className="flex flex-row gap-[6px] streakDescription text-[#A3A3A3]">
+                    <Image
+                      src={star}
+                      alt="new-icon"
+                      width={16}
+                      height={16}
+                      className="w-5 h-5"
+                    />
+                    <strong>{`${earnedPoints}`}</strong> points earned
                   </div>
                 </div>
               </div>

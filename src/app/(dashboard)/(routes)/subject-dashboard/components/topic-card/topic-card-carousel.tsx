@@ -2,6 +2,9 @@ import Slider from "react-slick";
 import TopicCard from "./topic-card";
 import "./topic-card.css";
 import ClipLoader from "react-spinners/ClipLoader";
+import nextIcon from "@/public/images/icons/nextIcon.svg";
+import prevIcon from "@/public/images/icons/prevIcon.svg";
+import Image from "next/image";
 
 const TopicCardCarousel = ({
   items,
@@ -28,33 +31,27 @@ const TopicCardCarousel = ({
     rows: 2,
     nextArrow: (
       <div className="carousel-buttons">
-        <div className="next-slick-arrow rounded-[8px] xs:w-[15px] xs:h-[15px] md:w-[24px] md:h-[24px]">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            stroke="black"
-            height="24"
-            viewBox="0 -960 960 960"
-            width="24"
-            className="xs:w-[15px] xs:h-[15px] md:w-[24px] md:h-[24px]"
-          >
-            <path d="m242-200 200-280-200-280h98l200 280-200 280h-98Zm238 0 200-280-200-280h98l200 280-200 280h-98Z" />
-          </svg>
+        <div className="next-slick-arrow rounded-[8px] xs:w-[32px] xs:h-[172px] md:w-[32px] md:h-[172px]">
+          <Image
+            src={nextIcon}
+            alt="Next"
+            width={32}
+            height={172}
+            className="xs:w-[32px] xs:h-[172px] md:w-[32px] md:h-[172px]"
+          />
         </div>
       </div>
     ),
     prevArrow: (
       <div className="carousel-buttons">
-        <div className="next-slick-arrow rotate-180 xs:w-[15px] xs:h-[15px] md:w-[24px] md:h-[24px]">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            stroke="black"
-            height="24"
-            viewBox="0 -960 960 960"
-            width="24"
-            className="xs:w-[15px] xs:h-[15px] md:w-[24px] md:h-[24px]"
-          >
-            <path d="m242-200 200-280-200-280h98l200 280-200 280h-98Zm238 0 200-280-200-280h98l200 280-200 280h-98Z" />
-          </svg>
+        <div className="next-slick-arrow xs:w-[32px] xs:h-[172px] md:w-[32px] md:h-[172px]">
+          <Image
+            src={prevIcon}
+            alt="Previous"
+            width={32}
+            height={172}
+            className="xs:w-[32px] xs:h-[172px] md:w-[32px] md:h-[172px]"
+          />
         </div>
       </div>
     ),

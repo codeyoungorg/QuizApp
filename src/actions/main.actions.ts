@@ -342,13 +342,15 @@ export const getNumberOfSubmittedAnswers = async (userid: string) => {
   const supabase = createClient();
   const { data: allQuizes, error } = await supabase
     .from("quiz")
-    .select("questions, submissions")
-    .eq("userid", userid);
+    .select("questions, submissions(*)")
+    .eq("userid", userid)
+    .filter("submissions.is_correct", "eq", true);
 
   if (error) {
     console.error(error);
     return 0;
   }
+  console.log(allQuizes);
   let numberOfCompletedQuiz = 0;
   allQuizes?.forEach((quiz: any) => {
     if (quiz.submissions?.length > 0) {

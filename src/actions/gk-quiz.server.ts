@@ -25,6 +25,20 @@ export const getNumberOfCompletedGKQuiz = async (userid: string) => {
     numberOfCompletedQuiz += quiz.submissions?.length || 0;
   });
 
+  const numberOfPointsEarned = allQuizes
+      ? allQuizes.reduce(
+          (count: number, quiz: { submissions?: { isCorrect: boolean }[] }) => {
+            if (quiz.submissions && quiz.submissions.length > 0) {
+              const correctCount = quiz.submissions.filter(
+                (submission: { isCorrect: boolean }) => submission.isCorrect
+              ).length;
+              return count + correctCount;
+            }
+            return count;
+          },
+          0
+        )
+      : 0;
   const totalQuiz =
     numberOfCompletedQuiz <= 10
       ? 10
@@ -34,6 +48,7 @@ export const getNumberOfCompletedGKQuiz = async (userid: string) => {
     numberOfCompletedQuiz,
     level,
     totalQuiz,
+    numberOfPointsEarned
   };
 };
 

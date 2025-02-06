@@ -184,7 +184,7 @@ export default function ScoreCard({
               )}
             >
               {quizResult?.topicPoints} points out of{" "}
-              {quizResult?.totalQuestions} flash cards
+              {quizResult?.totalQuestions} cards
             </p>
           </CardContent>
         </Card>
@@ -197,11 +197,11 @@ export default function ScoreCard({
         >
           <CardHeader>
             <h4 className="text-sm font-semibold mb-2 text-[#A3A3A3]">
-              CURRENT LEVEL
+              CURRENT STAGE
             </h4>
             <CardTitle className="text-xl font-semibold text-[#517B7B]">
               <span className="mr-2">🏆</span>
-              Level {quizResult?.level_id}
+              Stage {quizResult?.level_id}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -229,7 +229,7 @@ export default function ScoreCard({
               )}
             >
               {quizResult?.levelPoints} points out of{" "}
-              {quizResult?.levelTotalQuestions} flash cards
+              {quizResult?.levelTotalQuestions} cards
             </p>
           </CardContent>
         </Card>
