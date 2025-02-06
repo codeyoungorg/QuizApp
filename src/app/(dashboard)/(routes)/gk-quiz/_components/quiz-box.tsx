@@ -218,13 +218,15 @@ export default function QuizBox({
 
       await captureEvent({
         data: {
-          type:"gk",
-          subject:currentQuestion.subject,
-          topic:currentQuestion?.topic,
-          difficulty: currentQuestion?.difficulty_level ? [currentQuestion?.difficulty_level] : [],
+          type: "gk",
+          subject: currentQuestion.subject,
+          topic: currentQuestion?.topic,
+          difficulty: currentQuestion?.difficulty_level
+            ? [currentQuestion?.difficulty_level]
+            : [],
           quizId: parseInt(quizId),
-          questionId: currentQuestion?.id ? [currentQuestion?id] : []
-        }
+          questionId: currentQuestion?.id ? [currentQuestion?.id] : [],
+        },
       });
       // Move to the next question
       setQuestionIndex((questionIndex) => questionIndex + 1);
