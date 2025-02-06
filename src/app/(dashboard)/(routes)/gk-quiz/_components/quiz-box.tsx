@@ -221,9 +221,9 @@ export default function QuizBox({
           type:"gk",
           subject:currentQuestion.subject,
           topic:currentQuestion?.topic,
-          difficulty: [currentQuestion?.difficulty_level],
+          difficulty: currentQuestion?.difficulty_level ? [currentQuestion?.difficulty_level] : [],
           quizId: parseInt(quizId),
-          questionId: [currentQuestion?.id],
+          questionId: currentQuestion?.id ? [currentQuestion?id] : []
         }
       });
       // Move to the next question

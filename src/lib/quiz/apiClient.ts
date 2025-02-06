@@ -1,7 +1,17 @@
 import apiService from "../apiService";
 import { getCookie } from "cookies-next";
 
-export const captureEvent = async ({ data }) => {
+type QuizEventData = {
+  type:string;
+  subject:string;
+  topic?:string | null;
+  topicId?: number | string | null;
+  difficulty: [string | number] | number[] | [];
+  questionId:[string | number] | number[] | [];
+  quizId: number;
+};
+
+export const captureEvent = async ({ data }:{ data:QuizEventData}) => {
   const userId = getCookie("userId");
   const userRole = getCookie("userRole");
   try {
