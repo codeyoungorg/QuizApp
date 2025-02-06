@@ -16,6 +16,7 @@ export type QuizDataType = {
       subtopic: string;
       learning_objective: string;
     };
+    difficulty_level: string | number | null;
     question: string;
     explanation: string;
   }[];
