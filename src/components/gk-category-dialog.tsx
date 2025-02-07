@@ -10,11 +10,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Atom,
   BookAIcon,
+  BookUserIcon,
+  Building2,
   DicesIcon,
   FerrisWheelIcon,
   Globe2,
   HazeIcon,
+  HeartHandshake,
+  HourglassIcon,
+  MountainSnow,
+  PaletteIcon,
   TreesIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -39,6 +46,26 @@ const getIcon = (category: string) => {
     return <HazeIcon />;
   } else if (category === "Geography and Nature") {
     return <Globe2 />;
+  } else if (category === "Civics and Society") {
+    return <Building2 />;
+  } else if (category === "Geography and World Wonders") {
+    return <Globe2 />;
+  } else if (category === "History and Heritage") {
+    return <HourglassIcon />;
+  } else if (category === "Current Affairs and Personalities") {
+    return <BookUserIcon />;
+  } else if (category === "Science and Technology") {
+    return <Atom />;
+  } else if (category === "Current Affairs and Culture") {
+    return <MountainSnow />;
+  } else if (category === "Global Issues and Awareness") {
+    return <Globe2 />;
+  } else if (category === "Politics, Economy, and Society") {
+    return <HeartHandshake />;
+  } else if (category === "Global Issues and Awareness") {
+    return <TreesIcon />;
+  } else if (category === "Art and Culture") {
+    return <PaletteIcon />;
   } else {
     return <BookAIcon />;
   }
@@ -104,7 +131,7 @@ const GKCategoryDialog = ({
             Choose a Category
           </DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3">
           {categories.map((category) => (
             <div
               key={category}
@@ -117,7 +144,7 @@ const GKCategoryDialog = ({
             >
               <div className="mx-auto">{getIcon(category)}</div>
               <h3 className="text-sm font-semibold text-gray-700 text-center">
-                {category.split("and")[0]}
+                {category}
               </h3>
             </div>
           ))}
