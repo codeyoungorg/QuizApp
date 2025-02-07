@@ -27,7 +27,6 @@ const NativeComponent = () => {
       setCookie("userRole", data?.userRole);
 
       setTimeout(() => {
-        console.log(event.data);
         router.push("/");
       }, 2000);
       // Route to the main page
