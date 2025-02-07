@@ -100,6 +100,8 @@ export type GKQuizDataType = {
       subtopic: string;
       learning_objective: string;
     };
+    difficulty_level: string | number | null;
+    id: number | null;
     question: string;
     explanation: string;
   }[];
