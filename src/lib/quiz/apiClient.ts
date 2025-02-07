@@ -18,6 +18,7 @@ export const captureEvent = async ({ data }:{ data:QuizEventData}) => {
     const inclusion = [ "gk","coding", "language-practice"]; // "language-learn",
     // Only the above specific events
     if(inclusion.includes(data.type)){
+      console.log("Capture Event", userId, userRole, data)
       await apiService.post(`quiz/submit`, {
         userId,
         userRole,
