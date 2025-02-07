@@ -16,6 +16,7 @@ export const captureEvent = async ({ data }:{ data:QuizEventData}) => {
   const userRole = getCookie("userRole");
   try {
     const inclusion = [ "gk","coding", "language-practice"]; // "language-learn",
+    // Only the above specific events
     if(inclusion.includes(data.type)){
       await apiService.post(`quiz/submit`, {
         userId,
