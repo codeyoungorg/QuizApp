@@ -234,7 +234,7 @@ export default function QuizBox({
       await captureEvent({
         data: {
           type: "gk",
-          subject: currentQuestion.subject,
+          subject: "General Knowledge",
           topic: currentQuestion?.topic,
           difficulty: currentQuestion?.difficulty_level ? [currentQuestion.difficulty_level] : [],
           quizId: parseInt(quizId),
