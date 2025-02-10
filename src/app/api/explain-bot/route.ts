@@ -7,7 +7,7 @@ const openai = createOpenAI({
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { prompt: question, correctOption } = body;
+  const { question, correctOption } = body;
 
   const response = await streamText({
     model: openai("gpt-4o-mini"),

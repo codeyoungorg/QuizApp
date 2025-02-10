@@ -26,7 +26,7 @@ export default function MCQBox({
   hasEnded: boolean;
 }) {
   const correctAnswer = currentQuestion?.options.find(
-    (option: any) => option.correct == "true"
+    (option: any) => option.correct == true
   )?.text;
 
   const completedQuestion = submissions.find(
