@@ -1,9 +1,8 @@
 "use client";
 
-import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 import ExplainationPopover from "./explaination-popover";
 
 export default function OptionsBox({
@@ -41,10 +40,9 @@ export default function OptionsBox({
       <div className="grid grid-cols-2 gap-2">
         {options.map((option: any, i: number) => {
           const isSelected = completedQuestion?.selected.text === option.text;
-          const showCorrect =
-            hasEnded && isSelected && option.correct === "true";
+          const showCorrect = hasEnded && isSelected && option.correct == true;
           const showIncorrect =
-            hasEnded && isSelected && option.correct === "false";
+            hasEnded && isSelected && option.correct == false;
           return (
             <button
               type="button"
@@ -63,7 +61,7 @@ export default function OptionsBox({
             >
               <div
                 className={cn(
-                  "rounded-full bg-[#E6EFEF] w-6 h-6 flex items-center justify-center text-sm font-semibold",
+                  "rounded-full shrink-0 bg-[#E6EFEF] w-6 h-6 flex items-center justify-center text-sm font-semibold",
                   showCorrect
                     ? "bg-[#9BD4B6] text-[#FFF]"
                     : showIncorrect

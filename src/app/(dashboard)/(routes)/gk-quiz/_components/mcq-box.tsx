@@ -1,10 +1,11 @@
 "use client";
 
+import botIcon from "@/assets/Images/noah_dp.svg";
+import Image from "next/image";
+import FeedBackForm from "./feedback-form";
 import OptionsBox from "./options-box";
 import QuestionBox from "./question-box";
-import Image from "next/image";
-import botIcon from "@/assets/Images/noah_dp.svg";
-import FeedBackForm from "./feedback-form";
+
 export default function MCQBox({
   currentQuestion,
   handleNext,
@@ -15,7 +16,7 @@ export default function MCQBox({
 }: {
   currentQuestion: any;
   handleNext: any;
-  submissions: any;
+  submissions: any[];
   questionIndex: number;
   user: {
     name: string;
@@ -25,11 +26,13 @@ export default function MCQBox({
   hasEnded: boolean;
 }) {
   const correctAnswer = currentQuestion?.options.find(
-    (option: any) => option.correct == "true"
+    (option: any) => option.correct == true
   )?.text;
 
   const completedQuestion = submissions.find(
-    (option: any) => option.questionId === currentQuestion?.uuid
+    (option: any) =>
+      option.questionId === currentQuestion?.uuid &&
+      submissions.length !== questionIndex - 1
   );
   return (
     <div className="max-w-3xl my-2 flex items-start w-full gap-x-2">

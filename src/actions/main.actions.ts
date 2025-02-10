@@ -350,7 +350,7 @@ export const getNumberOfSubmittedAnswers = async (userid: string) => {
     console.error(error);
     return 0;
   }
-  console.log(allQuizes);
+
   let numberOfCompletedQuiz = 0;
   allQuizes?.forEach((quiz: any) => {
     if (quiz.submissions?.length > 0) {
