@@ -25,6 +25,7 @@ export default function ExplainationPopover({
     api: "/api/explain-bot",
     body: {
       correctOption: answer,
+      question: question,
     },
   });
   return (
