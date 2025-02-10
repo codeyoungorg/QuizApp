@@ -7,7 +7,10 @@ export type QuizDataType = {
     uuid: string;
     grade: string;
     topic: string;
-    options: Option[];
+    options: {
+      text: string;
+      correct: string;
+    }[];
     subject: string;
     metadata: {
       grade: string;
@@ -72,4 +75,44 @@ export type QuestionType = {
   blooms_level: string;
   difficulty_level: string;
   difficulty_rating: number;
+};
+
+export type GKQuizDataType = {
+  id: number;
+  userid: string;
+  topic_id: number;
+  subject_id: number;
+  questions: {
+    uuid: string;
+    grade: string;
+    topic: string;
+    options: {
+      text: string;
+      correct: boolean;
+    }[];
+    subject: string;
+    metadata: {
+      grade: string;
+      topic: string;
+      subject: string;
+      subtopic: string;
+      learning_objective: string;
+    };
+    question: string;
+    explanation: string;
+  }[];
+  submissions: {
+    selected: {
+      text: string;
+      correct: boolean;
+    };
+    isCorrect: boolean;
+    questionId: string;
+    questionIntId?: number;
+    correctOption?: string;
+  }[];
+  created_at: Date;
+  start: boolean;
+  complete: boolean;
+  multiple_topics?: any;
 };

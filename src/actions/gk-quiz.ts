@@ -1,31 +1,40 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
 
-// generating questions
-export const getGKQuestions = async (userId: string) => {
-  let db = "fetch_rows_db_gk_easy";
-  // generate two random topics
-  const topics = await generateRandomTopics();
-
+// // generating questions
+export const getGKQuestions = async ({
+  userId,
+  topicId,
+}: {
+  userId: string;
+  topicId: number;
+}) => {
   // fetching stored correct submissions
-  const questionIds = await fetchCorrectSubmissions(userId, topics);
+  const questionIds = await fetchCorrectSubmissions(userId, topicId);
 
-  const questions = await fetchQuestionsForGK(10, topics, questionIds, db);
-  return { questions, topics: topics };
+  const questions = await fetchQuestionsForGK({
+    limit: 5,
+    topicId,
+    questionIds,
+  });
+  return { questions };
 };
 
 // fetching question function
-const fetchQuestionsForGK = async (
-  limit: number,
-  topics: string[],
-  questionIds: string[],
-  db_url: string
-) => {
+const fetchQuestionsForGK = async ({
+  limit,
+  topicId,
+  questionIds,
+}: {
+  limit: number;
+  topicId: number;
+  questionIds: string[];
+}) => {
   const supabase = createClient();
 
-  const { data, error } = await supabase.rpc(db_url, {
+  const { data, error } = await supabase.rpc("db_gk_rpc", {
     rows_limit: limit,
-    topics: topics,
+    selected_topic_id: topicId,
     uuids: questionIds,
   });
 
@@ -36,35 +45,10 @@ const fetchQuestionsForGK = async (
   return data;
 };
 
-//   generating random topics
-const generateRandomTopics = async () => {
-  const supabase = createClient();
-
-  const { data, error } = await supabase.from("db_gk_quiz2").select("topic");
-
-  if (error) {
-    console.log(error);
-  }
-
-  const allTopics = Array.from(new Set(data?.map((topic: any) => topic.topic)));
-
-  const randomTopics = [] as string[];
-  for (let i = 0; i < 3; i++) {
-    const randomTopic = allTopics[Math.floor(Math.random() * allTopics.length)];
-    if (randomTopics.includes(randomTopic as string)) {
-      i--;
-      continue;
-    }
-    randomTopics.push(randomTopic as string);
-  }
-
-  return randomTopics;
-};
-
 // fetching correct submissions
 export const fetchCorrectSubmissions = async (
   userId: string,
-  topics: string[]
+  topicId: number
 ) => {
   const supabase = createClient();
 
@@ -72,7 +56,7 @@ export const fetchCorrectSubmissions = async (
     .from("correct_submissions_gk")
     .select("questionid")
     .eq("userid", userId)
-    .in("topic", topics);
+    .eq("topic_id", topicId);
 
   if (!data) {
     return [];
@@ -86,11 +70,15 @@ export const fetchCorrectSubmissions = async (
 };
 
 // create quiz
-export async function createGKQuiz(
-  userId: string,
-  questions: any,
-  topics: string[]
-) {
+export async function createGKQuiz({
+  questions,
+  topicId,
+  userId,
+}: {
+  userId: string;
+  questions: any;
+  topicId: number;
+}) {
   const supabase = createClient();
 
   const { data, error } = await supabase
@@ -99,7 +87,7 @@ export async function createGKQuiz(
       userid: userId,
       questions: questions,
       start: true,
-      multiple_topics: topics,
+      topic_id: topicId,
     })
     .select();
 
@@ -164,19 +152,24 @@ export async function storeUserSubmissionInGKQuiz(
 }
 
 // storing correct submission
-export async function storeCorrectSubmissionForGK(
-  userId: string,
-  questionId: string,
-  quizId: number,
-  multiple_topics: string[]
-) {
+export async function storeCorrectSubmissionForGK({
+  userId,
+  questionId,
+  quizId,
+  topicId,
+}: {
+  userId: string;
+  questionId: string;
+  quizId: number;
+  topicId: number;
+}) {
   const supabase = createClient();
 
   const { error } = await supabase.from("correct_submissions_gk").insert({
     userid: userId,
     questionid: questionId,
     quizid: quizId,
-    multiple_topics: multiple_topics,
+    topic_id: topicId,
   });
 
   if (error) {
@@ -233,18 +226,89 @@ export async function getInCompletedGKQuiz(userId: string) {
   return data;
 }
 
+export const getGKCategoriesByGrade = async (grade: number) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("gk_topics")
+    .select("category")
+    .contains("grade", [grade]);
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  // Get unique categories
+  const uniqueCategories = Array.from(
+    new Set(data?.map((item) => item.category))
+  );
+  return uniqueCategories.map((category) => ({ category }));
+};
+
+export const selectRandomTopicOfCategory = async ({
+  category,
+  grade,
+}: {
+  category: string;
+  grade: number;
+}) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("gk_topics")
+    .select("topic, id")
+    .contains("grade", [grade])
+    .eq("category", category);
+
+  if (error) {
+    console.error(error);
+    return { randomTopic: null, topicId: null };
+  }
+
+  const randomIndex = Math.floor(Math.random() * (data?.length || 0));
+  const randomTopic = data[randomIndex].topic;
+  const topicId = data[randomIndex].id;
+
+  return { randomTopic, topicId };
+};
+
 export const getNumberOfCompletedGKQuiz = async (userid: string) => {
   const supabase = createClient();
+
+  if (!userid) {
+    return {
+      numberOfCompletedQuiz: 0,
+      level: 1,
+      totalQuiz: 0,
+    };
+  }
   const { data: allQuizes, error } = await supabase
     .from("quiz_gk")
-    .select("questions, submissions")
+    .select("questions, submissions, userid, complete")
     .eq("userid", userid)
     .eq("complete", true);
 
   if (error) {
     console.error(error);
   }
-  let numberOfCompletedQuiz = allQuizes?.length || 0;
+  let numberOfCompletedQuiz = 0;
+  allQuizes?.forEach((quiz: any) => {
+    numberOfCompletedQuiz += quiz.submissions?.length || 0;
+  });
+
+  const numberOfPointsEarned = allQuizes
+    ? allQuizes.reduce(
+        (count: number, quiz: { submissions?: { isCorrect: boolean }[] }) => {
+          if (quiz.submissions && quiz.submissions.length > 0) {
+            const correctCount = quiz.submissions.filter(
+              (submission: { isCorrect: boolean }) => submission.isCorrect
+            ).length;
+            return count + correctCount;
+          }
+          return count;
+        },
+        0
+      )
+    : 0;
 
   const totalQuiz =
     numberOfCompletedQuiz <= 10
@@ -255,5 +319,43 @@ export const getNumberOfCompletedGKQuiz = async (userid: string) => {
     numberOfCompletedQuiz,
     level,
     totalQuiz,
+    numberOfPointsEarned,
   };
+};
+
+export const getGKQuizById = async (id: any) => {
+  const supabase = createClient();
+  try {
+    let { data, error } = await supabase
+      .from("quiz_gk")
+      .select("*")
+      .eq("id", id)
+      .limit(1);
+
+    if ((data?.length ?? 0) > 0) {
+      return data;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+};
+
+// select random category by grade
+export const selectRandomCategoryByGrade = async (grade: number) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("gk_topics")
+    .select("category")
+    .contains("grade", [grade]);
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+  const randomIndex = Math.floor(Math.random() * (data?.length || 0));
+  const randomCategory = data[randomIndex].category;
+  return randomCategory;
 };

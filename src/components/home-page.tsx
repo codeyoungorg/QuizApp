@@ -1,22 +1,24 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import "@/components/home-page.css";
-import Image from "next/image";
-import noahImage from "@/assets/Images/noahHomepageImage.png";
 import noahHeadingImage from "@/assets/Images/NoahHeading.png";
-import { useRouter } from "next/navigation";
-import { createGKQuiz, getGKQuestions } from "@/actions/gk-quiz";
-import { getCookie } from "cookies-next";
+import noahImage from "@/assets/Images/noahHomepageImage.png";
+import GKCategoryDialog from "@/components/gk-category-dialog";
+import "@/components/home-page.css";
 import saveGTMEvents from "@/lib/gtm";
+import chatsCompleted from "@/public/images/icons/chatsCompleted.png";
 import NewIcon from "@/public/images/icons/new-icon.png";
 import star from "@/public/images/icons/pointsStar.svg";
-import chatsCompleted from "@/public/images/icons/chatsCompleted.png";
+import { getCookie } from "cookies-next";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 type Props = {
   userId: string;
   mathQuiz: any;
   gkQuiz: any;
   doubtChats: any;
+  gkCategories: string[];
+  grade: number;
 };
 
 type QuizData = {
@@ -30,8 +32,11 @@ const HomePage: React.FC<Props> = ({
   mathQuiz,
   gkQuiz,
   doubtChats,
+  gkCategories,
+  grade,
 }: Props) => {
   const router = useRouter();
+  const [showCategoryDialog, setShowCategoryDialog] = useState(false);
 
   const [quizData] = useState<QuizData | null>({
     numberOfCompletedQuiz: gkQuiz?.value?.numberOfPointsEarned || 0,
@@ -71,7 +76,7 @@ const HomePage: React.FC<Props> = ({
               />
               {numberOfCompletedQuiz} pts
             </div>
-          ):(
+          ) : (
             ""
           )}
         </>
@@ -120,6 +125,7 @@ const HomePage: React.FC<Props> = ({
 
   useEffect(() => {
     const userId = getCookie("userId");
+
     saveGTMEvents({
       eventAction: "noah_homepage",
       label: userId ? "student" : "guest",
@@ -133,23 +139,6 @@ const HomePage: React.FC<Props> = ({
     }
   }, []);
 
-  const generateGKQuiz = async () => {
-    try {
-      const { questions, topics } = await getGKQuestions(userId);
-      if (questions.length === 0) {
-        return;
-      }
-
-      // create gk quiz and redirect to gk-quiz page
-      const data = await createGKQuiz(userId, questions, topics);
-      if (!data || !data!.length) return;
-      router.push(`/gk-quiz/${data[0]?.id}`);
-    } catch (error) {
-      console.log(error);
-      return;
-    }
-  };
-
   const handleButtonClick = (title: string) => {
     const userId = getCookie("userId");
     if (title === "Fun Trivia") {
@@ -161,7 +150,7 @@ const HomePage: React.FC<Props> = ({
         label3: null,
         label4: null,
       });
-      generateGKQuiz();
+      setShowCategoryDialog(true);
     } else if (title === "Ask a Doubt") {
       saveGTMEvents({
         eventAction: "doubt_clicked",
@@ -186,73 +175,84 @@ const HomePage: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-row justify-center pb-5">
-      <div className="parentDiv">
-        <div className="titleSectionWrapper">
-          <div className="titleTxt">
-            <div className="flex flex-row xs:justify-center md:justify-start">
+    <>
+      <div className="flex flex-row justify-center pb-5">
+        <div className="parentDiv">
+          <div className="titleSectionWrapper">
+            <div className="titleTxt">
+              <div className="flex flex-row xs:justify-center md:justify-start">
+                <Image
+                  src={noahHeadingImage}
+                  alt="Noah heading"
+                  height={42}
+                  width={151}
+                  className="noahHeadingImg"
+                />
+              </div>
+              <div className="subHeadingTxt">Built to make you better.</div>
+            </div>
+            <div className="noahHomeIcon">
               <Image
-                src={noahHeadingImage}
-                alt="Noah heading"
-                height={42}
-                width={151}
-                className="noahHeadingImg"
+                src={noahImage}
+                alt="Noah image"
+                height={222}
+                width={266}
+                className="md:w-[266px] md:h-[222px] xs:w-[206px] xs:h-[172px]"
               />
             </div>
-            <div className="subHeadingTxt">Built to make you better.</div>
           </div>
-          <div className="noahHomeIcon">
-            <Image
-              src={noahImage}
-              alt="Noah image"
-              height={222}
-              width={266}
-              className="md:w-[266px] md:h-[222px] xs:w-[206px] xs:h-[172px]"
-            />
-          </div>
-        </div>
-        {/* <QuickQuiz /> */}
-        <div className="cardContainer">
-          <div className="cardHeading">What do you want to do today?</div>
-          <div className="cardsWrapper">
-            {cards.map((card, index) => (
-              <div key={index} className="cardLayout">
-                <div className="lg:m-6 md:m-2 lg:p-0 xs:p-4 h-5/6 relative flex flex-col gap-4">
-                  <div className="cardTitle">{card.title}</div>
-                  <div className="cardSubTitle">{card.subtitle}</div>
-
-                  {getCookie("userRole") !== "guest" && (
-                    <div className={card.description && "cardDescription"}>
-                      {card.description}
-                    </div>
-                  )}
-                  <div className=" boxContainer flex flex-col gap-4 ">
-                    <div className="additionalText"> {card.additionalText}</div>
-                    <div className="">
-                      <button
-                        className="getStartedBtn"
-                        onClick={() => handleButtonClick(card.title)}
-                      >
-                        <span className="flex flex-row justify-center gap-2">
-                          Get Started
-                          <Image
-                            src="/images/icons/arrow-right.png"
-                            alt="arrow-right"
-                            width={16}
-                            height={16}
-                            className="mb-1"
-                          />
-                        </span>
-                      </button>
+          <div className="cardContainer">
+            <div className="cardHeading">What do you want to do today?</div>
+            <div className="cardsWrapper">
+              {cards.map((card, index) => (
+                <div key={index} className="cardLayout">
+                  <div className="lg:m-6 md:m-2 lg:p-0 xs:p-4 h-5/6 relative flex flex-col gap-4">
+                    <div className="cardTitle">{card.title}</div>
+                    <div className="cardSubTitle">{card.subtitle}</div>
+                    {getCookie("userRole") !== "guest" && (
+                      <div className={card.description && "cardDescription"}>
+                        {card.description}
+                      </div>
+                    )}
+                    <div className=" boxContainer flex flex-col gap-4 ">
+                      <div className="additionalText">
+                        {" "}
+                        {card.additionalText}
+                      </div>
+                      <div className="">
+                        <button
+                          className="getStartedBtn"
+                          onClick={() => handleButtonClick(card.title)}
+                        >
+                          <span className="flex flex-row justify-center gap-2">
+                            Get Started
+                            <Image
+                              src="/images/icons/arrow-right.png"
+                              alt="arrow-right"
+                              width={16}
+                              height={16}
+                              className="mb-1"
+                            />
+                          </span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <GKCategoryDialog
+        isOpen={showCategoryDialog}
+        onClose={() => setShowCategoryDialog(false)}
+        categories={gkCategories}
+        grade={grade}
+        userId={userId}
+      />
+    </>
   );
 };
 

@@ -1,9 +1,6 @@
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
-import {
-  getGKQuizById,
-  getNumberOfCompletedGKQuiz,
-} from "@/actions/gk-quiz.server";
+import { getGKQuizById, getNumberOfCompletedGKQuiz } from "@/actions/gk-quiz";
 import QuizBox from "../_components/quiz-box";
 
 export default async function QuizPage({

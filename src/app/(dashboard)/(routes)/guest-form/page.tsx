@@ -64,7 +64,6 @@ const GuestForm = () => {
             }
           }
           if (response.countryDetails && response.countryDetails.length > 0) {
-            console.log(response, "res");
             setCountries(response.countryDetails);
           }
         } catch (err) {
@@ -75,15 +74,10 @@ const GuestForm = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -154,7 +148,6 @@ const GuestForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const data = formData;
     const userId = getCookie("userId");
-    console.log("called", formData);
     if (userId) {
       data.guestId = userId;
     }
@@ -178,8 +171,6 @@ const GuestForm = () => {
           setCookie("userRole", "partial-parent");
         }
         if (response && response.parentId) {
-          console.log(response, "res");
-
           const mobileData = {
             type: "guestAuth",
             parentId: response.parentId,

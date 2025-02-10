@@ -93,11 +93,11 @@ export const getStudentActivity = async ({
   studentId,
   subjectId,
   userType,
-  timeZone
+  timeZone,
 }: {
   studentId: string | null;
   subjectId: number | null;
-  userType: string 
+  userType: string;
   timeZone: string | false;
 }) => {
   try {
@@ -105,7 +105,7 @@ export const getStudentActivity = async ({
       studentId,
       subjectId,
       userType,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
     const response = await apiService.get(`/dashboard/activity`, { params });
@@ -143,7 +143,6 @@ export const saveStudentDetails = async (studentDetails: {
   parentContact: string;
   parentName: string;
 }) => {
-  console.log(studentDetails, "details");
   try {
     const response = await apiService.post(`guest/student`, studentDetails);
     return response.data;
