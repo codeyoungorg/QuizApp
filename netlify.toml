@@ -1,4 +1,0 @@
-# branch configuration
-[context.production]
-  command = "npm run build"
-  environment = { BRANCH = "feat-gauri-gkAndScholarsClub" }
