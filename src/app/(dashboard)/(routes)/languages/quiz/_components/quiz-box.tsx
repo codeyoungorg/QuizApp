@@ -15,7 +15,7 @@ import {
 import { Loader2 } from "lucide-react"; // Import the loader icon
 import { useQuery } from "@tanstack/react-query";
 import useQuizStore from "@/store/quiz-store";
-import { saveStreak } from "@/lib/quiz/apiClient";
+import { captureEvent } from "@/lib/quiz/apiClient";
 
 const DndProviderWithBackend = ({
   children,
@@ -149,7 +149,6 @@ export default function QuizBox({
         return isCorrect ? prev + 1 : prev;
       }
     });
-    const res = await saveStreak();
   };
 
   const resetQuiz = () => {
@@ -202,6 +201,16 @@ export default function QuizBox({
         });
 
         if (data) {
+          await captureEvent({
+            data: {
+              type:"language-practice",
+              subject: lang,
+              quizId:data.id,
+              topicId,
+              difficulty: quizSubmissions.map(row=>levelId),
+              questionId: quizSubmissions.map(row=>row.questionId),
+            }
+          });
           router.replace(`/languages/result?lang=${lang}&quiz=${data.id}`);
         }
       }
