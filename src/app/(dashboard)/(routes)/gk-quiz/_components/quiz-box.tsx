@@ -32,7 +32,7 @@ import {
 } from "@/actions/gk-quiz";
 import saveGTMEvents from "@/lib/gtm";
 import apiService from "@/lib/apiService";
-import { saveStreak } from "@/lib/quiz/apiClient";
+import { captureEvent } from "@/lib/quiz/apiClient";
 
 type SubmissionType = {
   questionId: string;
@@ -231,7 +231,16 @@ export default function QuizBox({
 
       if (allQuestionsAnswered) return;
 
-      const res = await saveStreak();
+      await captureEvent({
+        data: {
+          type: "gk",
+          subject: "General Knowledge",
+          topic: currentQuestion?.topic,
+          difficulty: currentQuestion?.difficulty_level ? [currentQuestion.difficulty_level] : [],
+          quizId: parseInt(quizId),
+          questionId: currentQuestion?.id ? [currentQuestion.id] : [],
+        },
+      });
       // Move to the next question
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },

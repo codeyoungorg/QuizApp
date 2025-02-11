@@ -1,18 +1,31 @@
 import apiService from "../apiService";
 import { getCookie } from "cookies-next";
 
-export const saveStreak = async () => {
+type QuizEventData = {
+  type:string;
+  subject:string;
+  topic?:string | null;
+  topicId?: number | string | null;
+  difficulty: [string | number] | number[] | [];
+  questionId:[string | number] | number[] | [];
+  quizId: number;
+};
+
+export const captureEvent = async ({ data }:{ data:QuizEventData}) => {
   const userId = getCookie("userId");
   const userRole = getCookie("userRole");
-
   try {
-    const response = await apiService.post(`quiz/submit`, {
-      userId,
-      userRole,
-    });
-    return response.data;
+    const inclusion = [ "gk","coding", "language-practice"]; // "language-learn",
+    // Only the above specific events
+    if(inclusion.includes(data.type)){
+      console.log("Capture Event", userId, userRole, data)
+      await apiService.post(`quiz/submit`, {
+        userId,
+        userRole,
+        ...data
+      });
+    }
   } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error;
+    // throw error;
   }
 };
