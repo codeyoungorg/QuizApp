@@ -57,6 +57,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         {showBackButton ? (
           <button
             onClick={() => {
+              const urlParams = new URLSearchParams(window.location.search);
+                const fromParam = urlParams.get("from");
+                if (fromParam =="sandbox") {
+                  window.location.href=(`${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/home`);}
               if (pathname.includes("student-dashboard")) {
                 router.push("/");
               } else if (pathname.includes("subject-dashboard")) {
