@@ -340,22 +340,35 @@ export async function recentChat(userId: string) {
 
 export const getNumberOfSubmittedAnswers = async (userid: string) => {
   const supabase = createClient();
-  const { data: allQuizes, error } = await supabase
-    .from("quiz")
-    .select("questions, submissions(*)")
-    .eq("userid", userid)
-    .filter("submissions.is_correct", "eq", true);
+  // const { data: allQuizes, error } = await supabase
+  //   .from("quiz")
+  //   .select("questions, submissions(*)")
+  //   .eq("userid", userid)
+  //   .filter("submissions.is_correct", "eq", true);
 
+  // if (error) {
+  //   console.error(error);
+  //   return 0;
+  // }
+
+  // let numberOfCompletedQuiz = 0;
+  // allQuizes?.forEach((quiz: any) => {
+  //   if (quiz.submissions?.length > 0) {
+  //     numberOfCompletedQuiz += quiz.submissions.length;
+  //   }
+  // });
+
+  // Add language data
+  const { data: rsData, error } = await supabase
+    .from("global_leaderboard")
+    .select("count")
+    .eq("userid", userid);
+
+  const completions = rsData && rsData.length ? rsData[0].count : 0;
   if (error) {
     console.error(error);
     return 0;
   }
 
-  let numberOfCompletedQuiz = 0;
-  allQuizes?.forEach((quiz: any) => {
-    if (quiz.submissions?.length > 0) {
-      numberOfCompletedQuiz += quiz.submissions.length;
-    }
-  });
-  return numberOfCompletedQuiz;
+  return completions;
 };
