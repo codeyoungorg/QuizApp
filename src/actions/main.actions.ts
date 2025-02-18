@@ -339,7 +339,7 @@ export async function recentChat(userId: string) {
 }
 
 export const getNumberOfSubmittedAnswers = async (userid: string) => {
-  const supabase = createClient();
+  /* const supabase = createClient();
   const { data: allQuizes, error } = await supabase
     .from("quiz")
     .select("questions, submissions(*)")
@@ -357,5 +357,18 @@ export const getNumberOfSubmittedAnswers = async (userid: string) => {
       numberOfCompletedQuiz += quiz.submissions.length;
     }
   });
-  return numberOfCompletedQuiz;
+  return numberOfCompletedQuiz; */
+
+  const supabase = createClient();
+  const { data: rsData, error } = await supabase
+  .from("global_leaderboard")
+  .select("count")
+  .eq("userid", userid);
+
+  const completions = rsData && rsData.length ? rsData[0].count : 0;
+  if (error) {
+    console.error(error);
+    return 0;
+  }
+  return completions;
 };
