@@ -146,10 +146,7 @@ const PageContent = () => {
           let updatedSubjectData: any = subjectData;
           data.response.forEach((subject: any) => {
             updatedSubjectData[subject.subjectName].rank = subject.rank;
-            updatedSubjectData[subject.subjectName].answeredCount = parseInt(subject.count, 10);
-              // languages.includes(subject.subjectName)
-              //   ? parseInt(subject.attempted, 10)
-              //   : parseInt(subject.count, 10);
+            updatedSubjectData[subject.subjectName].answeredCount = subject.count ? parseInt(subject.count, 10) : 0;
             updatedSubjectData[subject.subjectName].points = languages.includes(
               subject.subjectName
             )
