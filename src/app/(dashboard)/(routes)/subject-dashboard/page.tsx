@@ -15,6 +15,7 @@ import constants from "@/constants/constants";
 import TopicCardCarousel from "./components/topic-card/topic-card-carousel";
 import saveGTMEvents from "@/lib/gtm";
 import TopicCard from "./components/topic-card/topic-card";
+import GuestWebsite from "@/components/guest-website";
 import ClipLoader from "react-spinners/ClipLoader";
 
 type TopicCardLayout = {
@@ -45,16 +46,34 @@ const PageContent = () => {
   const [topicLoader, setTopicLoader] = useState<boolean>(false);
   const [dashboardLoader, setDashboardLoader] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const [isWebView, setIsWebView] = useState(false);
+
   const userId = getCookie("userId");
   const userGrade = getCookie("grade");
   const params = useSearchParams();
   const subject = params.get("subject");
   const userRole = getCookie("userRole");
+  const grade = getCookie("grade");
   const [clientTimezone, setClientTimezone] = useState("");
+    useEffect(() => {
+      // Check if we're in a WebView environment
+      const checkWebView = () => {
+        return window.ReactNativeWebView !== undefined;
+      };
+  
+      setIsWebView(checkWebView());
+    }, []);
   useEffect(() => {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setClientTimezone(tz);
   }, []);
+
+    useEffect(() => {
+      if (!isWebView && userRole === "guest" && (grade === undefined || grade === "undefined")) {
+        setIsPopupOpen(true);
+      }
+    }, [userRole, grade]);
 
   let sub = "";
   let subjectId: any = null;
@@ -254,6 +273,9 @@ const PageContent = () => {
           )}
         </div>
       </div>
+      {isPopupOpen && (
+        <GuestWebsite open={isPopupOpen} setIsPopupOpen={setIsPopupOpen} />
+      )}
     </div>
   );
 };
