@@ -24,9 +24,9 @@ export default function LanguageCard({
   ).length;
 
   useEffect(() => {
-    const storedValue = localStorage.getItem("totalCorrectAnswers");
-    setCompletedQuestions(Number(storedValue));
-  }, []);
+    const storedValue = localStorage.getItem(`totalCorrectAnswers_${langId}`);
+    setCompletedQuestions(Number(storedValue) || 0);
+  }, [langId]);
 
   const progress =
     totalQuestionsCount === 0
