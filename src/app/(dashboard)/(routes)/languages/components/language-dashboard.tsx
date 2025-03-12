@@ -36,17 +36,19 @@ const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
 
   const { data: dashboardData, isLoading: dashboardLoader } =
     useQuery<LeaderboardResponse>({
-      queryKey: ["languageLeaderboard", userId, langId],
+      queryKey: ["languageLeaderboard", userId, langId, lang],
       queryFn: () =>
         getLanguageDashboard({
           userId: userId || null,
           lang: langId || null,
         }),
       enabled: !!userId && !!langId,
+      staleTime: 0,
+      refetchOnMount: true,
     });
 
   const { data: activityData, isLoading: activityLoader } = useQuery({
-    queryKey: ["studentActivity", userId, langId],
+    queryKey: ["studentActivity", userId, langId, lang],
     queryFn: () =>
       getStudentActivity({
         studentId: userId || null,
@@ -55,6 +57,8 @@ const LanguageDashboard = ({ levels, lang, langId, totalQuestions }: Props) => {
         timeZone: "",
       }),
     enabled: !!userId && !!langId,
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   const [avatar, setAvatar] = useState<string>("");
