@@ -42,7 +42,7 @@ export default function LanguageCard({
     for (const topic of data) {
       if (topic.languages_quiz && topic.languages_quiz.length > 0) {
         for (const quiz of topic.languages_quiz) {
-          totalCorrect += quiz.correct;
+          totalCorrect += quiz.correct * topic.level_id;
         }
       }
     }
