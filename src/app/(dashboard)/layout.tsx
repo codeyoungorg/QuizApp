@@ -51,16 +51,17 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     >
       <div
         className={`w-full border-b-2 flex items-center justify-between bg-[#FFF] py-4 sticky top-0 z-[100] ${
-          isWebView && "h-14"
+          isWebView && "h-14 top-7"
         }`}
       >
         {showBackButton ? (
           <button
             onClick={() => {
               const urlParams = new URLSearchParams(window.location.search);
-                const fromParam = urlParams.get("from");
-                if (fromParam =="sandbox") {
-                  window.location.href=(`${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/home`);}
+              const fromParam = urlParams.get("from");
+              if (fromParam == "sandbox") {
+                window.location.href = `${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/home`;
+              }
               if (pathname.includes("student-dashboard")) {
                 router.push("/");
               } else if (pathname.includes("subject-dashboard")) {
