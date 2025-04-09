@@ -7,6 +7,7 @@ import { Inter } from "next/font/google";
 import { usePathname, useRouter } from "next/navigation";
 import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
+import { getCookie } from "cookies-next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,10 +30,18 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (pathname !== "/") {
-      setShowBackButton(true);
+    if (window.ReactNativeWebView) {
+      if (pathname !== "/" || getCookie("currentPageUrl")) {
+        setShowBackButton(true);
+      } else {
+        setShowBackButton(false);
+      }
     } else {
-      setShowBackButton(false);
+      if (pathname !== "/") {
+        setShowBackButton(true);
+      } else {
+        setShowBackButton(false);
+      }
     }
   }, [pathname]);
 
@@ -59,6 +68,15 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             onClick={() => {
               const urlParams = new URLSearchParams(window.location.search);
               const fromParam = urlParams.get("from");
+              if (isWebView) {
+                const targetUrl = getCookie("currentPageUrl");
+                const landingUrl = getCookie("targetPageUrl");
+
+                if (landingUrl === window.location.href) {
+                  window.location.href = targetUrl;
+                  return;
+                }
+              }
               if (fromParam == "sandbox") {
                 window.location.href = `${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/home`;
               }
@@ -107,27 +125,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               height={20}
             />
             <span className="ml-1 xs:hidden md:block">Go Back</span>
-          </button>
-        ) : isWebView ? (
-          <button
-            onClick={() => {
-              if (isWebView) {
-                const mobileData = {
-                  type: "route",
-                };
-                window.ReactNativeWebView.postMessage(
-                  JSON.stringify(mobileData)
-                );
-              }
-            }}
-            className="xs:ml-5"
-          >
-            <Image
-              src={"/images/icons/arrow-left.svg"}
-              alt="arrow-left"
-              width={20}
-              height={20}
-            />
           </button>
         ) : (
           <></>
