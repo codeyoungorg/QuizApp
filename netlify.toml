@@ -1,0 +1,4 @@
+# branch configuration
+[context.production]
+  command = "npm run build"
+  environment = { BRANCH = "feat/SPRIN-2015/evaluation-feature" }
