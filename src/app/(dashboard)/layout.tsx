@@ -73,7 +73,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 const landingUrl = getCookie("targetPageUrl");
 
                 if (landingUrl === window.location.href) {
-                  window.location.href = targetUrl;
+                  window.location.href = targetUrl || "";
                   return;
                 }
               }
