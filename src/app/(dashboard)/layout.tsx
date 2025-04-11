@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 import { getCookie } from "cookies-next";
+import { stopLoader } from "../../utils/loaderUtils";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
+    stopLoader();
     if (window.ReactNativeWebView) {
       if (pathname !== "/" || getCookie("currentPageUrl")) {
         setShowBackButton(true);
