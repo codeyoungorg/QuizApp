@@ -137,7 +137,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <Image src={sandboxLogo} alt="sandbox-logo" />
           </Link>
         )}
-        {isWebView && showBackButton && (
+        {isWebView && (
           <IconButton
             aria-label="home"
             onClick={handleHome}
