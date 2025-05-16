@@ -22,6 +22,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [isWebView, setIsWebView] = useState(false);
 
   useEffect(() => {
+    stopLoader();
     // Check if we're in a WebView environment
     const checkWebView = () => {
       return window.ReactNativeWebView !== undefined;
