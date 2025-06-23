@@ -56,6 +56,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       window.ReactNativeWebView.postMessage(JSON.stringify(mobileData));
     }
   };
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("from") === "sandboxLanguage") {
+      sessionStorage.setItem("entryPoint", "sandboxLanguage");
+    }
+  }, []);
 
   return (
     <div
@@ -70,6 +76,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <button
             onClick={() => {
               const urlParams = new URLSearchParams(window.location.search);
+              const entryPoint = sessionStorage.getItem("entryPoint");
               const fromParam = urlParams.get("from");
               if (isWebView) {
                 const targetUrl = getCookie("currentPageUrl");
@@ -79,6 +86,14 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                   window.location.href = targetUrl || "";
                   return;
                 }
+              }
+                if (
+                entryPoint == "sandboxLanguage" &&
+                pathname.includes(`student-dashboard`)
+              ) {
+                window.location.href = `${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/language-learning`;
+                sessionStorage.removeItem("entryPoint");
+                return;
               }
               if (fromParam == "sandbox") {
                 window.location.href = `${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/home`;
