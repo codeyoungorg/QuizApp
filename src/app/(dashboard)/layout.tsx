@@ -87,9 +87,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                   return;
                 }
               }
-                if (
+              if (
                 entryPoint == "sandboxLanguage" &&
-                pathname.includes(`student-dashboard`)
+                !pathname.includes("/quiz") &&
+                pathname.includes(`/languages`)
               ) {
                 window.location.href = `${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/language-learning`;
                 sessionStorage.removeItem("entryPoint");
