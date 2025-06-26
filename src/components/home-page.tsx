@@ -36,6 +36,7 @@ const HomePage: React.FC<Props> = ({
   grade,
 }: Props) => {
   const router = useRouter();
+
   const [showCategoryDialog, setShowCategoryDialog] = useState(false);
 
   const [quizData] = useState<QuizData | null>({
@@ -136,6 +137,20 @@ const HomePage: React.FC<Props> = ({
     });
     if (!userId) {
       window.open(process.env.NEXT_PUBLIC_SANDBOX_URL, "_self");
+    }
+     const params = new URLSearchParams(window.location.search);
+    const fromParam = params.get("from");
+    const triviaParam = params.get("trivia");
+    if (fromParam === "sandbox" && triviaParam === "1") {
+      saveGTMEvents({
+        eventAction: "general_opened",
+        label: userId ? "student" : "guest",
+        label1: userId || null,
+        label2: null,
+        label3: null,
+        label4: null,
+      });
+      setShowCategoryDialog(true);
     }
   }, []);
 
