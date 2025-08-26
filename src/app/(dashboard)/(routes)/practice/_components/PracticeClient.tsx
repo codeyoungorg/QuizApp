@@ -1,0 +1,101 @@
+"use client";
+
+import { useState } from "react";
+import { SelectQuestionCount } from "./SelectQuestionCount";
+import { AttemptQuiz } from "./AttemptQuiz";
+import { useSearchParams } from "next/navigation";
+import axios from "axios";
+import { ErrorToast } from "@/utils/getToast";
+import { ExerciseCompleted } from "./ExerciseCompleted";
+import { QuizDataType, SubmissionType } from "@/types/quiz.types";
+
+export default function PracticeClient({
+  user_id,
+  user_grade,
+}: {
+  user_id: string | null;
+  user_grade: string | null;
+}) {
+  const queryParams = useSearchParams();
+  const topicId = queryParams.get("topicId");
+  const subjectId = queryParams.get("subjectId");
+  const quizTopic = queryParams.get("topic");
+  const userId = user_id || queryParams.get("userId");
+  const grade = user_grade || queryParams.get("grade");
+
+  const userData = {
+    id: userId,
+    grade: grade ? parseInt(grade) : null,
+    subjectId: subjectId ? parseInt(subjectId) : null,
+    topicId: topicId ? parseInt(topicId) : null,
+  };
+
+  const [quizData, setQuizData] = useState<QuizDataType | null>(null);
+  const [submissions, setSubmissions] = useState<SubmissionType[]>([]);
+  const [questionCount, setQuestionCount] = useState<number | null>(null);
+  const [isPracticeStarted, setIsPracticeStarted] = useState(false);
+
+  const [isShowScore, setIsShowScore] = useState(false);
+  const [isReviewQuiz, setIsReviewQuiz] = useState(false);
+
+  const [quizLoading, setQuizLoading] = useState(false);
+
+  const handleStartPractice = async () => {
+    if (topicId && userId && grade && subjectId && questionCount) {
+      try {
+        setQuizLoading(true);
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_QUIZ_API}/quiz/serve`,
+          {
+            grade: parseInt(grade),
+            subjectId: parseInt(subjectId),
+            userId,
+            topicId: parseInt(topicId),
+            noOfQuestions: questionCount,
+          }
+        );
+        setQuizData(response.data?.quiz);
+        setIsPracticeStarted(true);
+      } catch (error) {
+        console.error(error);
+        ErrorToast("Failed to start quiz.");
+      } finally {
+        setQuizLoading(false);
+      }
+    } else {
+      ErrorToast("Missing required parameters to start the quiz.");
+    }
+  };
+
+  return (
+    <div className="p-5 h-full">
+      {!isPracticeStarted ? (
+        <SelectQuestionCount
+          quizTopic={quizTopic}
+          setQuestionCount={setQuestionCount}
+          questionCount={questionCount}
+          onStartPractice={handleStartPractice}
+          quizLoading={quizLoading}
+        />
+      ) : isShowScore ? (
+        <ExerciseCompleted
+          setIsShowScore={setIsShowScore}
+          setIsReviewQuiz={setIsReviewQuiz}
+          submissions={submissions}
+          setIsPracticeStarted={setIsPracticeStarted}
+          setSubmissions={setSubmissions}
+        />
+      ) : (
+        <AttemptQuiz
+          setIsShowScore={setIsShowScore}
+          isReviewQuiz={isReviewQuiz}
+          setIsReviewQuiz={setIsReviewQuiz}
+          quizData={quizData}
+          userData={userData}
+          submissions={submissions}
+          setSubmissions={setSubmissions}
+        />
+      )}
+    </div>
+  );
+}
