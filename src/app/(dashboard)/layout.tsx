@@ -23,7 +23,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [isWebView, setIsWebView] = useState(false);
 
   useEffect(() => {
-    stopLoader();
+    // stopLoader();
+
     // Check if we're in a WebView environment
     const checkWebView = () => {
       return window.ReactNativeWebView !== undefined;
@@ -33,7 +34,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    stopLoader();
+    // stopLoader();
+
     if (window.ReactNativeWebView) {
       if (pathname !== "/" || getCookie("currentPageUrl")) {
         setShowBackButton(true);

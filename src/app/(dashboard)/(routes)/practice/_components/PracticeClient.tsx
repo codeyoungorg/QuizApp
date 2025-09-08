@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SelectQuestionCount } from "./SelectQuestionCount";
 import { AttemptQuiz } from "./AttemptQuiz";
 import { useSearchParams } from "next/navigation";
@@ -8,6 +8,7 @@ import axios from "axios";
 import { ErrorToast } from "@/utils/getToast";
 import { ExerciseCompleted } from "./ExerciseCompleted";
 import { QuizDataType, SubmissionType } from "@/types/quiz.types";
+import { startLoader, stopLoader } from "@/utils/loaderUtils";
 
 export default function PracticeClient({
   user_id,
@@ -44,6 +45,7 @@ export default function PracticeClient({
     if (topicId && userId && grade && subjectId && questionCount) {
       try {
         setQuizLoading(true);
+        startLoader();
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_QUIZ_API}/quiz/serve`,
           {
@@ -61,11 +63,16 @@ export default function PracticeClient({
         ErrorToast("Failed to start quiz.");
       } finally {
         setQuizLoading(false);
+        stopLoader();
       }
     } else {
       ErrorToast("Missing required parameters to start the quiz.");
     }
   };
+
+  useEffect(() => {
+    stopLoader();
+  }, []);
 
   return (
     <div className="p-5 h-full">
