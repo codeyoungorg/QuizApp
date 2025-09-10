@@ -28,7 +28,9 @@ const NativeComponent = () => {
 
       setTimeout(() => {
         // router.push("/");
-        window.location.href = data?.url;
+        if (data?.url) {
+          window.location.href = data.url;
+        }
       }, 500);
     };
 
