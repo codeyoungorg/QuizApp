@@ -20,6 +20,8 @@ export interface AttemptQuizProps {
   };
   submissions: SubmissionType[];
   setSubmissions: (submissions: SubmissionType[]) => void;
+  resetQuiz: () => void;
+  handleQuizEnd: () => void;
 }
 
 // Constants

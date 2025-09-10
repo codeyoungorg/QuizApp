@@ -1,4 +1,5 @@
 import { Button } from "@/components/newFlow/ui/buttons";
+import classNames from "clsx";
 import { X } from "lucide-react";
 import BlueTick from "@/assets/Images/selected_option.svg";
 import Image from "next/image";
@@ -6,6 +7,10 @@ import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 
 import coinImage from "@/assets/Images/coin.png";
 import badgeImg from "@/assets/Images/badge.png";
+import goldBadgeImg from "@/assets/Images/gold_badge.png";
+import silverBadgeImg from "@/assets/Images/silver_badge.png";
+import bronzeBadgeImg from "@/assets/Images/bronze_badge.png";
+
 import { ProgressSteps } from "@/components/newFlow/ui/progressStepper";
 import SquareArrowLeft from "@/assets/Images/squareArrowLeft.svg";
 import { SubmissionType } from "@/types/quiz.types";
@@ -15,22 +20,26 @@ type ExerciseCompletedProps = {
   setIsReviewQuiz: (review: boolean) => void;
   setIsShowScore: (show: boolean) => void;
   submissions: SubmissionType[];
-  setSubmissions: (submissions: SubmissionType[]) => void;
-  setIsPracticeStarted: (started: boolean) => void;
+  resetQuiz: () => void;
+  quizSummaryData: any;
+  topic: string;
 };
 
 export const ExerciseCompleted = ({
   setIsReviewQuiz,
   setIsShowScore,
   submissions,
-  setSubmissions,
-  setIsPracticeStarted,
+  resetQuiz,
+  quizSummaryData,
+  topic,
 }: ExerciseCompletedProps) => {
   const totalCorrectCount = submissions.filter(
     (submission) => submission.isCorrect
   ).length;
 
   const { handleExit } = useExitBtn();
+
+  const badge = quizSummaryData?.summary?.badge;
 
   return (
     <section className="max-w-[400px] h-full mx-auto flex flex-col items-center">
@@ -60,26 +69,48 @@ export const ExerciseCompleted = ({
 
         <div className="w-full max-w-[400px] mt-12 border-[2px] border-[#E6E6E6] shadow-[0px_8px_16px_0px_#00000014] p-4 pb-7 rounded-[20px]">
           <div className="flex justify-between">
-            <p className="text-app-text-black font-bold">
-              Systems of Equations
-            </p>
+            <p className="text-app-text-black font-bold">{topic}</p>
             <div className="flex gap-2">
-              <Image src={badgeImg} alt="Badge" className="w-5 h-5" />
-              <Image src={badgeImg} alt="Badge" className="w-5 h-5" />
-              <Image src={badgeImg} alt="Badge" className="w-5 h-5" />
+              <Image
+                src={bronzeBadgeImg}
+                alt="Bronze Badge"
+                className={classNames(
+                  "w-5 h-5",
+                  badge === null && "mix-blend-luminosity"
+                )}
+              />
+              <Image
+                src={silverBadgeImg}
+                alt="Silver Badge"
+                className={classNames(
+                  "w-5 h-5",
+                  badge < 27 && "mix-blend-luminosity"
+                )}
+              />
+              <Image
+                src={goldBadgeImg}
+                alt="Gold Badge"
+                className={classNames(
+                  "w-5 h-5",
+                  badge < 28 && "mix-blend-luminosity"
+                )}
+              />
             </div>
           </div>
           <div className="mt-4">
             <div className="flex gap-1 text-sm mb-3">
               <Image src={coinImage} alt="Coin" className="w-5 h-5" />
-              <span className="font-bold text-app-text-black">24/25</span>
+              <span className="font-bold text-app-text-black">
+                {quizSummaryData?.summary?.correct || 0}/
+                {quizSummaryData?.summary?.available || 0}
+              </span>
               <span className="font-semibold text-app-text-grey">
                 points scored
               </span>
             </div>
             <ProgressSteps
-              total={25}
-              current={24}
+              total={quizSummaryData?.summary?.available || 0}
+              current={quizSummaryData?.summary?.correct || 0}
               showSteps={false}
               className="border border-app-tertiary rounded-full h-[10px]"
             />
@@ -107,8 +138,7 @@ export const ExerciseCompleted = ({
           variant="primary"
           className="flex justify-between w-full max-w-[392px] sm:mx-auto"
           onClick={() => {
-            setIsPracticeStarted(false);
-            setSubmissions([]);
+            resetQuiz();
           }}
         >
           <span>Practice more</span>

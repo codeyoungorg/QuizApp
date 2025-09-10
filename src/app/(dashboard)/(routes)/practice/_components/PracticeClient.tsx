@@ -40,6 +40,7 @@ export default function PracticeClient({
   const [isReviewQuiz, setIsReviewQuiz] = useState(false);
 
   const [quizLoading, setQuizLoading] = useState(false);
+  const [quizSummaryData, setQuizSummaryData] = useState<any | null>(null);
 
   const handleStartPractice = async () => {
     if (topicId && userId && grade && subjectId && questionCount) {
@@ -70,9 +71,29 @@ export default function PracticeClient({
     }
   };
 
+  const handleQuizEnd = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_QUIZ_API}/quiz/submission/summary?quizId=${quizData?.id}&userId=${userId}`
+      );
+      console.log(response.data);
+      setQuizSummaryData(response.data);
+    } catch (error) {
+      console.error(error);
+      ErrorToast("Failed to end quiz.");
+    }
+  };
+
   useEffect(() => {
     stopLoader();
   }, []);
+
+  const resetQuiz = () => {
+    setIsPracticeStarted(false);
+    setSubmissions([]);
+    setIsReviewQuiz(false);
+    setIsShowScore(false);
+  };
 
   return (
     <div className="p-5 h-full">
@@ -89,8 +110,9 @@ export default function PracticeClient({
           setIsShowScore={setIsShowScore}
           setIsReviewQuiz={setIsReviewQuiz}
           submissions={submissions}
-          setIsPracticeStarted={setIsPracticeStarted}
-          setSubmissions={setSubmissions}
+          resetQuiz={resetQuiz}
+          quizSummaryData={quizSummaryData}
+          topic={quizTopic || ""}
         />
       ) : (
         <AttemptQuiz
@@ -101,6 +123,8 @@ export default function PracticeClient({
           userData={userData}
           submissions={submissions}
           setSubmissions={setSubmissions}
+          resetQuiz={resetQuiz}
+          handleQuizEnd={handleQuizEnd}
         />
       )}
     </div>

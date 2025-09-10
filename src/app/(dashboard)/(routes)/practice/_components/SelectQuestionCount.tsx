@@ -5,6 +5,8 @@ import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import Image from "next/image";
 import coinImage from "@/assets/Images/coin.png";
 import { useExitBtn } from "../useExitBtn";
+import { useState } from "react";
+import ExitModel from "./ExitModel";
 
 type SelectQuestionCountProps = {
   quizTopic: string | null;
@@ -22,15 +24,21 @@ export const SelectQuestionCount = ({
   quizLoading,
 }: SelectQuestionCountProps) => {
   const { handleExit } = useExitBtn();
+  const [isExitModalOpen, setIsExitModalOpen] = useState(false);
   return (
     <section className="max-w-[650px] h-full mx-auto flex flex-col">
       <Button
         variant="secondary"
         className="ml-auto mt-4 mb-14 flex self-end"
-        onClick={handleExit}
+        onClick={() => setIsExitModalOpen(true)}
       >
         Exit <X />
       </Button>
+      <ExitModel
+        isOpen={isExitModalOpen}
+        onClose={() => setIsExitModalOpen(false)}
+        onConfirm={handleExit}
+      />
       <div className="sm:text-center mb-5">
         <p className="text-[28px] font-bold mb-10">{quizTopic}</p>
         <p className="text-lg font-semibold">

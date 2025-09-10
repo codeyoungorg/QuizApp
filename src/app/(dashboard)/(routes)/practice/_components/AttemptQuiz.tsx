@@ -13,6 +13,7 @@ import { ErrorToast } from "@/utils/getToast";
 import { AttemptQuizProps, FEEDBACK_TYPES, Option } from "../types";
 import { useExitBtn } from "../useExitBtn";
 import { captureEvent } from "@/lib/quiz/apiClient";
+import ExitModel from "./ExitModel";
 
 export const AttemptQuiz = ({
   isReviewQuiz,
@@ -22,6 +23,8 @@ export const AttemptQuiz = ({
   userData,
   submissions,
   setSubmissions,
+  resetQuiz,
+  handleQuizEnd,
 }: AttemptQuizProps) => {
   const questions = quizData?.questions || [];
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(1);
@@ -29,6 +32,7 @@ export const AttemptQuiz = ({
   const [feedbackType, setFeedbackType] = useState<"good" | "bad" | null>(null);
 
   const [loadingNextQuestion, setLoadingNextQuestion] = useState(false);
+  const [isExitModalOpen, setIsExitModalOpen] = useState(false);
 
   const currentQuestion = useMemo(() => {
     if (!questions.length) return null;
@@ -67,7 +71,7 @@ export const AttemptQuiz = ({
       const isCorrect = options[index]?.correct === "true";
 
       const currentSubmission = {
-        questionId: currentQuestion.uuid,
+        questionId: currentQuestion.id,
         selected: options[index],
         isCorrect,
         correctOption: options.find((option: any) => option.correct === "true")
@@ -98,6 +102,7 @@ export const AttemptQuiz = ({
           difficulty: [currentQuestion?.difficulty_level!],
           quizId: parseInt(quizData?.id! as unknown as string),
           questionId: [currentQuestion?.id!],
+          userId: userData.id || "",
         },
       });
       const response = await axios.post(
@@ -149,7 +154,7 @@ export const AttemptQuiz = ({
       const isCorrect = options[index]?.correct === "true";
 
       const newSubmission = {
-        questionId: currentQuestion.uuid,
+        questionId: currentQuestion.id as unknown as string,
         selected: options[index],
         isCorrect,
       };
@@ -170,6 +175,7 @@ export const AttemptQuiz = ({
 
       if (isLastQuestion && isQuestionSubmitted) {
         completeQuiz();
+        handleQuizEnd();
         setIsShowScore(true);
         setIsReviewQuiz(false);
       }
@@ -186,7 +192,8 @@ export const AttemptQuiz = ({
     const optionState = (option: Option) => {
       if (isReviewQuiz) {
         const submittedOption = submissions.find(
-          (submission) => submission.questionId === currentQuestion.uuid
+          (submission) =>
+            submission.questionId === (currentQuestion.id as unknown as string)
         );
 
         return submittedOption?.selected.text === option!.text
@@ -290,7 +297,7 @@ export const AttemptQuiz = ({
             feedbackType={feedbackType}
             setFeedbackType={setFeedbackType}
             feedbackData={{
-              questionId: currentQuestion?.uuid!,
+              questionId: (currentQuestion?.id as unknown as string)!,
               userId: userData?.id!,
             }}
           />
@@ -299,7 +306,7 @@ export const AttemptQuiz = ({
     );
   };
 
-  const { handleExit } = useExitBtn();
+  const { handleExit } = useExitBtn(resetQuiz);
 
   const gotoScore = () => {
     if (isReviewQuiz) {
@@ -307,7 +314,7 @@ export const AttemptQuiz = ({
       setIsShowScore(true);
       return;
     }
-    handleExit();
+    setIsExitModalOpen(true);
   };
 
   return (
@@ -321,6 +328,11 @@ export const AttemptQuiz = ({
         <Button variant="secondary" onClick={gotoScore}>
           Exit <X />
         </Button>
+        <ExitModel
+          isOpen={isExitModalOpen}
+          onClose={() => setIsExitModalOpen(false)}
+          onConfirm={handleExit}
+        />
       </div>
 
       <div className="border border-[#E6E6E6] p-5 sm:p-9 rounded-xl">
