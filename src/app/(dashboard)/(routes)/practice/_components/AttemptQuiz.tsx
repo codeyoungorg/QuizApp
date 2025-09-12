@@ -6,14 +6,14 @@ import { ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { McqOption } from "@/components/newFlow/ui/McqOption";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { FeedbackModel } from "./FeedbackModel";
-import { toast } from "sonner";
 import { SubmissionType } from "@/types/quiz.types";
 import axios from "axios";
-import { ErrorToast } from "@/utils/getToast";
+import { ErrorToast, SuccessToast } from "@/utils/getToast";
 import { AttemptQuizProps, FEEDBACK_TYPES, Option } from "../types";
 import { useExitBtn } from "../useExitBtn";
 import { captureEvent } from "@/lib/quiz/apiClient";
 import ExitModel from "./ExitModel";
+import { Frown, RefreshCw } from "lucide-react";
 
 export const AttemptQuiz = ({
   isReviewQuiz,
@@ -93,6 +93,12 @@ export const AttemptQuiz = ({
   const submitAnswer = useCallback(async (payload: any) => {
     try {
       setLoadingNextQuestion(true);
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_QUIZ_API}/quiz/submission`,
+        payload
+      );
+
       // TODO: add capture event for fun trivia (gk)
       await captureEvent({
         data: {
@@ -105,10 +111,6 @@ export const AttemptQuiz = ({
           userId: userData.id || "",
         },
       });
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_QUIZ_API}/quiz/submission`,
-        payload
-      );
 
       return response.data;
     } catch (error) {
@@ -131,7 +133,7 @@ export const AttemptQuiz = ({
         }
       );
     } catch (error) {
-      toast.error("Failed to complete quiz.");
+      throw error;
     } finally {
       setLoadingNextQuestion(false);
     }
@@ -167,18 +169,27 @@ export const AttemptQuiz = ({
         try {
           await submitAnswer(payload);
           isQuestionSubmitted = true;
-          setCurrentQuestionIndex(currentQuestionIndex + 1);
           setSubmissions(updatedSubmissions);
           setSelectedOption(null);
-        } catch (error) {}
+        } catch (error) {
+          ErrorToast("Failed to submit answer.");
+          return;
+        }
       }
 
       if (isLastQuestion && isQuestionSubmitted) {
-        completeQuiz();
-        handleQuizEnd();
-        setIsShowScore(true);
-        setIsReviewQuiz(false);
+        try {
+          await completeQuiz();
+          await handleQuizEnd();
+          setIsShowScore(true);
+          setIsReviewQuiz(false);
+          SuccessToast("Quiz completed successfully");
+        } catch {
+          ErrorToast("Failed to complete quiz.");
+          return;
+        }
       }
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
@@ -274,18 +285,18 @@ export const AttemptQuiz = ({
         <div className="mt-10">
           <Button
             variant="secondary"
-            className="flex justify-between w-full max-w-[200px] mx-auto rounded-[32px]"
+            className="flex justify-between w-full max-w-[250px] mx-auto rounded-[32px]"
           >
-            <span className="text-xs text-app-text-grey font-semibold">
+            <span className="text-sm text-app-text-grey font-semibold mr-4">
               Rate this question
             </span>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <ThumbsUp
-                size={14}
+                size={18}
                 onClick={() => handleFeedback(FEEDBACK_TYPES.GOOD)}
               />
               <ThumbsDown
-                size={14}
+                size={18}
                 onClick={() => handleFeedback(FEEDBACK_TYPES.BAD)}
               />
             </div>
@@ -318,7 +329,7 @@ export const AttemptQuiz = ({
   };
 
   return (
-    <section className="w-full max-w-[810px] mx-auto my-5">
+    <section className="w-full max-w-[810px] mx-auto py-5">
       <div className="flex justify-between items-center mb-10">
         <ProgressSteps
           current={currentQuestionIndex}
@@ -335,19 +346,39 @@ export const AttemptQuiz = ({
         />
       </div>
 
-      <div className="border border-[#E6E6E6] p-5 sm:p-9 rounded-xl">
-        <p className="font-bold text-app-text-black">
-          {currentQuestion?.question}
-        </p>
+      {currentQuestion === null ? (
+        <div className="flex flex-col gap-4 items-center mt-28">
+          <Frown className="size-6" />
+          <p className="text-app-black font-bold">Opps!</p>
+          <p className="text-app-grey text-sm font-semibold">
+            We are sorry, but it looks like an error has occurred.
+          </p>
+          <Button
+            className="rounded-[18px]"
+            variant="secondary"
+            onClick={() => {
+              resetQuiz();
+            }}
+          >
+            <RefreshCw className="mr-2 size-4" />
+            Refresh
+          </Button>
+        </div>
+      ) : (
+        <div className="border border-[#E6E6E6] p-5 sm:p-9 rounded-xl">
+          <p className="font-bold text-app-text-black">
+            {currentQuestion?.question}
+          </p>
 
-        {renderQuestionOptions()}
+          {renderQuestionOptions()}
 
-        <div className="border-t border-[#E6E6E6] my-6" />
+          <div className="border-t border-[#E6E6E6] my-6" />
 
-        {renderNavigationButtons()}
-      </div>
+          {renderNavigationButtons()}
+        </div>
+      )}
 
-      {renderFeedbackSection()}
+      {currentQuestion !== null && renderFeedbackSection()}
     </section>
   );
 };

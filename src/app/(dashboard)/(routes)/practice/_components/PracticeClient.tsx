@@ -76,11 +76,9 @@ export default function PracticeClient({
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_QUIZ_API}/quiz/submission/summary?quizId=${quizData?.id}&userId=${userId}`
       );
-      console.log(response.data);
       setQuizSummaryData(response.data);
     } catch (error) {
-      console.error(error);
-      ErrorToast("Failed to end quiz.");
+      throw error;
     }
   };
 
@@ -113,6 +111,7 @@ export default function PracticeClient({
           resetQuiz={resetQuiz}
           quizSummaryData={quizSummaryData}
           topic={quizTopic || ""}
+          grade={grade || ""}
         />
       ) : (
         <AttemptQuiz

@@ -11,7 +11,6 @@ import saveGTMEvents from "@/lib/gtm";
 import { SuccessToast } from "@/utils/getToast";
 import classNames from "clsx";
 import { useState } from "react";
-import { toast } from "sonner";
 
 const reasons = {
   good: [

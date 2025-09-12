@@ -172,7 +172,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         className={classNames(
           "md:mt-[1rem]  bg-[#FFF] overflow-y-auto refresh-scroll-container",
           pathname === "/practice"
-            ? "h-[100vh]"
+            ? "h-[100vh] md:mt-0"
             : "md:h-[calc(100vh-90px)] xs:h-[calc(100vh-56px)]"
         )}
       >

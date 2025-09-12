@@ -6,15 +6,11 @@ import Image from "next/image";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 
 import coinImage from "@/assets/Images/coin.png";
-import badgeImg from "@/assets/Images/badge.png";
-import goldBadgeImg from "@/assets/Images/gold_badge.png";
-import silverBadgeImg from "@/assets/Images/silver_badge.png";
-import bronzeBadgeImg from "@/assets/Images/bronze_badge.png";
 
-import { ProgressSteps } from "@/components/newFlow/ui/progressStepper";
 import SquareArrowLeft from "@/assets/Images/squareArrowLeft.svg";
 import { SubmissionType } from "@/types/quiz.types";
 import { useExitBtn } from "../useExitBtn";
+import { PointsProgressStepper } from "@/components/newFlow/ui/PointsProgressStepper";
 
 type ExerciseCompletedProps = {
   setIsReviewQuiz: (review: boolean) => void;
@@ -23,6 +19,7 @@ type ExerciseCompletedProps = {
   resetQuiz: () => void;
   quizSummaryData: any;
   topic: string;
+  grade: string;
 };
 
 export const ExerciseCompleted = ({
@@ -32,6 +29,7 @@ export const ExerciseCompleted = ({
   resetQuiz,
   quizSummaryData,
   topic,
+  grade,
 }: ExerciseCompletedProps) => {
   const totalCorrectCount = submissions.filter(
     (submission) => submission.isCorrect
@@ -68,50 +66,32 @@ export const ExerciseCompleted = ({
         </div>
 
         <div className="w-full max-w-[400px] mt-12 border-[2px] border-[#E6E6E6] shadow-[0px_8px_16px_0px_#00000014] p-4 pb-7 rounded-[20px]">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <p className="text-app-text-black font-bold">{topic}</p>
-            <div className="flex gap-2">
-              <Image
-                src={bronzeBadgeImg}
-                alt="Bronze Badge"
-                className={classNames(
-                  "w-5 h-5",
-                  badge === null && "mix-blend-luminosity"
-                )}
-              />
-              <Image
-                src={silverBadgeImg}
-                alt="Silver Badge"
-                className={classNames(
-                  "w-5 h-5",
-                  badge < 27 && "mix-blend-luminosity"
-                )}
-              />
-              <Image
-                src={goldBadgeImg}
-                alt="Gold Badge"
-                className={classNames(
-                  "w-5 h-5",
-                  badge < 28 && "mix-blend-luminosity"
-                )}
-              />
+            <div className="text-app-text-grey font-semibold text-xs border-2 border-[#E6E6E6] px-2 py-1 rounded-[8px]">
+              Grade {grade}
             </div>
           </div>
-          <div className="mt-4">
+          <div className="mt-4 bg-[#F8F8F8] p-3 rounded-[16px]">
             <div className="flex gap-1 text-sm mb-3">
               <Image src={coinImage} alt="Coin" className="w-5 h-5" />
-              <span className="font-bold text-app-text-black">
-                {quizSummaryData?.summary?.correct || 0}/
-                {quizSummaryData?.summary?.available || 0}
+              <span className="font-semibold text-app-text-black">
+                <span className="text-[#0055FF] font-bold">
+                  {quizSummaryData?.summary?.pointsEarned || 0}
+                </span>
+                <span className="mx-[2px]">/</span>
+                <span className="">
+                  {quizSummaryData?.summary?.pointsAvailable || 0}
+                </span>
               </span>
-              <span className="font-semibold text-app-text-grey">
+              <span className="font-semibold text-app-text-black">
                 points scored
               </span>
             </div>
-            <ProgressSteps
-              total={quizSummaryData?.summary?.available || 0}
-              current={quizSummaryData?.summary?.correct || 0}
-              showSteps={false}
+            <PointsProgressStepper
+              total={quizSummaryData?.summary?.pointsAvailable || 0}
+              current={quizSummaryData?.summary?.pointsEarned || 0}
+              data={quizSummaryData}
               className="border border-app-tertiary rounded-full h-[10px]"
             />
           </div>
