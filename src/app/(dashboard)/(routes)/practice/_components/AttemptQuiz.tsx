@@ -108,7 +108,6 @@ export const AttemptQuiz = ({
           difficulty: [currentQuestion?.difficulty_level!],
           quizId: parseInt(quizData?.id! as unknown as string),
           questionId: [currentQuestion?.id!],
-          userId: userData.id || "",
         },
       });
 
