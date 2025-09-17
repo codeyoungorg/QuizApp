@@ -71,6 +71,7 @@ export const AttemptQuiz = ({
       const isCorrect = options[index]?.correct === "true";
 
       const currentSubmission = {
+        topicId: userData.topicId,
         questionId: currentQuestion.id,
         selected: options[index],
         isCorrect,
