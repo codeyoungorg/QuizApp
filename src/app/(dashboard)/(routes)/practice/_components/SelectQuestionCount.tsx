@@ -26,10 +26,10 @@ export const SelectQuestionCount = ({
   const { handleExit } = useExitBtn();
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
   return (
-    <section className="max-w-[650px] h-full mx-auto flex flex-col">
+    <section className="max-w-[650px] pb-4 h-full mx-auto flex flex-col">
       <Button
         variant="secondary"
-        className="ml-auto mt-4 mb-14 flex self-end"
+        className="ml-auto mb-14 flex self-end"
         onClick={() => setIsExitModalOpen(true)}
       >
         Exit <X />
@@ -66,7 +66,7 @@ export const SelectQuestionCount = ({
       </div>
 
       <div className="mt-auto">
-        <div className="flex gap-2 items-center my-[26px] w-fit mx-auto font-semibold text-app-text-grey">
+        <div className="flex gap-2 sm:items-center my-[26px] w-fit sm:mx-auto font-semibold text-app-text-grey">
           <Image src={coinImage} alt="Coin" className="w-5 h-5" />
           Earn 1 point for each correct answer
         </div>

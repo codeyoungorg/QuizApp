@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback } from "react";
 import classNames from "clsx";
 import { Button } from "@/components/newFlow/ui/buttons";
 import { ProgressSteps } from "@/components/newFlow/ui/progressStepper";
-import { ThumbsDown, ThumbsUp, X } from "lucide-react";
+import { ArrowRight, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { McqOption } from "@/components/newFlow/ui/McqOption";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { FeedbackModel } from "./FeedbackModel";
@@ -337,7 +337,15 @@ export const AttemptQuiz = ({
           className="w-[150px]"
         />
         <Button variant="secondary" onClick={gotoScore}>
-          Exit <X />
+          {isReviewQuiz ? (
+            <>
+              Go to scores <ArrowRight />
+            </>
+          ) : (
+            <>
+              Exit <X />
+            </>
+          )}
         </Button>
         <ExitModel
           isOpen={isExitModalOpen}

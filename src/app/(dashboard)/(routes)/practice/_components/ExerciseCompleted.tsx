@@ -52,7 +52,7 @@ export const ExerciseCompleted = ({
       <div className="flex flex-col items-center w-full">
         <div className="flex gap-1">
           <Image src={BlueTick} alt="Selected" className="h-5 w-5" /> Practice
-          Completed
+          Completed!
         </div>
 
         <div>
@@ -67,7 +67,9 @@ export const ExerciseCompleted = ({
 
         <div className="w-full max-w-[400px] mt-12 border-[2px] border-[#E6E6E6] shadow-[0px_8px_16px_0px_#00000014] p-4 pb-7 rounded-[20px]">
           <div className="flex justify-between items-center">
-            <p className="text-app-text-black font-bold">{topic}</p>
+            <p className="text-app-text-black font-bold max-w-[270px] truncate ">
+              {topic}
+            </p>
             <div className="text-app-text-grey font-semibold text-xs border-2 border-[#E6E6E6] px-2 py-1 rounded-[8px]">
               Grade {grade}
             </div>

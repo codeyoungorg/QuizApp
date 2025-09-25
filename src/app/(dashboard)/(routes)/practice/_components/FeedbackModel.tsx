@@ -78,9 +78,9 @@ export const FeedbackModel = ({
 
   return (
     <Dialog open={!!feedbackType} onOpenChange={() => setFeedbackType(null)}>
-      <DialogContent className="max-w-[400px]">
+      <DialogContent className="max-w-[95%] sm:max-w-[400px]">
         <DialogHeader>
-          <DialogTitle className="text-app-text-black text-[20px]">
+          <DialogTitle className="text-app-text-black text-left md:text-[20px]">
             {feedbackType === "good"
               ? "Why did you like this?"
               : "Tell us what went wrong"}
@@ -92,7 +92,7 @@ export const FeedbackModel = ({
               key={reason}
               variant="unstyled"
               className={classNames(
-                "w-full font-semibold max-w-[353px] h-[56px] p-4 border border-[#E6E6E6] rounded-[16px] text-app-text-black",
+                "w-full font-semibold max-w-[353px] h-[56px] p-4 border border-[#E6E6E6] rounded-[16px] text-sm md:text-[16px] text-app-text-black",
                 {
                   "border-[2px] border-[#0055FF]": selectedReason === reason,
                 }

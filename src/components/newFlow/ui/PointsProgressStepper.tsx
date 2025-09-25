@@ -41,6 +41,9 @@ export function PointsProgressStepper({
   data,
   ...props
 }: PointsProgressStepperProps) {
+
+  current = current > total ? total : current;
+
   const percentage = total === 0 ? 0 : (current / total) * 100;
 
   const badges = {
