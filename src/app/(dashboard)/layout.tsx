@@ -66,11 +66,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
+  const isLanguagePage = pathname.includes("/language/");
+  const isPracticePage = pathname.includes("/practice");
+
+  const isHideNavigation = isLanguagePage || isPracticePage;
+
   return (
     <div
       className={`${inter.variable} font-sans h-full w-full bg-[#FFF] z-100`}
     >
-      {pathname !== "/practice" && (
+      {!isHideNavigation && (
         <div
           className={`w-full border-b-2 flex items-center justify-between bg-[#FFF] py-4 sticky top-0 z-[100] ${
             isWebView && "h-14 top-7"
@@ -171,7 +176,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <main
         className={classNames(
           "md:mt-[1rem]  bg-[#FFF] overflow-y-auto refresh-scroll-container",
-          pathname === "/practice"
+          isHideNavigation
             ? "h-[100vh] md:!mt-0"
             : "md:h-[calc(100vh-90px)] xs:h-[calc(100vh-56px)]"
         )}

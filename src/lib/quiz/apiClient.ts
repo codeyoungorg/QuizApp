@@ -26,6 +26,6 @@ export const captureEvent = async ({ data }:{ data:QuizEventData}) => {
       });
     }
   } catch (error) {
-    // throw error;
+   console.log("Error in captureEvent", error)
   }
 };
