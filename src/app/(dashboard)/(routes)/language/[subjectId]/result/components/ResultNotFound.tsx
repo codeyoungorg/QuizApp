@@ -29,7 +29,14 @@ export const ResultNotFound = ({ lang }: ResultNotFoundProps) => {
           <Button
             variant="secondary"
             onClick={() => {
-                // TODO: handle app and website route 
+              if (window.ReactNativeWebView) {
+                const mobileData = {
+                  type: "route",
+                };
+                window.ReactNativeWebView.postMessage(JSON.stringify(mobileData));
+              } else {
+                history.back();
+              }
             }}
             className="flex-1"
           >

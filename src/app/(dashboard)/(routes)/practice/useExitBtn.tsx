@@ -1,6 +1,5 @@
 export const useExitBtn = (onExit?: () => void) => {
   const handleExit = () => {
-    // replace with custom model
 
     if (onExit) {
       onExit();

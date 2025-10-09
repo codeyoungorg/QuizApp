@@ -100,7 +100,6 @@ export const AttemptQuiz = ({
         payload
       );
 
-      // TODO: add capture event for fun trivia (gk)
       await captureEvent({
         data: {
           type: "coding",
