@@ -28,6 +28,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { ErrorToast, SuccessToast } from "@/utils/getToast";
 import { HandleQuite } from "@/utils/HandleQuite";
+import { startLoader, stopLoader } from "@/utils/loaderUtils";
 
 type QuizSubmission = {
   questionId: number;
@@ -76,6 +77,11 @@ export const AttemptExercise = ({
   
   const [dndBackend, setDndBackend] = useState<any>(() => HTML5Backend);
   const [backendOptions, setBackendOptions] = useState<any>({});
+
+
+  useEffect(() => {
+    stopLoader();
+  }, []);
 
   useEffect(() => {
     if (mode === "learn") {
@@ -158,6 +164,7 @@ export const AttemptExercise = ({
   };
 
   const completeSet = async () => {
+    startLoader();
     setIsLoading(true);
     setIsCompleted(true);
 
@@ -252,11 +259,13 @@ export const AttemptExercise = ({
         }
       }
     } catch (error) {
-      console.error("Error saving quiz data:", error);
+      console.error("Error saving exercise data:", error);
       setIsLoading(false);
       setIsCompleted(false);
       setSaveError("An unexpected error occurred. Please try again.");
-      ErrorToast("Network error. Please check your connection and try again.");
+      ErrorToast("An unexpected error occurred. Please try again.");
+    } finally {
+      stopLoader();
     }
   };
 

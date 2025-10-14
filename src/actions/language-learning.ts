@@ -1,5 +1,4 @@
 import { ExerciseData } from "@/app/(dashboard)/(routes)/language/[subjectId]/types";
-import { startLoader, stopLoader } from "@/utils/loaderUtils";
 import axios from "axios";
 
 type QuizSubmission = {
@@ -26,7 +25,6 @@ export const LanguageLearningGetTopicContent = async ({
   const url = `${baseUrl}/funzone/languages/serve/learn-section`;
 
   try {
-    startLoader();
     const { data: json } = await axios.post(url, {
       language,
       topic: Number(topic),
@@ -56,8 +54,6 @@ export const LanguageLearningGetTopicContent = async ({
       to,
     });
     return null;
-  } finally {
-    stopLoader();
   }
 };
 
@@ -90,7 +86,6 @@ export const updateLanguageLearningPractice = async ({
   const url = `${baseUrl}/funzone/languages/submit/practice/update`;
 
   try {
-    startLoader();
     const { data } = await axios.post(url, {
       userId,
       total,
@@ -113,8 +108,6 @@ export const updateLanguageLearningPractice = async ({
       quizId,
     });
     return null;
-  } finally {
-    stopLoader();
   }
 };
 
@@ -145,7 +138,6 @@ export const saveLanguageLearningPractice = async ({
   const url = `${baseUrl}/funzone/languages/submit/practice`;
 
   try {
-    startLoader();
     const { data } = await axios.post(url, {
       userId,
       total,
@@ -166,8 +158,6 @@ export const saveLanguageLearningPractice = async ({
       levelId,
     });
     return null;
-  } finally {
-    stopLoader();
   }
 };
 
@@ -229,7 +219,6 @@ export const LanguageLearningFetchQuizResult = async (quizId: string, userId?: s
   const url = `${baseUrl}/funzone/languages/serve/result`;
 
   try {
-    startLoader();
     const { data } = await axios.get(url, {
       params: {
         quizId,
@@ -249,8 +238,6 @@ export const LanguageLearningFetchQuizResult = async (quizId: string, userId?: s
       userId,
     });
     return null;
-  } finally {
-    stopLoader();
   }
 };
 
@@ -285,7 +272,6 @@ export const saveLanguageLearningData = async ({
   const url = `${baseUrl}/funzone/languages/submit/learn`;
 
   try {
-    startLoader();
     const { data } = await axios.post(url, {
       userId,
       total,
@@ -306,7 +292,5 @@ export const saveLanguageLearningData = async ({
       language,
     });
     return null;
-  } finally {
-    stopLoader();
   }
 };
