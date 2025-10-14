@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useQuizStore from "@/store/quiz-store";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import ExitModel from "../../../../practice/_components/ExitModel";
 
 import cardIcon from "@/public/images/icons/cards_icons_result_page.png";
 import topicIcon from "@/public/images/icons/topics_icons_result_page.png";
+import { HandleQuite } from "@/utils/HandleQuite";
 
 interface QuizResultData {
   id: string;
@@ -62,10 +63,11 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
   quizResult,
   lang,
 }) => {
-  console.log("quizResult: ", quizResult)
   const router = useRouter();
   const [currentScore, setCurrentScore] = useState({ correct: 0, total: 0 });
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+  const [isContinueLearningClicked, setIsContinueLearningClicked] =
+    useState(false);
   const { currentQuizScore } = useQuizStore();
   const userId = getCookie("userId");
 
@@ -78,7 +80,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
         total: quizResult?.total || 0,
       });
     }
-    
+
     saveGTMEvents({
       eventAction: "test_completed",
       label: userId ? "student" : "guest",
@@ -90,26 +92,30 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
   }, [currentQuizScore, quizResult, lang, userId]);
 
   const handleExitConfirm = () => {
-    // handle app exit 
-    router.push(`/languages?lang=${lang}`);
+    HandleQuite(false, `/languages?lang=${lang}`);
     setIsExitModalOpen(false);
   };
 
   const handleContinueLearning = () => {
+    setIsContinueLearningClicked(true);
     router.push(`/languages?lang=${lang}`);
   };
-  
-  const isLevelComplete = 
-    quizResult?.levelPoints === (quizResult?.levelTotalQuestions * parseInt(quizResult?.level_id));
-  
-  const levelPercentage = 
-    ((quizResult?.levelPoints / quizResult?.levelTotalQuestions) * 100) || 0;
-  const isLevelUnlocked = levelPercentage >= 85;
-  
-  const isAllLevelsCompleted = parseInt(quizResult?.level_id) == 3 && isLevelComplete;
 
+  const isLevelComplete =
+    quizResult?.levelPoints ===
+    quizResult?.levelTotalQuestions * parseInt(quizResult?.level_id);
+
+  const levelPercentage =
+    (quizResult?.levelPoints / quizResult?.levelTotalQuestions) * 100 || 0;
+  const isLevelUnlocked = levelPercentage >= 85;
+
+  const isAllLevelsCompleted =
+    parseInt(quizResult?.level_id) == 3 && isLevelComplete;
 
   const getButtonText = () => {
+    if (isContinueLearningClicked) {
+      return "Loading...";
+    }
     if (isAllLevelsCompleted) {
       return "Start Practice";
     }
@@ -137,11 +143,11 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
               </svg>
             </div>
             <h2 className="font-semibold text-app-text-black">
-              {isAllLevelsCompleted 
-                ? "All levels completed!" 
-                : isLevelUnlocked 
-                  ? `Level ${parseInt(quizResult?.level_id) + 1} unlocked!` 
-                  : "Quiz completed!"}
+              {isAllLevelsCompleted
+                ? "All levels completed!"
+                : isLevelUnlocked
+                ? `Level ${parseInt(quizResult?.level_id) + 1} unlocked!`
+                : "Quiz completed!"}
             </h2>
           </div>
 
@@ -173,9 +179,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
                 <div className="flex items-center gap-2 text-blue-600">
                   <Image src={cardIcon} alt="Topic" className="w-5 h-5" />
                   <span className="text-sm">
-                    <span className="font-bold">
-                      {quizResult?.topicPoints}
-                    </span>
+                    <span className="font-bold">{quizResult?.topicPoints}</span>
                     <span className="font-normal text-gray-400">
                       {" "}
                       / {quizResult?.totalQuestions} cards
@@ -183,7 +187,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
                   </span>
                 </div>
 
-                <ProgressSteps 
+                <ProgressSteps
                   current={quizResult?.topicPoints || 0}
                   total={quizResult?.totalQuestions || 0}
                   className="w-full"
@@ -199,7 +203,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
               Current stage
             </p>
             <div className="bg-white rounded-3xl p-4 border-2 border-[#E6E6E6] shadow-sm h-[158px]">
-                <div className="mb-6 flex justify-between">
+              <div className="mb-6 flex justify-between">
                 <p className="text-base font-bold text-black">Word Wizards</p>
                 <h3 className="text-sm font-medium text-gray-400">
                   Stage {quizResult?.level_id}
@@ -210,9 +214,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
                 <div className="flex items-center gap-2 text-blue-600">
                   <Image src={topicIcon} alt="Topic" className="w-5 h-5" />
                   <span className="text-sm">
-                    <span className="font-bold">
-                      {quizResult?.levelPoints}
-                    </span>
+                    <span className="font-bold">{quizResult?.levelPoints}</span>
                     <span className="font-normal text-gray-400">
                       {" "}
                       / {quizResult?.levelTotalQuestions} cards
@@ -220,7 +222,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
                   </span>
                 </div>
 
-                <ProgressSteps 
+                <ProgressSteps
                   current={quizResult?.levelPoints || 0}
                   total={quizResult?.levelTotalQuestions || 0}
                   className="w-full"
@@ -241,7 +243,15 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
                 <div
                   key={topic.id}
                   className="bg-white rounded-2xl p-5 border-2 border-[#E6E6E6] cursor-pointer hover:shadow-md transition-shadow"
-                  onClick={() => router.push(`/language/${lang}/practice?topic=${topic.id}&from=1&to=5&level=${topic.level_id || quizResult?.level_id}`)}
+                  onClick={() =>
+                    router.push(
+                      `/language/${lang}/practice?topic=${
+                        topic.id
+                      }&from=1&to=5&level=${
+                        topic.level_id || quizResult?.level_id
+                      }`
+                    )
+                  }
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <span className="w-5 h-5 flex items-center justify-center">
@@ -257,7 +267,9 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
                       <span className="font-bold text-app-text-black">
                         {topic.totalQuestions || 0}
                       </span>{" "}
-                      <span className="font-semibold text-app-text-grey">cards</span>
+                      <span className="font-semibold text-app-text-grey">
+                        cards
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -273,7 +285,11 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
           onClick={handleContinueLearning}
         >
           <span>{getButtonText()}</span>
-          <ArrowCircleRightIcon />
+          {isContinueLearningClicked ? (
+            <Loader2 className="w-5 h-5" />
+          ) : (
+            <ArrowCircleRightIcon />
+          )}
         </Button>
 
         <ExitModel
@@ -285,4 +301,3 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
     </div>
   );
 };
-

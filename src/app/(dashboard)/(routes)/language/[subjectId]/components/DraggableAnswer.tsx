@@ -16,7 +16,8 @@ export const DraggableAnswer = ({
   text,
   timerEnded,
   isCorrect,
-}: AnswerOption & { isCorrect: boolean }) => {
+  questionAnswered,
+}: AnswerOption & { isCorrect: boolean; questionAnswered?: boolean }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -28,21 +29,23 @@ export const DraggableAnswer = ({
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
-    canDrag: !timerEnded
-  }), [id, text]);
+    canDrag: !timerEnded && !questionAnswered,
+  }), [id, text, timerEnded, questionAnswered]);
 
   useEffect(() => {
     drag(ref);
   }, [drag]);
 
   const borderColor = isCorrect ? "#008000" : "#E6E6E6";
+  const canDragItem = !timerEnded && !questionAnswered;
 
   return (
     <div
       ref={ref}
       className={cn(
-        "w-full select-none cursor-move rounded-[12px] border bg-white px-[10px] py-3 text-app-text-black font-semibold transition-all flex items-center justify-between touch-none",
-        isDragging ? "opacity-30" : "opacity-100 hover:bg-gray-50"
+        "w-full select-none rounded-[12px] border bg-white px-[10px] py-3 text-app-text-black font-semibold transition-all flex items-center justify-between touch-none",
+        isDragging ? "opacity-50" : "opacity-100 hover:bg-gray-50",
+        canDragItem ? "cursor-move" : "cursor-not-allowed opacity-60"
       )}
       style={{
         borderWidth: "2px",

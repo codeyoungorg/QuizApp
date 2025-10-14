@@ -61,8 +61,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   };
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("from") === "sandboxLanguage") {
-      sessionStorage.setItem("entryPoint", "sandboxLanguage");
+    if (urlParams.get("from") && urlParams.get("from") !== "") {
+      sessionStorage.setItem("entryPoint", urlParams.get("from") as string);
     }
   }, []);
 
@@ -177,7 +177,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         className={classNames(
           "md:mt-[1rem]  bg-[#FFF] overflow-y-auto refresh-scroll-container",
           isHideNavigation
-            ? "h-[100vh] md:!mt-0"
+            ? "h-[100svh] md:!mt-0"
             : "md:h-[calc(100vh-90px)] xs:h-[calc(100vh-56px)]"
         )}
       >

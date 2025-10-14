@@ -1,10 +1,10 @@
 "use client";
 import { Button } from "@/components/newFlow/ui/buttons";
-import { Check, X, CheckCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Check, X, Loader2 } from "lucide-react";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ExitModel from "../../../practice/_components/ExitModel";
 import { useState } from "react";
+import { HandleQuite } from "@/utils/HandleQuite";
 
 interface LearnResultProps {
   correct: number;
@@ -17,11 +17,11 @@ export const LearnResult = ({
   total,
   onTakeQuiz,
 }: LearnResultProps) => {
-  const router = useRouter();
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+  const [isTakeQuizClicked, setIsTakeQuizClicked] = useState(false);
 
   const handleExit = () => {
-    router.push("/");
+    HandleQuite();
     setIsExitModalOpen(false);
   };
 
@@ -61,8 +61,10 @@ export const LearnResult = ({
             ))}
           </div>
 
+          {/* Based on current implementation the total is always equal to the correct */}
+          {/* Reason: user can not go to next question if the answer is incorrect */}
           <h2 className="text-2xl font-bold text-app-text-black mb-4">
-            You got {correct} out of {total} correct.
+            You got {total} out of {total} correct.
           </h2>
 
           <p className="text-base text-app-text-grey md:text-center">
@@ -75,11 +77,14 @@ export const LearnResult = ({
         <Button
           variant="primary"
           size="full"
-          onClick={onTakeQuiz}
+          onClick={() => {
+            setIsTakeQuizClicked(true);
+            onTakeQuiz();
+          }}
           className="flex justify-between items-center"
         >
-          <span>Take the quiz</span>
-          <ArrowCircleRightIcon />
+          <span>{isTakeQuizClicked ? "Loading..." : "Take the quiz"}</span>
+          {isTakeQuizClicked ? <Loader2 className="animate-spin" /> : <ArrowCircleRightIcon />}
         </Button>
       </div>
 

@@ -1,3 +1,5 @@
+import { HandleQuite } from "@/utils/HandleQuite";
+
 export const useExitBtn = (onExit?: () => void) => {
   const handleExit = () => {
 
@@ -6,15 +8,7 @@ export const useExitBtn = (onExit?: () => void) => {
       return;
     }
 
-    window.close();
-    if (!(typeof window !== "undefined" && !!window.ReactNativeWebView))
-      return false;
-
-    const mobileData = {
-      type: "route",
-    };
-
-    window.ReactNativeWebView.postMessage(JSON.stringify(mobileData));
+    HandleQuite();
   };
 
   return { handleExit };

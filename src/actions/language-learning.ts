@@ -226,7 +226,11 @@ export const LanguageLearningFetchQuizResult = async (quizId: string, userId?: s
       },
     });
 
-    return data;
+    if(data){
+      return data;
+    }
+
+    return null;
   } catch (error: any) {
     console.error("[LanguageLearningFetchQuizResult] Error:", {
       error: error.message,

@@ -51,7 +51,7 @@ export const LearnQuestion = ({
   }, [currentQueIndex, previousAnswer, correctAnswer, droppedAnswer]);
 
   const handleDrop = (item: AnswerOption) => {
-    if (item.text !== droppedAnswer && !timerEnded) {
+    if (item.text !== droppedAnswer && !timerEnded && !isCorrect) {
       const correct = item.text === correctAnswer;
       setDroppedAnswer(item.text);
       setIsCorrect(correct);
@@ -115,6 +115,7 @@ export const LearnQuestion = ({
                 text={option.text}
                 isCorrect={showCorrectAnswer && option.text === correctAnswer}
                 timerEnded={timerEnded}
+                questionAnswered={isCorrect === true}
               />
             ))}
           </div>

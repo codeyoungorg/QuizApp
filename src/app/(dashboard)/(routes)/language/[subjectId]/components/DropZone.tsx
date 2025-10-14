@@ -35,13 +35,13 @@ export const DropZone = ({
     <div>
       <div
         ref={ref}
-        className={cn(
+        className={cn     (
           "min-h-[90px] w-full rounded-[20px] flex flex-col items-center justify-center px-4 py-5",
           "transition-all duration-300 border-2",
           droppedAnswer && isCorrect === null
             ? "bg-white border-[#E6E6E6]"
             : isCorrect === true
-            ? "bg-white border-[#E6E6E6]"
+            ? "bg-white border-[#008000] bg-[#008000]/10"
             : isCorrect === false
             ? "bg-red-50 border-red-400"
             : "bg-[#FAFAFA] border-[#E6E6E6] border-dashed",
