@@ -52,8 +52,8 @@ export const DraggableAnswer = ({
       ref={ref}
       className={cn(
         "w-full select-none rounded-[12px] border bg-white px-[10px] py-3 text-app-text-black font-semibold transition-all flex items-center justify-between touch-none",
-        isDragging ? "opacity-0" : "opacity-100 hover:bg-gray-50",
-        canDragItem ? "cursor-move" : "cursor-not-allowed opacity-60"
+        isDragging ? "opacity-50" : "opacity-100 hover:bg-gray-50",
+        canDragItem ? "cursor-grab" : "cursor-not-allowed opacity-60"
       )}
       style={{
         borderWidth: "2px",

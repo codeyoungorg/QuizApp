@@ -55,8 +55,12 @@ export const LearnQuestion = ({
       const correct = item.text === correctAnswer;
       setDroppedAnswer(item.text);
       setIsCorrect(correct);
-      setShowCorrectAnswer(true);
+      
       handleAnswer(item.text, correct);
+
+      if(correct){
+        setShowCorrectAnswer(true);
+      }
     }
   };
 
