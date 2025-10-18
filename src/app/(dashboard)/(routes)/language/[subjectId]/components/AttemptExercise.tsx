@@ -92,7 +92,6 @@ export const AttemptExercise = ({
       if (isTouchDevice) {
         setDndBackend(() => TouchBackend);
         setBackendOptions({
-          enableMouseEvents: true,
           ignoreContextMenu: true,
         });
       } else {
