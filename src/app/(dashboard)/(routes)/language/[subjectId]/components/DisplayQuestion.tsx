@@ -173,7 +173,7 @@ export const DisplayQuestion = ({
             disabled={selectedOptionIndex === null}
             onClick={handleNext}
           >
-            <span>{showAnswer ? "Continue" : "Check Answer"}</span>
+            <span>{showAnswer ? "Next Question" : "Check Answer"}</span>
             <ArrowCircleRightIcon />
           </Button>
         )}

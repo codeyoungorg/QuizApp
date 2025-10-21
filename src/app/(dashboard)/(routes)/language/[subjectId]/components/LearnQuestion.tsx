@@ -165,7 +165,7 @@ export const LearnQuestion = ({
             disabled={!droppedAnswer || !isCorrect}
             onClick={handleNext}
           >
-            <span>Continue</span>
+            <span>Next Question</span>
             <ArrowCircleRightIcon />
           </Button>
         )}
