@@ -1,4 +1,5 @@
 import { ExerciseData } from "@/app/(dashboard)/(routes)/language/[subjectId]/types";
+import { stopLoader } from "@/utils/loaderUtils";
 import axios from "axios";
 
 type QuizSubmission = {
@@ -54,6 +55,8 @@ export const LanguageLearningGetTopicContent = async ({
       to,
     });
     return null;
+  } finally {
+    stopLoader();
   }
 };
 
@@ -108,6 +111,8 @@ export const updateLanguageLearningPractice = async ({
       quizId,
     });
     return null;
+  } finally {
+    stopLoader();
   }
 };
 
@@ -158,6 +163,8 @@ export const saveLanguageLearningPractice = async ({
       levelId,
     });
     return null;
+  } finally {
+    stopLoader();
   }
 };
 
@@ -192,7 +199,7 @@ export const LanguageLearningGetUserCardState = async ({
       },
     });
 
-    if(data.result === null){
+    if (data.result === null) {
       return null;
     }
 
@@ -207,10 +214,15 @@ export const LanguageLearningGetUserCardState = async ({
       lang,
     });
     return null;
+  } finally {
+    stopLoader();
   }
 };
 
-export const LanguageLearningFetchQuizResult = async (quizId: string, userId?: string) => {
+export const LanguageLearningFetchQuizResult = async (
+  quizId: string,
+  userId?: string
+) => {
   const baseUrl = process.env.NEXT_PUBLIC_QUIZ_API;
   if (!baseUrl) {
     return null;
@@ -226,7 +238,7 @@ export const LanguageLearningFetchQuizResult = async (quizId: string, userId?: s
       },
     });
 
-    if(data){
+    if (data) {
       return data;
     }
 
@@ -238,6 +250,8 @@ export const LanguageLearningFetchQuizResult = async (quizId: string, userId?: s
       userId,
     });
     return null;
+  } finally {
+    stopLoader();
   }
 };
 
@@ -292,5 +306,7 @@ export const saveLanguageLearningData = async ({
       language,
     });
     return null;
+  } finally {
+    stopLoader();
   }
 };
