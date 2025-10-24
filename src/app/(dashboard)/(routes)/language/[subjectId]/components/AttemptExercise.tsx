@@ -28,7 +28,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { ErrorToast, SuccessToast } from "@/utils/getToast";
 import { HandleQuite } from "@/utils/HandleQuite";
-import { startLoader, stopLoader } from "@/utils/loaderUtils";
+import { stopLoader } from "@/utils/loaderUtils";
 
 type QuizSubmission = {
   questionId: number;
@@ -163,7 +163,6 @@ export const AttemptExercise = ({
   };
 
   const completeSet = async () => {
-    startLoader();
     setIsLoading(true);
     setIsCompleted(true);
 

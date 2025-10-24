@@ -16,6 +16,7 @@ import ExitModel from "../../../../practice/_components/ExitModel";
 import cardIcon from "@/public/images/icons/cards_icons_result_page.png";
 import topicIcon from "@/public/images/icons/topics_icons_result_page.png";
 import { HandleQuite } from "@/utils/HandleQuite";
+import { stopLoader } from "@/utils/loaderUtils";
 
 interface QuizResultData {
   id: string;
@@ -70,6 +71,11 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
     useState(false);
   const { currentQuizScore } = useQuizStore();
   const userId = getCookie("userId");
+
+
+  useEffect(() => {
+    stopLoader();
+  }, []);
 
   useEffect(() => {
     if (currentQuizScore) {
