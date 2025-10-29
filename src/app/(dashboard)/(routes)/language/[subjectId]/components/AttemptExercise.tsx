@@ -189,13 +189,13 @@ export const AttemptExercise = ({
           setIsLoading(false);
           setIsCompleted(true);
           SuccessToast("Progress saved successfully!");
-          handleEvent("lang_quiz_completed", "When language learning quiz is completed");
+          handleEvent("lang_learning_completed", "When language learning quiz is completed");
         } else {
           setIsLoading(false);
           setIsCompleted(false);
           setSaveError("Failed to save your progress. Please try again.");
           ErrorToast("Failed to save your progress. Please try again.");
-          handleEvent("lang_quiz_failed_submit", "When language learning quiz fails to submit");
+          handleEvent("lang_learning_failed_submit", "When language learning quiz fails to submit");
         }
       } else {
         if (prevQuiz?.id) {
