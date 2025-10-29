@@ -17,6 +17,7 @@ import cardIcon from "@/public/images/icons/cards_icons_result_page.png";
 import topicIcon from "@/public/images/icons/topics_icons_result_page.png";
 import { HandleQuite } from "@/utils/HandleQuite";
 import { stopLoader } from "@/utils/loaderUtils";
+import { handleEvent } from "@/utils/handleEvent";
 
 interface QuizResultData {
   id: string;
@@ -72,7 +73,6 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
   const { currentQuizScore } = useQuizStore();
   const userId = getCookie("userId");
 
-
   useEffect(() => {
     stopLoader();
   }, []);
@@ -104,7 +104,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
 
   const handleContinueLearning = () => {
     setIsContinueLearningClicked(true);
-    router.push(`/languages?lang=${lang}`);
+    HandleQuite(false, `/languages?lang=${lang}`);
   };
 
   const isLevelComplete =
@@ -249,15 +249,19 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
                 <div
                   key={topic.id}
                   className="bg-white rounded-2xl p-5 border-2 border-[#E6E6E6] cursor-pointer hover:shadow-md transition-shadow"
-                  onClick={() =>
+                  onClick={() => {
+                    handleEvent(
+                      "lang_practice_started",
+                      "When languge learning practice is started"
+                    );
                     router.push(
                       `/language/${lang}/practice?topic=${
                         topic.id
                       }&from=1&to=5&level=${
                         topic.level_id || quizResult?.level_id
                       }`
-                    )
-                  }
+                    );
+                  }}
                 >
                   <div className="flex items-center gap-2 mb-3">
                     <span className="w-5 h-5 flex items-center justify-center">
