@@ -9,6 +9,7 @@ import { ErrorToast } from "@/utils/getToast";
 import { ExerciseCompleted } from "./ExerciseCompleted";
 import { QuizDataType, SubmissionType } from "@/types/quiz.types";
 import { startLoader, stopLoader } from "@/utils/loaderUtils";
+import { handleEvent } from "@/utils/handleEvent";
 
 export default function PracticeClient({
   user_id,
@@ -57,10 +58,12 @@ export default function PracticeClient({
             noOfQuestions: questionCount,
           }
         );
+        handleEvent("quiz_started", "When a quiz is started");
         setQuizData(response.data?.quiz);
         setIsPracticeStarted(true);
       } catch (error) {
         console.error(error);
+        handleEvent("quiz_failed_start", "When a quiz fails to start");
         ErrorToast("Failed to start quiz.");
       } finally {
         setQuizLoading(false);
@@ -76,9 +79,11 @@ export default function PracticeClient({
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_QUIZ_API}/quiz/submission/summary?quizId=${quizData?.id}&userId=${userId}`
       );
+      handleEvent("quiz_completed", "When a quiz is completed");
       setQuizSummaryData(response.data);
     } catch (error) {
-      throw error;
+      handleEvent("quiz_failed_submit", "When a quiz fails to submit");
+      ErrorToast("Failed to submit quiz.");
     }
   };
 

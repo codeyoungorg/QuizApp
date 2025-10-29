@@ -29,6 +29,7 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import { ErrorToast, SuccessToast } from "@/utils/getToast";
 import { HandleQuite } from "@/utils/HandleQuite";
 import { stopLoader } from "@/utils/loaderUtils";
+import { handleEvent } from "@/utils/handleEvent";
 
 type QuizSubmission = {
   questionId: number;
@@ -188,11 +189,13 @@ export const AttemptExercise = ({
           setIsLoading(false);
           setIsCompleted(true);
           SuccessToast("Progress saved successfully!");
+          handleEvent("lang_quiz_completed", "When language learning quiz is completed");
         } else {
           setIsLoading(false);
           setIsCompleted(false);
           setSaveError("Failed to save your progress. Please try again.");
           ErrorToast("Failed to save your progress. Please try again.");
+          handleEvent("lang_quiz_failed_submit", "When language learning quiz fails to submit");
         }
       } else {
         if (prevQuiz?.id) {
@@ -211,9 +214,11 @@ export const AttemptExercise = ({
           if (data) {
             SuccessToast("Quiz submitted successfully!");
             router.replace(`/language/${lang}/result?quiz=${data.id}`);
+            handleEvent("lang_practice_complete", "When language learning practice is completed");
           } else {
             setIsLoading(false);
             setIsCompleted(false);
+            handleEvent("lang_practice_failed_submit", "When language learning practice fails to submit");
             setSaveError("Failed to update quiz results. Please try again.");
             ErrorToast("Failed to update quiz results. Please try again.");
           }
@@ -248,9 +253,11 @@ export const AttemptExercise = ({
             }
             SuccessToast("Quiz submitted successfully!");
             router.replace(`/language/${lang}/result?quiz=${data.id}`);
+            handleEvent("lang_practice_complete", "When language learning practice is completed");
           } else {
             setIsLoading(false);
             setIsCompleted(false);
+            handleEvent("lang_practice_failed_submit", "When language learning practice fails to submit");
             setSaveError("Failed to save quiz results. Please try again.");
             ErrorToast("Failed to save quiz results. Please try again.");
           }
