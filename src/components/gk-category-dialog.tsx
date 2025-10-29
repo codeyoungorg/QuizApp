@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
+import { toast } from "@/components/ui/use-toast";
 interface GKCategoryDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -105,6 +105,10 @@ const GKCategoryDialog = ({
     try {
       const { questions } = await getGKQuestions({ userId, topicId });
       if (questions?.length === 0) {
+        toast({
+          title: "Great job! You’ve completed all questions for this topic.",
+          variant: "success",
+        });
         return;
       }
       // create gk quiz and redirect to gk-quiz page

@@ -11,6 +11,7 @@ import { getCookie } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
 
 type Props = {
   userId: string;
@@ -191,6 +192,7 @@ const HomePage: React.FC<Props> = ({
 
   return (
     <>
+      <Toaster />
       <div className="flex flex-row justify-center pb-5">
         <div className="parentDiv">
           <div className="titleSectionWrapper">
