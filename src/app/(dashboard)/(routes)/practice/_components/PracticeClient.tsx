@@ -10,6 +10,8 @@ import { ExerciseCompleted } from "./ExerciseCompleted";
 import { QuizDataType, SubmissionType } from "@/types/quiz.types";
 import { startLoader, stopLoader } from "@/utils/loaderUtils";
 import { handleEvent } from "@/utils/handleEvent";
+import { checkFalsy } from "@/utils/checkFalsy";
+
 
 export default function PracticeClient({
   user_id,
@@ -22,8 +24,8 @@ export default function PracticeClient({
   const topicId = queryParams.get("topicId");
   const subjectId = queryParams.get("subjectId");
   const quizTopic = queryParams.get("topic");
-  const userId = user_id || queryParams.get("userId");
-  const grade = user_grade || queryParams.get("grade");
+  const userId = checkFalsy(user_id) ? user_id : queryParams.get("userId");
+  const grade = checkFalsy(user_grade) ? user_grade : queryParams.get("grade");
 
   const userData = {
     id: userId,

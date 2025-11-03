@@ -39,6 +39,8 @@ export const ExerciseCompleted = ({
 
   const badge = quizSummaryData?.summary?.badge;
 
+  const totalPoints = quizSummaryData?.summary?.pointForCurrentQuiz || 0;
+
   return (
     <section className="max-w-[400px] h-full mx-auto flex flex-col items-center">
       <Button
@@ -57,7 +59,7 @@ export const ExerciseCompleted = ({
 
         <div>
           <p className="text-[#FF7F00] font-semibold text-2xl my-5 text-center">
-            +{totalCorrectCount} points
+            +{totalPoints} points
           </p>
 
           <Button variant="secondary" className="text-sm">
