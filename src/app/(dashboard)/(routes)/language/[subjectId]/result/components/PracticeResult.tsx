@@ -130,7 +130,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
 
   return (
     <div className="min-h-screen bg-white w-full">
-      <div className="w-full max-w-[800px] mx-auto px-4 sm:px-6 py-8 sm:py-12 relative">
+      <div className="w-full max-w-[800px] mx-auto px-4 sm:px-6 py-8 sm:py-12 relative pb-24 md:pb-8">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="w-5 h-5 rounded-full bg-app-secondary flex items-center justify-center">
@@ -288,19 +288,23 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
           </div>
         )}
 
-        <Button
-          variant="primary"
-          className="flex justify-between w-full mt-auto"
-          disabled={false}
-          onClick={handleContinueLearning}
-        >
-          <span>{getButtonText()}</span>
-          {isContinueLearningClicked ? (
-            <Loader2 className="w-5 h-5" />
-          ) : (
-            <ArrowCircleRightIcon />
-          )}
-        </Button>
+        <div className="fixed md:relative bottom-0 left-0 right-0 md:left-auto md:right-auto bg-white border-t md:border-t-0 border-gray-200 p-4 md:p-0 md:mt-8 z-10">
+          <div className="w-full max-w-[800px] mx-auto">
+            <Button
+              variant="primary"
+              className="flex justify-between w-full"
+              disabled={false}
+              onClick={handleContinueLearning}
+            >
+              <span>{getButtonText()}</span>
+              {isContinueLearningClicked ? (
+                <Loader2 className="w-5 h-5" />
+              ) : (
+                <ArrowCircleRightIcon />
+              )}
+            </Button>
+          </div>
+        </div>
 
         <ExitModel
           isOpen={isExitModalOpen}
