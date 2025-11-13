@@ -94,6 +94,8 @@ export const AttemptExercise = ({
         setDndBackend(() => TouchBackend);
         setBackendOptions({
           ignoreContextMenu: true,
+          delayTouchStart: 0,
+          enableMouseEvents: false,
         });
       } else {
         setDndBackend(() => HTML5Backend);

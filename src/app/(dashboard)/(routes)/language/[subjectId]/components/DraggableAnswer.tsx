@@ -42,7 +42,7 @@ export const DraggableAnswer = ({
   useEffect(() => {
     drag(ref);
     preview(getEmptyImage(), { captureDraggingState: true });
-  }, [drag, preview]);
+  }, [drag, preview, timerEnded, questionAnswered]);
 
   const borderColor = isCorrect ? "#008000" : "#E6E6E6";
   const canDragItem = !timerEnded && !questionAnswered;
