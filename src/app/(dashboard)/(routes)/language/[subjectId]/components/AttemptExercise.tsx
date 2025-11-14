@@ -11,7 +11,6 @@ import { DisplayQuestion } from "./DisplayQuestion";
 import { LearnQuestion } from "./LearnQuestion";
 import { CustomDragLayer } from "./CustomDragLayer";
 import { LearnResult } from "./LearnResult";
-import "./drag-fix.css";
 import { useQuery } from "@tanstack/react-query";
 import useQuizStore from "@/store/quiz-store";
 import {
@@ -31,7 +30,6 @@ import { ErrorToast, SuccessToast } from "@/utils/getToast";
 import { HandleQuite } from "@/utils/HandleQuite";
 import { stopLoader } from "@/utils/loaderUtils";
 import { handleEvent } from "@/utils/handleEvent";
-import "./drag-fix.css";
 
 type QuizSubmission = {
   questionId: number;
@@ -80,49 +78,11 @@ export const AttemptExercise = ({
   
   const [dndBackend, setDndBackend] = useState<any>(() => HTML5Backend);
   const [backendOptions, setBackendOptions] = useState<any>({});
-  const [authData, setAuthData] = useState<any>(null);
+
 
   useEffect(() => {
     stopLoader();
   }, []);
-
-  // Listen for auth data from React Native WebView
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      console.log('AttemptExercise: Received message event:', event.data);
-      if (event.data && typeof event.data === 'object' && event.data.touchConfig) {
-        console.log('AttemptExercise: Setting auth data with touchConfig:', event.data);
-        setAuthData(event.data);
-      }
-    };
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('message', handleMessage);
-      
-      // Also check if authData is already available on window
-      if ((window as any).authData) {
-        console.log('AttemptExercise: Found existing authData on window:', (window as any).authData);
-        setAuthData((window as any).authData);
-      }
-      
-      // Check for injected authData periodically (fallback)
-      const checkForAuthData = () => {
-        if ((window as any).authData && !authData) {
-          console.log('AttemptExercise: Found authData via periodic check:', (window as any).authData);
-          setAuthData((window as any).authData);
-        }
-      };
-      
-      const interval = setInterval(checkForAuthData, 1000);
-      
-      return () => {
-        window.removeEventListener('message', handleMessage);
-        clearInterval(interval);
-      };
-    }
-    
-    return () => {};
-  }, [authData]);
 
   useEffect(() => {
     if (mode === "learn") {
@@ -132,37 +92,17 @@ export const AttemptExercise = ({
       
       if (isTouchDevice) {
         setDndBackend(() => TouchBackend);
-        
-        // Get touch configuration from React Native app
-        const touchConfig = authData?.touchConfig || {};
-        console.log('AttemptExercise: Current authData:', authData);
-        console.log('AttemptExercise: TouchConfig received:', touchConfig);
-        
-        // Very aggressive touch settings for immediate response
-        const baseOptions = {
+        setBackendOptions({
           ignoreContextMenu: true,
-          delayTouchStart: 0, // No delay whatsoever
+          delayTouchStart: 0,
           enableMouseEvents: false,
-          touchSlop: 1, // Very small movement threshold (1px)
-          delay: 0,
-          delayMouseStart: 0,
-          enableHoverOutsideTarget: false,
-          // Additional aggressive settings
-          scrollAngleRanges: undefined, // Remove scroll angle restrictions
-          enableKeyboardEvents: false,
-        };
-        
-        console.log('AttemptExercise: Setting very aggressive TouchBackend options:', baseOptions);
-        setBackendOptions(baseOptions);
+        });
       } else {
-        console.log('AttemptExercise: Not a touch device, using HTML5Backend');
         setDndBackend(() => HTML5Backend);
         setBackendOptions({});
       }
-    } else {
-      console.log('AttemptExercise: Mode is not learn, skipping DnD setup');
     }
-  }, [mode, authData]);
+  }, [mode]);
 
   const cardState = `${from}-${to}`;
 
