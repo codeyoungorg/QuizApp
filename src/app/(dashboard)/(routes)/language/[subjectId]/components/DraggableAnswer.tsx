@@ -25,6 +25,12 @@ export const DraggableAnswer = ({
     type: "answer",
     item: () => {
       const width = ref.current?.offsetWidth || 0;
+      // Handle touch prevention when drag starts
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
+        document.body.style.userSelect = 'none';
+      }
       return { id, text, width };
     },
     collect: (monitor) => ({
@@ -39,24 +45,19 @@ export const DraggableAnswer = ({
       anchorX: 0.5,
       anchorY: 0.5,
     },
-    // Add these options for better touch handling
-    begin: (monitor: any) => {
-      // Prevent scrolling when drag starts
-      if (typeof document !== 'undefined') {
-        document.body.style.overflow = 'hidden';
-        document.body.style.touchAction = 'none';
-        document.body.style.userSelect = 'none';
-      }
-    },
-    end: (item: any, monitor: any) => {
+  }), [id, text, timerEnded, questionAnswered]);
+
+  // Handle touch restoration when drag ends
+  useEffect(() => {
+    if (!isDragging) {
       // Re-enable scrolling when drag ends
       if (typeof document !== 'undefined') {
         document.body.style.overflow = '';
         document.body.style.touchAction = '';
         document.body.style.userSelect = '';
       }
-    },
-  }), [id, text, timerEnded, questionAnswered]);
+    }
+  }, [isDragging]);
 
   useEffect(() => {
     drag(ref);
