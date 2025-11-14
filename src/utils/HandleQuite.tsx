@@ -8,7 +8,7 @@ export const HandleQuite = (goBack?: boolean, route?: string, appData?: {
     const returnUrl = localStorage.getItem("appReturnUrl") || appData?.returnUrl || "Home";
     const mobileData = {
       type: "route",
-      returnUrl,
+      url: returnUrl,
       params: appData?.params,
     };
     window.ReactNativeWebView.postMessage(JSON.stringify(mobileData));
