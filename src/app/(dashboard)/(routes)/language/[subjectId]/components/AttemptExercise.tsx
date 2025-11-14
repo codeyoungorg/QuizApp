@@ -11,6 +11,7 @@ import { DisplayQuestion } from "./DisplayQuestion";
 import { LearnQuestion } from "./LearnQuestion";
 import { CustomDragLayer } from "./CustomDragLayer";
 import { LearnResult } from "./LearnResult";
+import "./drag-fix.css";
 import { useQuery } from "@tanstack/react-query";
 import useQuizStore from "@/store/quiz-store";
 import {
@@ -30,6 +31,7 @@ import { ErrorToast, SuccessToast } from "@/utils/getToast";
 import { HandleQuite } from "@/utils/HandleQuite";
 import { stopLoader } from "@/utils/loaderUtils";
 import { handleEvent } from "@/utils/handleEvent";
+import "./drag-fix.css";
 
 type QuizSubmission = {
   questionId: number;
@@ -87,8 +89,9 @@ export const AttemptExercise = ({
   // Listen for auth data from React Native WebView
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      console.log('AttemptExercise: Received message event:', event.data);
       if (event.data && typeof event.data === 'object' && event.data.touchConfig) {
-        console.log('Received auth data from React Native:', event.data);
+        console.log('AttemptExercise: Setting auth data with touchConfig:', event.data);
         setAuthData(event.data);
       }
     };
@@ -98,16 +101,28 @@ export const AttemptExercise = ({
       
       // Also check if authData is already available on window
       if ((window as any).authData) {
+        console.log('AttemptExercise: Found existing authData on window:', (window as any).authData);
         setAuthData((window as any).authData);
       }
+      
+      // Check for injected authData periodically (fallback)
+      const checkForAuthData = () => {
+        if ((window as any).authData && !authData) {
+          console.log('AttemptExercise: Found authData via periodic check:', (window as any).authData);
+          setAuthData((window as any).authData);
+        }
+      };
+      
+      const interval = setInterval(checkForAuthData, 1000);
+      
+      return () => {
+        window.removeEventListener('message', handleMessage);
+        clearInterval(interval);
+      };
     }
     
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('message', handleMessage);
-      }
-    };
-  }, []);
+    return () => {};
+  }, [authData]);
 
   useEffect(() => {
     if (mode === "learn") {
@@ -120,37 +135,32 @@ export const AttemptExercise = ({
         
         // Get touch configuration from React Native app
         const touchConfig = authData?.touchConfig || {};
+        console.log('AttemptExercise: Current authData:', authData);
+        console.log('AttemptExercise: TouchConfig received:', touchConfig);
         
+        // Very aggressive touch settings for immediate response
         const baseOptions = {
-          ignoreContextMenu: touchConfig.ignoreContextMenu ?? true,
-          delayTouchStart: 0, // Always 0 for immediate response
-          enableMouseEvents: touchConfig.enableMouseEvents ?? false,
-          touchSlop: touchConfig.isProduction ? 2 : 5, // Smaller for production
-          scrollAngleRanges: touchConfig.scrollAngleRanges ?? [
-            { start: -45, end: 45 },
-            { start: 135, end: 225 }
-          ],
-          // Additional options for better touch handling
+          ignoreContextMenu: true,
+          delayTouchStart: 0, // No delay whatsoever
+          enableMouseEvents: false,
+          touchSlop: 1, // Very small movement threshold (1px)
           delay: 0,
           delayMouseStart: 0,
           enableHoverOutsideTarget: false,
+          // Additional aggressive settings
+          scrollAngleRanges: undefined, // Remove scroll angle restrictions
+          enableKeyboardEvents: false,
         };
         
+        console.log('AttemptExercise: Setting very aggressive TouchBackend options:', baseOptions);
         setBackendOptions(baseOptions);
-        
-        console.log('TouchBackend configured with options:', {
-          touchConfig,
-          backendOptions: {
-            ignoreContextMenu: touchConfig.ignoreContextMenu ?? true,
-            delayTouchStart: touchConfig.delayTouchStart ?? 0,
-            enableMouseEvents: touchConfig.enableMouseEvents ?? false,
-            touchSlop: touchConfig.touchSlop ?? (touchConfig.isProduction ? 3 : 5),
-          }
-        });
       } else {
+        console.log('AttemptExercise: Not a touch device, using HTML5Backend');
         setDndBackend(() => HTML5Backend);
         setBackendOptions({});
       }
+    } else {
+      console.log('AttemptExercise: Mode is not learn, skipping DnD setup');
     }
   }, [mode, authData]);
 
