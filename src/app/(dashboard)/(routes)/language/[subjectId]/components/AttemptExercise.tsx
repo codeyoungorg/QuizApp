@@ -190,7 +190,6 @@ export const AttemptExercise = ({
         if (data) {
           setIsLoading(false);
           setIsCompleted(true);
-          SuccessToast("Progress saved successfully!");
           handleEvent("lang_learning_completed", "When language learning quiz is completed");
         } else {
           setIsLoading(false);
@@ -214,7 +213,6 @@ export const AttemptExercise = ({
           });
 
           if (data) {
-            SuccessToast("Quiz submitted successfully!");
             router.replace(`/language/${lang}/result?quiz=${data.id}`);
             handleEvent("lang_practice_complete", "When language learning practice is completed");
           } else {
@@ -253,7 +251,6 @@ export const AttemptExercise = ({
             } catch (eventError) {
               console.error("Failed to capture event:", eventError);
             }
-            SuccessToast("Quiz submitted successfully!");
             router.replace(`/language/${lang}/result?quiz=${data.id}`);
             handleEvent("lang_practice_complete", "When language learning practice is completed");
           } else {

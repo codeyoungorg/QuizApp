@@ -104,7 +104,13 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
 
   const handleContinueLearning = () => {
     setIsContinueLearningClicked(true);
-    HandleQuite(false, `/languages?lang=${lang}`);
+    HandleQuite(false, `/languages?lang=${lang}`, {
+      returnUrl: `LanguageLearning`,
+      params: {
+        language: lang,
+        studentId: userId,
+      },
+    });
   };
 
   const isLevelComplete =

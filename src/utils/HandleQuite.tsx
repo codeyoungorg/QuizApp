@@ -1,11 +1,15 @@
-export const HandleQuite = (goBack?: boolean, route?: string) => {
+export const HandleQuite = (goBack?: boolean, route?: string, appData?: {
+  returnUrl?: string;
+  params?: any;
+}) => {
   const entryPoint = sessionStorage.getItem("entryPoint");
 
   if (window.ReactNativeWebView) {
-    const returnUrl = localStorage.getItem("appReturnUrl") || "Home";
+    const returnUrl = localStorage.getItem("appReturnUrl") || appData?.returnUrl || "Home";
     const mobileData = {
       type: "route",
       returnUrl,
+      params: appData?.params,
     };
     window.ReactNativeWebView.postMessage(JSON.stringify(mobileData));
     return;
