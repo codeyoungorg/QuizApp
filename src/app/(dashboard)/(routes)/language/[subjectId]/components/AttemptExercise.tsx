@@ -78,10 +78,35 @@ export const AttemptExercise = ({
   
   const [dndBackend, setDndBackend] = useState<any>(() => HTML5Backend);
   const [backendOptions, setBackendOptions] = useState<any>({});
-
+  const [authData, setAuthData] = useState<any>(null);
 
   useEffect(() => {
     stopLoader();
+  }, []);
+
+  // Listen for auth data from React Native WebView
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && typeof event.data === 'object' && event.data.touchConfig) {
+        console.log('Received auth data from React Native:', event.data);
+        setAuthData(event.data);
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('message', handleMessage);
+      
+      // Also check if authData is already available on window
+      if ((window as any).authData) {
+        setAuthData((window as any).authData);
+      }
+    }
+    
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('message', handleMessage);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -92,17 +117,42 @@ export const AttemptExercise = ({
       
       if (isTouchDevice) {
         setDndBackend(() => TouchBackend);
-        setBackendOptions({
-          ignoreContextMenu: true,
-          delayTouchStart: 0,
-          enableMouseEvents: false,
+        
+        // Get touch configuration from React Native app
+        const touchConfig = authData?.touchConfig || {};
+        
+        const baseOptions = {
+          ignoreContextMenu: touchConfig.ignoreContextMenu ?? true,
+          delayTouchStart: 0, // Always 0 for immediate response
+          enableMouseEvents: touchConfig.enableMouseEvents ?? false,
+          touchSlop: touchConfig.isProduction ? 2 : 5, // Smaller for production
+          scrollAngleRanges: touchConfig.scrollAngleRanges ?? [
+            { start: -45, end: 45 },
+            { start: 135, end: 225 }
+          ],
+          // Additional options for better touch handling
+          delay: 0,
+          delayMouseStart: 0,
+          enableHoverOutsideTarget: false,
+        };
+        
+        setBackendOptions(baseOptions);
+        
+        console.log('TouchBackend configured with options:', {
+          touchConfig,
+          backendOptions: {
+            ignoreContextMenu: touchConfig.ignoreContextMenu ?? true,
+            delayTouchStart: touchConfig.delayTouchStart ?? 0,
+            enableMouseEvents: touchConfig.enableMouseEvents ?? false,
+            touchSlop: touchConfig.touchSlop ?? (touchConfig.isProduction ? 3 : 5),
+          }
         });
       } else {
         setDndBackend(() => HTML5Backend);
         setBackendOptions({});
       }
     }
-  }, [mode]);
+  }, [mode, authData]);
 
   const cardState = `${from}-${to}`;
 

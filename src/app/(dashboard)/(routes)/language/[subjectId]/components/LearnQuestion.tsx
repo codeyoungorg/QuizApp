@@ -111,7 +111,7 @@ export const LearnQuestion = ({
             droppedAnswer={droppedAnswer}
           />
 
-          <div className="flex flex-col gap-3 mt-6 select-none">
+          <div className="flex flex-col gap-3 mt-6 select-none touch-none">
             {data.options.map((option, index) => (
               <DraggableAnswer
                 key={index}

@@ -36,6 +36,25 @@ export const DraggableAnswer = ({
     },
     previewOptions: {
       captureDraggingState: true,
+      anchorX: 0.5,
+      anchorY: 0.5,
+    },
+    // Add these options for better touch handling
+    begin: (monitor: any) => {
+      // Prevent scrolling when drag starts
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
+        document.body.style.userSelect = 'none';
+      }
+    },
+    end: (item: any, monitor: any) => {
+      // Re-enable scrolling when drag ends
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+        document.body.style.userSelect = '';
+      }
     },
   }), [id, text, timerEnded, questionAnswered]);
 
