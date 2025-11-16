@@ -38,11 +38,13 @@ type QuizSubmission = {
 };
 
 type ExerciseMode = "learn" | "practice";
+type InteractionMode = 'drag' | 'click';
 
 export const AttemptExercise = ({
   content,
   exerciseInfo,
   mode = "practice",
+  interactionMode = "click",
 }: {
   content: ExerciseData;
   exerciseInfo: {
@@ -53,6 +55,7 @@ export const AttemptExercise = ({
     to: number;
   };
   mode?: ExerciseMode;
+  interactionMode?: InteractionMode;
 }) => {
   const { userId, topicId, lang, from, to } = exerciseInfo;
 
@@ -421,6 +424,7 @@ export const AttemptExercise = ({
               (sub) => sub.questionId === content[currentQueIndex].id
             )?.answer
           }
+          interactionMode={interactionMode}
         />
       );
     } else {

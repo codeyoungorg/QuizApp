@@ -12,6 +12,8 @@ type AnswerOption = {
   text: string;
 };
 
+type InteractionMode = 'drag' | 'click';
+
 export const LearnQuestion = ({
   data,
   handleAnswer,
@@ -21,6 +23,7 @@ export const LearnQuestion = ({
   timerEnded,
   resetQuiz,
   previousAnswer,
+  interactionMode = 'drag',
 }: {
   data: ExerciseQuestion;
   handleAnswer: (answer: string, isCorrect: boolean) => void;
@@ -30,6 +33,7 @@ export const LearnQuestion = ({
   timerEnded: boolean;
   resetQuiz: () => void;
   previousAnswer?: string;
+  interactionMode?: InteractionMode;
 }) => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [droppedAnswer, setDroppedAnswer] = useState<string | null>(null);
@@ -62,6 +66,11 @@ export const LearnQuestion = ({
         setShowCorrectAnswer(true);
       }
     }
+  };
+
+  const handleAnswerClick = (item: AnswerOption) => {
+    // Same logic as handleDrop but for click mode
+    handleDrop(item);
   };
 
   const handleNext = () => {
@@ -109,6 +118,7 @@ export const LearnQuestion = ({
             onDrop={handleDrop}
             isCorrect={isCorrect}
             droppedAnswer={droppedAnswer}
+            interactionMode={interactionMode}
           />
 
           <div className="flex flex-col gap-3 mt-6 select-none">
@@ -120,6 +130,8 @@ export const LearnQuestion = ({
                 isCorrect={showCorrectAnswer && option.text === correctAnswer}
                 timerEnded={timerEnded}
                 questionAnswered={isCorrect === true}
+                onClick={handleAnswerClick}
+                interactionMode={interactionMode}
               />
             ))}
           </div>

@@ -8,14 +8,18 @@ type AnswerOption = {
   text: string;
 };
 
+type InteractionMode = 'drag' | 'click';
+
 export const DropZone = ({
   onDrop,
   isCorrect,
   droppedAnswer,
+  interactionMode = 'drag',
 }: {
   onDrop: (item: AnswerOption) => void;
   isCorrect: boolean | null;
   droppedAnswer: string | null;
+  interactionMode?: InteractionMode;
 }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "answer",
@@ -23,13 +27,16 @@ export const DropZone = ({
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
+    canDrop: () => interactionMode === 'drag',
   }));
 
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    drop(ref);
-  }, [drop]);
+    if (interactionMode === 'drag') {
+      drop(ref);
+    }
+  }, [drop, interactionMode]);
 
   return (
     <div>
@@ -55,7 +62,9 @@ export const DropZone = ({
           </div>
         ) : (
           <p className="text-sm font-normal text-[#999999]">
-            Drag the correct option here
+            {interactionMode === 'click' 
+              ? 'Select the correct option'
+              : 'Drag the correct option here'}
           </p>
         )}
       </div>

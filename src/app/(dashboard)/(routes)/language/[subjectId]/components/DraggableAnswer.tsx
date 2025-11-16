@@ -12,13 +12,22 @@ type AnswerOption = {
   timerEnded: boolean;
 };
 
+type InteractionMode = 'drag' | 'click';
+
 export const DraggableAnswer = ({
   id,
   text,
   timerEnded,
   isCorrect,
   questionAnswered,
-}: AnswerOption & { isCorrect: boolean; questionAnswered?: boolean }) => {
+  onClick,
+  interactionMode = 'drag',
+}: AnswerOption & {
+  isCorrect: boolean;
+  questionAnswered?: boolean;
+  onClick?: (item: { id: string; text: string }) => void;
+  interactionMode?: InteractionMode;
+}) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag, preview] = useDrag(() => ({
@@ -30,36 +39,50 @@ export const DraggableAnswer = ({
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
-    canDrag: !timerEnded && !questionAnswered,
+    canDrag: interactionMode === 'drag' && !timerEnded && !questionAnswered,
     options: {
       dropEffect: "move",
     },
     previewOptions: {
       captureDraggingState: true,
     },
-  }), [id, text, timerEnded, questionAnswered]);
+  }), [id, text, timerEnded, questionAnswered, interactionMode]);
 
   useEffect(() => {
-    drag(ref);
-    preview(getEmptyImage(), { captureDraggingState: true });
-  }, [drag, preview, timerEnded, questionAnswered]);
+    if (interactionMode === 'drag') {
+      drag(ref);
+      preview(getEmptyImage(), { captureDraggingState: true });
+    }
+  }, [drag, preview, timerEnded, questionAnswered, interactionMode]);
+
+  const handleClick = () => {
+    if (interactionMode === 'click' && !timerEnded && !questionAnswered && onClick) {
+      onClick({ id, text });
+    }
+  };
 
   const borderColor = isCorrect ? "#008000" : "#E6E6E6";
-  const canDragItem = !timerEnded && !questionAnswered;
+  const canInteract = !timerEnded && !questionAnswered;
+  const cursorStyle = interactionMode === 'click' 
+    ? (canInteract ? 'cursor-pointer' : 'cursor-not-allowed')
+    : (canInteract ? 'cursor-grab' : 'cursor-not-allowed');
 
   return (
     <div
       ref={ref}
+      onClick={handleClick}
       className={cn(
         "w-full select-none rounded-[12px] border bg-white px-[10px] py-3 text-app-text-black font-semibold transition-all flex items-center justify-between touch-none",
         isDragging ? "opacity-50" : "opacity-100 hover:bg-gray-50",
-        canDragItem ? "cursor-grab" : "cursor-not-allowed opacity-60"
+        cursorStyle,
+        !canInteract && "opacity-60",
+        interactionMode === 'click' && canInteract && "active:scale-[0.98]"
       )}
       style={{
         borderWidth: "2px",
         borderColor: borderColor,
       }}
-      aria-label={`Drag answer: ${text}`}
+      aria-label={interactionMode === 'click' ? `Click to select: ${text}` : `Drag answer: ${text}`}
     >
       <span>{text}</span>
       {isCorrect && (
