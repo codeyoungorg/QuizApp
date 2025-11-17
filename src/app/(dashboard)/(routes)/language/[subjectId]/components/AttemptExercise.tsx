@@ -38,7 +38,7 @@ type QuizSubmission = {
 };
 
 type ExerciseMode = "learn" | "practice";
-type InteractionMode = 'drag' | 'click';
+type InteractionMode = "drag" | "click";
 
 export const AttemptExercise = ({
   content,
@@ -78,10 +78,9 @@ export const AttemptExercise = ({
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const router = useRouter();
-  
+
   const [dndBackend, setDndBackend] = useState<any>(() => HTML5Backend);
   const [backendOptions, setBackendOptions] = useState<any>({});
-
 
   useEffect(() => {
     stopLoader();
@@ -92,7 +91,7 @@ export const AttemptExercise = ({
       const isTouchDevice =
         typeof window !== "undefined" &&
         ("ontouchstart" in window || navigator.maxTouchPoints > 0);
-      
+
       if (isTouchDevice) {
         setDndBackend(() => TouchBackend);
         setBackendOptions({
@@ -142,7 +141,7 @@ export const AttemptExercise = ({
   const handleNextCard = () => {
     if (currentQueIndex < content.length - 1) {
       setCurrentQueIndex(currentQueIndex + 1);
-      setTimeLeft(45); 
+      setTimeLeft(45);
       setTimerEnded(false);
     } else {
       completeSet();
@@ -152,7 +151,7 @@ export const AttemptExercise = ({
   const handlePrevCard = () => {
     if (currentQueIndex > 0) {
       setCurrentQueIndex(currentQueIndex - 1);
-      setTimeLeft(45); 
+      setTimeLeft(45);
       setTimerEnded(false);
     }
   };
@@ -164,7 +163,7 @@ export const AttemptExercise = ({
     setAnsweredQuestions(new Set());
     setIsCompleted(false);
     setIsLoading(false);
-    setTimeLeft(45); 
+    setTimeLeft(45);
     setTimerEnded(false);
   };
 
@@ -193,13 +192,19 @@ export const AttemptExercise = ({
         if (data) {
           setIsLoading(false);
           setIsCompleted(true);
-          handleEvent("lang_learning_completed", "When language learning quiz is completed");
+          handleEvent(
+            "lang_learning_completed",
+            "When language learning quiz is completed"
+          );
         } else {
           setIsLoading(false);
           setIsCompleted(false);
           setSaveError("Failed to save your progress. Please try again.");
           ErrorToast("Failed to save your progress. Please try again.");
-          handleEvent("lang_learning_failed_submit", "When language learning quiz fails to submit");
+          handleEvent(
+            "lang_learning_failed_submit",
+            "When language learning quiz fails to submit"
+          );
         }
       } else {
         if (prevQuiz?.id) {
@@ -217,11 +222,17 @@ export const AttemptExercise = ({
 
           if (data) {
             router.replace(`/language/${lang}/result?quiz=${data.id}`);
-            handleEvent("lang_practice_complete", "When language learning practice is completed");
+            handleEvent(
+              "lang_practice_complete",
+              "When language learning practice is completed"
+            );
           } else {
             setIsLoading(false);
             setIsCompleted(false);
-            handleEvent("lang_practice_failed_submit", "When language learning practice fails to submit");
+            handleEvent(
+              "lang_practice_failed_submit",
+              "When language learning practice fails to submit"
+            );
             setSaveError("Failed to update quiz results. Please try again.");
             ErrorToast("Failed to update quiz results. Please try again.");
           }
@@ -246,8 +257,8 @@ export const AttemptExercise = ({
                   quizId: parseInt(data.id),
                   topicId: parseInt(topicId as unknown as string),
                   difficulty: quizSubmissions.map((row) => content[0].level_id),
-                  questionId: quizSubmissions.map(
-                    (row) => parseInt(row.questionId as unknown as string)
+                  questionId: quizSubmissions.map((row) =>
+                    parseInt(row.questionId as unknown as string)
                   ),
                 },
               });
@@ -255,11 +266,17 @@ export const AttemptExercise = ({
               console.error("Failed to capture event:", eventError);
             }
             router.replace(`/language/${lang}/result?quiz=${data.id}`);
-            handleEvent("lang_practice_complete", "When language learning practice is completed");
+            handleEvent(
+              "lang_practice_complete",
+              "When language learning practice is completed"
+            );
           } else {
             setIsLoading(false);
             setIsCompleted(false);
-            handleEvent("lang_practice_failed_submit", "When language learning practice fails to submit");
+            handleEvent(
+              "lang_practice_failed_submit",
+              "When language learning practice fails to submit"
+            );
             setSaveError("Failed to save quiz results. Please try again.");
             ErrorToast("Failed to save quiz results. Please try again.");
           }
@@ -327,7 +344,7 @@ export const AttemptExercise = ({
 
   useEffect(() => {
     const isCurrentQuestionAnswered = answeredQuestions.has(currentQueIndex);
-    
+
     if (timeLeft > 0 && !isCurrentQuestionAnswered) {
       const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timerId);
@@ -337,7 +354,13 @@ export const AttemptExercise = ({
   }, [timeLeft, answeredQuestions, currentQueIndex]);
 
   const handleExit = () => {
-    HandleQuite();
+    HandleQuite(false, null, {
+      returnUrl: `LanguageLearning`,
+      params: {
+        language: lang,
+        studentId: userId,
+      },
+    });
     setIsExitModalOpen(false);
   };
 
@@ -365,14 +388,16 @@ export const AttemptExercise = ({
             <h2 className="text-2xl font-bold text-app-text-black mb-2">
               Oops! Something went wrong
             </h2>
-            <p className="text-base text-app-text-grey">
-              {saveError}
-            </p>
+            <p className="text-base text-app-text-grey">{saveError}</p>
           </div>
           <div className="flex gap-3 w-full">
             <Button
               variant="secondary"
-              onClick={() => router.push(`/language/${lang}?topic=${topicId}&from=${from}&to=${to}`)}
+              onClick={() =>
+                router.push(
+                  `/language/${lang}?topic=${topicId}&from=${from}&to=${to}`
+                )
+              }
               className="flex-1"
             >
               Go Back
@@ -395,7 +420,9 @@ export const AttemptExercise = ({
 
   if (isCompleted && mode === "learn") {
     const handleTakeQuiz = () => {
-      router.push(`/language/${lang}/practice?topic=${topicId}&from=${from}&to=${to}`);
+      router.push(
+        `/language/${lang}/practice?topic=${topicId}&from=${from}&to=${to}`
+      );
     };
 
     return (

@@ -1,4 +1,4 @@
-export const HandleQuite = (goBack?: boolean, route?: string, appData?: {
+export const HandleQuite = (goBack?: boolean, route?: string | null, appData?: {
   returnUrl?: string;
   params?: any;
 }) => {

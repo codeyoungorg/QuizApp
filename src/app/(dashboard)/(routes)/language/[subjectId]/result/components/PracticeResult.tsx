@@ -98,8 +98,14 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
   }, [currentQuizScore, quizResult, lang, userId]);
 
   const handleExitConfirm = () => {
-    HandleQuite(false, `/languages?lang=${lang}`);
     setIsExitModalOpen(false);
+    HandleQuite(false, `/languages?lang=${lang}`, {
+      returnUrl: `LanguageLearning`,
+      params: {
+        language: lang,
+        studentId: userId,
+      },
+    });
   };
 
   const handleContinueLearning = () => {
