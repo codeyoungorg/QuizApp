@@ -183,7 +183,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
             <p className="text-base font-semibold text-app-text-black mb-4">
               Current topic
             </p>
-            <div className="bg-white rounded-3xl p-4 border-2 border-[#E6E6E6] shadow-sm h-[158px]">
+            <div className="bg-white rounded-3xl p-4 border-2 border-[#E6E6E6] shadow-sm ">
               <div className="flex items-center gap-2 mb-5">
                 <span className="w-[20px]">
                   {getCardIcon(quizResult?.topic?.name)}
@@ -220,7 +220,7 @@ export const PracticeResult: React.FC<PracticeResultProps> = ({
             <p className="text-base font-semibold text-black mb-3">
               Current stage
             </p>
-            <div className="bg-white rounded-3xl p-4 border-2 border-[#E6E6E6] shadow-sm h-[158px]">
+            <div className="bg-white rounded-3xl p-4 border-2 border-[#E6E6E6] shadow-sm ">
               <div className="mb-6 flex justify-between">
                 <p className="text-base font-bold text-black">Word Wizards</p>
                 <h3 className="text-sm font-medium text-gray-400">
