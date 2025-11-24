@@ -16,15 +16,23 @@ const NativeComponent = () => {
         userId?: string;
         grade?: number;
         userRole?: string;
+        deviceInfo?: {
+          appVersion: string;
+        };
       };
     }) => {
       const data = event.data;
+      
       setCookie("Authorization", data?.authToken);
       setCookie("refresh-token", data?.refreshToken);
       setCookie("userName", data?.userName);
       setCookie("userId", data?.userId);
       setCookie("grade", data?.grade);
       setCookie("userRole", data?.userRole);
+
+      if(data?.deviceInfo?.appVersion === "6.0.1") {
+        localStorage.setItem("isNewApp", "true");
+      }
 
       setTimeout(() => {
         // router.push("/");
