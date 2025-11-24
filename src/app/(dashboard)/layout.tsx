@@ -1,4 +1,5 @@
 "use client";
+import classNames from "clsx";
 import React, { useEffect, useState } from "react";
 import sandboxLogo from "@/assets/Images/sandboxLogo.svg";
 import Image from "next/image";
@@ -22,7 +23,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [isWebView, setIsWebView] = useState(false);
 
   useEffect(() => {
-    stopLoader();
+    // stopLoader();
+
     // Check if we're in a WebView environment
     const checkWebView = () => {
       return window.ReactNativeWebView !== undefined;
@@ -32,7 +34,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    stopLoader();
+    // stopLoader();
+
     if (window.ReactNativeWebView) {
       if (pathname !== "/" || getCookie("currentPageUrl")) {
         setShowBackButton(true);
@@ -58,112 +61,126 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   };
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("from") === "sandboxLanguage") {
-      sessionStorage.setItem("entryPoint", "sandboxLanguage");
+    if (urlParams.get("from") && urlParams.get("from") !== "") {
+      sessionStorage.setItem("entryPoint", urlParams.get("from") as string);
     }
   }, []);
+
+  const isLanguagePage = pathname.includes("/language/");
+  const isPracticePage = pathname.includes("/practice");
+
+  const isHideNavigation = isLanguagePage || isPracticePage;
 
   return (
     <div
       className={`${inter.variable} font-sans h-full w-full bg-[#FFF] z-100`}
     >
-      <div
-        className={`w-full border-b-2 flex items-center justify-between bg-[#FFF] py-4 sticky top-0 z-[100] ${
-          isWebView && "h-14 top-7"
-        }`}
-      >
-        {showBackButton ? (
-          <button
-            onClick={() => {
-              const urlParams = new URLSearchParams(window.location.search);
-              const entryPoint = sessionStorage.getItem("entryPoint");
-              const fromParam = urlParams.get("from");
-              if (isWebView) {
-                const targetUrl = getCookie("currentPageUrl");
-                const landingUrl = getCookie("targetPageUrl");
+      {!isHideNavigation && (
+        <div
+          className={`w-full border-b-2 flex items-center justify-between bg-[#FFF] py-4 sticky top-0 z-[100] ${
+            isWebView && "h-14 top-7"
+          }`}
+        >
+          {showBackButton ? (
+            <button
+              onClick={() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const entryPoint = sessionStorage.getItem("entryPoint");
+                const fromParam = urlParams.get("from");
+                if (isWebView) {
+                  const targetUrl = getCookie("currentPageUrl");
+                  const landingUrl = getCookie("targetPageUrl");
 
-                if (landingUrl === window.location.href) {
-                  window.location.href = targetUrl || "";
+                  if (landingUrl === window.location.href) {
+                    window.location.href = targetUrl || "";
+                    return;
+                  }
+                }
+                if (
+                  entryPoint == "sandboxLanguage" &&
+                  !pathname.includes("/quiz") &&
+                  pathname.includes(`/languages`)
+                ) {
+                  window.location.href = `${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/language-learning`;
+                  sessionStorage.removeItem("entryPoint");
                   return;
                 }
-              }
-              if (
-                entryPoint == "sandboxLanguage" &&
-                !pathname.includes("/quiz") &&
-                pathname.includes(`/languages`)
-              ) {
-                window.location.href = `${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/language-learning`;
-                sessionStorage.removeItem("entryPoint");
-                return;
-              }
-              if (fromParam == "sandbox") {
-                window.location.href = `${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/home`;
-              }
-              if (pathname.includes("student-dashboard")) {
-                router.push("/");
-              } else if (pathname.includes("subject-dashboard")) {
-                router.push("/student-dashboard");
-              } else if (pathname.includes("gk-quiz")) {
-                router.push("/");
-              } else if (pathname.includes("/quiz/")) {
-                const subjectName = pathname.split("/")[2];
-                router.push(
-                  `/subject-dashboard?subject=${
-                    subjectName == "math" ? "mathematics" : subjectName
-                  }`
-                );
-              } else if (pathname.includes("chat-bot/")) {
-                router.push("/chat-bot");
-              } else if (pathname.includes("chat-bot")) {
-                router.push("/");
-              } else if (
-                pathname.includes("languages/result") ||
-                pathname.includes("languages/quiz") ||
-                pathname.includes("languages/learn")
-              ) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const langParam = urlParams.get("lang");
-                if (langParam) {
-                  router.push(`/languages?lang=${langParam}`);
-                } else {
-                  router.push("/student-dashboard");
+                if (fromParam == "sandbox") {
+                  window.location.href = `${process.env.NEXT_PUBLIC_SANDBOX_URL}/#/home`;
                 }
-              } else if (pathname.includes("languages")) {
-                router.push("/student-dashboard");
-              } else {
-                router.back();
-              }
-            }}
-            className="md:ml-6 xs:ml-5 lg:text-sm md:text-xs font-bold leading-tight
+                if (pathname.includes("student-dashboard")) {
+                  router.push("/");
+                } else if (pathname.includes("subject-dashboard")) {
+                  router.push("/student-dashboard");
+                } else if (pathname.includes("gk-quiz")) {
+                  router.push("/");
+                } else if (pathname.includes("/quiz/")) {
+                  const subjectName = pathname.split("/")[2];
+                  router.push(
+                    `/subject-dashboard?subject=${
+                      subjectName == "math" ? "mathematics" : subjectName
+                    }`
+                  );
+                } else if (pathname.includes("chat-bot/")) {
+                  router.push("/chat-bot");
+                } else if (pathname.includes("chat-bot")) {
+                  router.push("/");
+                } else if (
+                  pathname.includes("languages/result") ||
+                  pathname.includes("languages/quiz") ||
+                  pathname.includes("languages/learn")
+                ) {
+                  const urlParams = new URLSearchParams(window.location.search);
+                  const langParam = urlParams.get("lang");
+                  if (langParam) {
+                    router.push(`/languages?lang=${langParam}`);
+                  } else {
+                    router.push("/student-dashboard");
+                  }
+                } else if (pathname.includes("languages")) {
+                  router.push("/student-dashboard");
+                } else {
+                  router.back();
+                }
+              }}
+              className="md:ml-6 xs:ml-5 lg:text-sm md:text-xs font-bold leading-tight
             text-left text-[#569090] flex flex-row justify-center items-center lg:hover:bg-[#FFF] xs:hover:bg-[#f2f7f7] p-2 rounded-full"
-          >
-            <Image
-              src={"/images/icons/arrow-left.svg"}
-              alt="arrow-left"
-              width={20}
-              height={20}
-            />
-            <span className="ml-1 xs:hidden md:block">Go Back</span>
-          </button>
-        ) : (
-          <></>
+            >
+              <Image
+                src={"/images/icons/arrow-left.svg"}
+                alt="arrow-left"
+                width={20}
+                height={20}
+              />
+              <span className="ml-1 xs:hidden md:block">Go Back</span>
+            </button>
+          ) : (
+            <></>
+          )}
+          {!isWebView && (
+            <Link href="/" className="mx-auto">
+              <Image src={sandboxLogo} alt="sandbox-logo" />
+            </Link>
+          )}
+          {isWebView && (
+            <IconButton
+              aria-label="home"
+              onClick={handleHome}
+              className=" right-0"
+            >
+              <HomeIcon style={{ color: "#569090" }} />
+            </IconButton>
+          )}
+        </div>
+      )}
+      <main
+        className={classNames(
+          "md:mt-[1rem]  bg-[#FFF] overflow-y-auto refresh-scroll-container",
+          isHideNavigation
+            ? "h-[100svh] md:!mt-0"
+            : "md:h-[calc(100vh-90px)] xs:h-[calc(100vh-56px)]"
         )}
-        {!isWebView && (
-          <Link href="/" className="mx-auto">
-            <Image src={sandboxLogo} alt="sandbox-logo" />
-          </Link>
-        )}
-        {isWebView && (
-          <IconButton
-            aria-label="home"
-            onClick={handleHome}
-            className=" right-0"
-          >
-            <HomeIcon style={{ color: "#569090" }} />
-          </IconButton>
-        )}
-      </div>
-      <main className="md:mt-[1rem] md:h-[calc(100vh-90px)] xs:h-[calc(100vh-56px)] bg-[#FFF] overflow-y-auto refresh-scroll-container">
+      >
         {children}
       </main>
     </div>

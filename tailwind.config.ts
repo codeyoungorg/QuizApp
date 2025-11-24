@@ -38,6 +38,23 @@ const config = {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
+        app: {
+          text: {
+            black: "hsl(var(--app-text-black))",
+            grey: "hsl(var(--app-text-grey))",
+            yellow: "hsl(var(--app-text-yellow))",
+          },
+          primary: {
+            DEFAULT: "hsl(var(--app-primary))",
+            border: "hsl(var(--app-primary-border))",
+          },
+          secondary: "hsl(var(--app-secondary))",
+          tertiary: "hsl(var(--app-tertiary))",
+          warning: {
+            DEFAULT: "hsl(var(--app-warning))",
+            subtle: "hsl(var(--app-warning-subtle))",
+          },
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

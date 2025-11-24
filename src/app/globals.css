@@ -40,6 +40,16 @@ body,
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    --app-text-black: 0 0% 20%;
+    --app-text-grey: 0 0% 60%;
+    --app-text-yellow: 44 100% 19%;
+    --app-primary: 44 100% 59%;
+    --app-primary-border: 44 100% 39%;
+    --app-secondary: 220 100% 50%;
+    --app-tertiary: 0 0% 96%;
+    --app-warning: 39 100% 50%;
+    --app-warning-subtle: 40 100% 94%;
   }
 }
 

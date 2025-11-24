@@ -252,13 +252,13 @@ export default function Chat({
       // Move to the next question
       await captureEvent({
         data: {
-          type:"coding",
-          subject:currentQuestion.subject,
-          topicId:currentQuestion?.topic_id,
+          type: "coding",
+          subject: currentQuestion.subject,
+          topicId: currentQuestion?.topic_id,
           difficulty: [currentQuestion?.difficulty_level],
           quizId: parseInt(quizId),
           questionId: [currentQuestion?.id],
-        }
+        },
       });
       setQuestionIndex((questionIndex) => questionIndex + 1);
     },

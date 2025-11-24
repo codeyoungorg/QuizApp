@@ -9,6 +9,7 @@ const NativeComponent = () => {
   useEffect(() => {
     const handleMessage = async (event: {
       data: {
+        url?: string;
         authToken?: string;
         refreshToken?: string;
         userName?: string;
@@ -18,7 +19,6 @@ const NativeComponent = () => {
       };
     }) => {
       const data = event.data;
-
       setCookie("Authorization", data?.authToken);
       setCookie("refresh-token", data?.refreshToken);
       setCookie("userName", data?.userName);
@@ -27,9 +27,11 @@ const NativeComponent = () => {
       setCookie("userRole", data?.userRole);
 
       setTimeout(() => {
-        router.push("/");
-      }, 2000);
-      // Route to the main page
+        // router.push("/");
+        if (data?.url) {
+          window.location.href = data.url;
+        }
+      }, 500);
     };
 
     window.addEventListener("message", handleMessage);

@@ -42,10 +42,10 @@ export default function ScoreCard({
     }
     saveGTMEvents({
       eventAction: "test_completed",
-      label: userId?"student":"guest",
+      label: userId ? "student" : "guest",
       label1: userId?.toString() || null,
       label2: lang,
-      label3:quizResult?.languages_topics?.name as string || null ,
+      label3: (quizResult?.languages_topics?.name as string) || null,
       label4: null,
     });
   }, [currentQuizScore, quizResult]);
@@ -65,7 +65,6 @@ export default function ScoreCard({
 
   // Add check for level 3 completion
   const isAllLevelsCompleted = quizResult.level_id == 3 && isLevelComplete;
-  
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">

@@ -5,6 +5,7 @@ import "./globals.css";
 import Providers from "@/components/providers";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Toaster } from "sonner";
 
 const { NEXT_ENABLE_NEWRELIC } = process.env;
 
@@ -41,6 +42,7 @@ export default function RootLayout({
         <Providers>
           <main className="flex flex-col h-screen w-full">{children}</main>
         </Providers>
+        <Toaster />
       </body>
     </html>
   );
