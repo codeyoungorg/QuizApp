@@ -23,7 +23,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [isWebView, setIsWebView] = useState(false);
 
   useEffect(() => {
-    // stopLoader();
+    const isNewApp = localStorage.getItem("isNewApp");
+    if(isNewApp !== "true"){
+      stopLoader();
+    }
 
     // Check if we're in a WebView environment
     const checkWebView = () => {
@@ -34,7 +37,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    // stopLoader();
+    const isNewApp = localStorage.getItem("isNewApp");
+    if(isNewApp !== "true"){
+      stopLoader();
+    }
 
     if (window.ReactNativeWebView) {
       if (pathname !== "/" || getCookie("currentPageUrl")) {
