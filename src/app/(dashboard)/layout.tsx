@@ -11,6 +11,8 @@ import HomeIcon from "@mui/icons-material/HomeOutlined";
 import { getCookie } from "cookies-next";
 import { stopLoader } from "../../utils/loaderUtils";
 import { HandleQuite } from "@/utils/HandleQuite";
+import { useExitBtn } from './(routes)/practice/useExitBtn';
+import CloseIcon from "@mui/icons-material/Close";
 
 
 const inter = Inter({
@@ -160,13 +162,24 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <></>
           )}
           {!isWebView && (
-
+            <>
             <Link href="/" className="mx-auto">
               <Image src={sandboxLogo} alt="sandbox-logo" />
             </Link>
+            <button
+              onClick={() => HandleQuite(false)}
+              className="flex items-center gap-2 rounded-[14px] border px-4 py-3 text-sm font-semibold mr-[32px]"
+              style={{
+                borderColor: "#6C9D9D",
+                color: "#6C9D9D",
+              }}
+              >
+              Exit 
+              <CloseIcon fontSize="small" />
+              </button>
+              </>
           )}
           {isWebView && (
-            <div className="flex items-center ml-auto mr-8 gap-4">
             <IconButton
               aria-label="home"
               onClick={handleHome}
@@ -174,25 +187,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             >
               <HomeIcon style={{ color: "#569090" }} />
             </IconButton>
-            <button
-              onClick={() => HandleQuite(false)}
-              className="
-                flex items-center gap-2
-                rounded-[14px]
-                border border-[#B0B0B0]
-                bg-[#F2F2F2]
-                px-[14px] py-[12px]
-                text-[14px] font-semibold
-                text-[#6F6F6F]
-                transition-all duration-200
-                hover:bg-[#E8E8E8]
-                active:scale-[0.99]
-              "
-            >
-              <span>Exit</span>
-              <span className="text-[18px] leading-none">×</span>
-            </button>
-            </div>
           )}
           
         </div>
