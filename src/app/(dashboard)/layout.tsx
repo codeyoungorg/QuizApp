@@ -10,6 +10,8 @@ import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 import { getCookie } from "cookies-next";
 import { stopLoader } from "../../utils/loaderUtils";
+import { HandleQuite } from "@/utils/HandleQuite";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -171,6 +173,46 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               <HomeIcon style={{ color: "#569090" }} />
             </IconButton>
           )}
+          <button
+            onClick={() => HandleQuite(false)}
+            style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+
+    background: "#F2F2F2",
+    border: "1px solid #6C9D9D",
+    borderRadius: "14px",
+
+    padding: "12px",
+    marginRight: "32px",
+
+    fontSize: "14px",
+    fontWeight: 600,
+    fontFamily: "Inter, sans-serif",
+    color: "#6C9D9D",
+
+    cursor: "pointer",
+    transition: "background-color 0.2s ease, transform 0.1s ease",
+  }}
+  onMouseOver={(e) => {
+    e.currentTarget.style.background = "#EFEFEF";
+  }}
+  onMouseOut={(e) => {
+    e.currentTarget.style.background = "transparent";
+  }}
+  onMouseDown={(e) => {
+    e.currentTarget.style.transform = "scale(0.99)";
+  }}
+  onMouseUp={(e) => {
+    e.currentTarget.style.transform = "scale(1)";
+  }}
+>
+  <span>Exit</span>
+  <span style={{ fontSize: "18px", lineHeight: "1" }}>×</span>
+  
+  
+  </button>
         </div>
       )}
       <main
