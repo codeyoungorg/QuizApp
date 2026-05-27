@@ -46,6 +46,8 @@ type FlashcardPageProps = {
   lang: string;
   userId: string;
   cardState: string;
+  successPath?: (quizId: number) => string;
+  skipPersist?: boolean;
 };
 
 // TODO: Uncomment <QuickQuiz /> in HomePage.tsx to use this component
@@ -57,6 +59,8 @@ export default function QuizBox({
   lang,
   userId,
   cardState,
+  successPath,
+  skipPersist,
 }: FlashcardPageProps) {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
@@ -171,6 +175,12 @@ export default function QuizBox({
       };
       setCurrentQuizScore(currentScore);
 
+      if (skipPersist) {
+        const target = successPath ? successPath(0) : `/languages/result?lang=${lang}&quiz=0`;
+        router.replace(target);
+        return;
+      }
+
       if (prevQuiz?.id) {
         const data = await updateQuizData({
           userId,
@@ -185,8 +195,10 @@ export default function QuizBox({
         });
 
         if (data) {
-          // Use router.replace for smoother transition
-          router.replace(`/languages/result?lang=${lang}&quiz=${data.id}`);
+          const target = successPath
+            ? successPath(data.id)
+            : `/languages/result?lang=${lang}&quiz=${data.id}`;
+          router.replace(target);
         }
       } else {
         const data = await saveQuizData({
@@ -211,7 +223,10 @@ export default function QuizBox({
               questionId: quizSubmissions.map(row=>row.questionId),
             }
           });
-          router.replace(`/languages/result?lang=${lang}&quiz=${data.id}`);
+          const target = successPath
+            ? successPath(data.id)
+            : `/languages/result?lang=${lang}&quiz=${data.id}`;
+          router.replace(target);
         }
       }
     } catch (error) {

@@ -145,6 +145,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                   }
                 } else if (pathname.includes("languages")) {
                   router.push("/student-dashboard");
+                } else if (
+                  pathname.includes("vocabulary-building/quiz") ||
+                  pathname.includes("vocabulary-building/success")
+                ) {
+                  router.push("/vocabulary-building");
+                } else if (pathname.includes("vocabulary-building")) {
+                  router.push("/student-dashboard");
                 } else {
                   router.back();
                 }
