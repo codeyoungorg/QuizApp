@@ -21,6 +21,13 @@ export default function VocabularyQuizPage() {
       userId={userId}
       cardState="1-5"
       skipPersist
+      variant="vocab"
+      levelBadge={{
+        label: level.badgeLabel,
+        emoji: level.badgeEmoji,
+        bg: level.badgeBg,
+        text: level.badgeText,
+      }}
       successPath={(quizId) =>
         `/vocabulary-building/success?level=${level.id}&quiz=${quizId}`
       }
