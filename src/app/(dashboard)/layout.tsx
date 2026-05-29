@@ -102,6 +102,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     return;
                   }
                 }
+                if(entryPoint === "studentPortal" || fromParam === "studentPortal") {
+                  window.location.href = `https://studentportal.codeyoung.com/#/dashboard`;
+                }
                 if (
                   entryPoint == "sandboxLanguage" &&
                   !pathname.includes("/quiz") &&
@@ -144,6 +147,13 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     router.push("/student-dashboard");
                   }
                 } else if (pathname.includes("languages")) {
+                  router.push("/student-dashboard");
+                } else if (
+                  pathname.includes("vocabulary-building/quiz") ||
+                  pathname.includes("vocabulary-building/success")
+                ) {
+                  router.push("/vocabulary-building");
+                } else if (pathname.includes("vocabulary-building")) {
                   router.push("/student-dashboard");
                 } else {
                   router.back();
