@@ -132,7 +132,7 @@ export default function QuizContainer({
         sessionId,
         userId,
         wordId: question.id,
-        selectedOption: selectedIndex,
+        selectedOption: selectedIndex + 1, // backend is 1-based
       });
       if (!res) {
         ErrorToast("Could not submit answer. Please try again.");
@@ -141,7 +141,7 @@ export default function QuizContainer({
       if (res.summary) summaryRef.current = res.summary;
       return {
         isCorrect: res.isCorrect,
-        correctOption: res.correctOption,
+        correctOption: res.correctOption - 1, // convert back to 0-based for UI
         explanation: res.explanation,
         sessionComplete: res.sessionComplete,
       };
