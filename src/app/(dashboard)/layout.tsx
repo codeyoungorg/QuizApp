@@ -102,6 +102,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     return;
                   }
                 }
+                if(entryPoint === "studentPortal" || fromParam === "studentPortal") {
+                  window.location.href = `https://studentportal.codeyoung.com/#/dashboard`;
+                }
                 if (
                   entryPoint == "sandboxLanguage" &&
                   !pathname.includes("/quiz") &&
