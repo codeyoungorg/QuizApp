@@ -1,62 +1,73 @@
-export type LevelId = "beginner" | "adventurer" | "master";
+import type { VocabularyApiLevelId } from "../_types";
 
-export type Level = {
-  id: LevelId;
-  badgeLabel: string;
+export type LevelSlug = "beginner" | "adventurer" | "master";
+
+export type LevelTheme = {
+  apiLevelId: VocabularyApiLevelId;
+  slug: LevelSlug;
+  description: string;
+  difficultyLabel: string;
   badgeEmoji: string;
   badgeBg: string;
   badgeText: string;
-  gradeText: string;
-  description: string;
-  wordsLearnt: number;
-  totalWords: number;
   cardBg: string;
+  progressAccent: string;
 };
 
-export const LEVELS: Level[] = [
+export const LEVEL_THEMES: LevelTheme[] = [
   {
-    id: "beginner",
-    badgeLabel: "Beginner Explorer",
+    apiLevelId: 1,
+    slug: "beginner",
+    description: "Start building strong word foundations",
+    difficultyLabel: "Beginner",
     badgeEmoji: "🔍",
     badgeBg: "bg-[#EDE7FF]",
-    badgeText: "text-[#7C5CFF]",
-    gradeText: "Grades 3-6",
-    description: "Start building strong word foundations",
-    wordsLearnt: 41,
-    totalWords: 200,
-    cardBg: "bg-[#F1F4FF]",
+    badgeText: "text-[#8080FF]",
+    cardBg: "bg-[#F5F5FF]",
+    progressAccent: "text-[#7C5CFF]",
   },
   {
-    id: "adventurer",
-    badgeLabel: "Word Adventurer",
+    apiLevelId: 2,
+    slug: "adventurer",
+    description: "Expand your thinking with stronger vocabulary",
+    difficultyLabel: "Intermediate",
     badgeEmoji: "🧭",
     badgeBg: "bg-[#FFF1E7]",
     badgeText: "text-[#E98451]",
-    gradeText: "Grades 7-9",
-    description: "Expand your thinking with stronger vocabulary",
-    wordsLearnt: 41,
-    totalWords: 342,
-    cardBg: "bg-[#FFF7EC]",
+    cardBg: "bg-[#FFF6E5]",
+    progressAccent: "text-[#E98451]",
   },
   {
-    id: "master",
-    badgeLabel: "Word Master",
+    apiLevelId: 3,
+    slug: "master",
+    description: "Master advanced words and powerful expression",
+    difficultyLabel: "Advanced",
     badgeEmoji: "🚀",
     badgeBg: "bg-[#FFE7EE]",
     badgeText: "text-[#E5557A]",
-    gradeText: "Grades 10-12",
-    description: "Master advanced words and powerful expression",
-    wordsLearnt: 41,
-    totalWords: 416,
-    cardBg: "bg-[#FFEDED]",
+    cardBg: "bg-[#FFF0F0]",
+    progressAccent: "text-[#E5557A]",
   },
 ];
 
-export const getLevel = (id: string | undefined): Level => {
-  return LEVELS.find((l) => l.id === id) ?? LEVELS[0];
+const DEFAULT_THEME = LEVEL_THEMES[0];
+
+export const getThemeByApiId = (
+  apiLevelId: number | undefined
+): LevelTheme => {
+  return (
+    LEVEL_THEMES.find((t) => t.apiLevelId === apiLevelId) ?? DEFAULT_THEME
+  );
 };
 
-export const getNextLevel = (id: string | undefined): Level | null => {
-  const i = LEVELS.findIndex((l) => l.id === id);
-  return i >= 0 && i < LEVELS.length - 1 ? LEVELS[i + 1] : null;
+export const getThemeBySlug = (slug: string | undefined): LevelTheme => {
+  return LEVEL_THEMES.find((t) => t.slug === slug) ?? DEFAULT_THEME;
+};
+
+export const getNextThemeByApiId = (
+  apiLevelId: number | undefined
+): LevelTheme | null => {
+  const i = LEVEL_THEMES.findIndex((t) => t.apiLevelId === apiLevelId);
+  if (i < 0 || i >= LEVEL_THEMES.length - 1) return null;
+  return LEVEL_THEMES[i + 1];
 };

@@ -1,54 +1,102 @@
 "use client";
 
+import Image from "next/image";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Level } from "../_data/levels";
+import type { LevelTheme } from "../_data/levels";
+import booksImg from "../../../../../assets/Images/Books.png";
 
-export default function LevelCard({ level }: { level: Level }) {
+type LevelCardProps = {
+  theme: LevelTheme;
+  name: string;
+  grades: string;
+  learned: number;
+  total: number;
+};
+
+export default function LevelCard({
+  theme,
+  name,
+  grades,
+  learned,
+  total,
+}: LevelCardProps) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onPlay = () => {
-    router.push(`/vocabulary-building/quiz?level=${level.id}`);
+    if (isLoading) return;
+    setIsLoading(true);
+    router.push(`/vocabulary-building/quiz?level=${theme.slug}`);
   };
 
   return (
     <div
       className={cn(
-        "rounded-2xl p-4 md:p-5 flex flex-col gap-3 relative overflow-hidden min-h-[180px]",
-        level.cardBg
+        "rounded-2xl p-5 flex flex-col gap-3 relative overflow-hidden min-h-[220px]",
+        theme.cardBg
       )}
       style={{ boxShadow: "0px 4px 12px 0px #00000008" }}
     >
+      {/* Large decorative emoji top-right */}
+      <span
+        className="absolute -top-4 -right-6 select-none pointer-events-none"
+        style={{ fontSize: "100px", lineHeight: 1, opacity: 0.9 }}
+        aria-hidden
+      >
+        {theme.badgeEmoji}
+      </span>
+
       <div
         className={cn(
           "inline-flex w-fit items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold",
-          level.badgeBg,
-          level.badgeText
+          theme.badgeBg,
+          theme.badgeText
         )}
       >
-        <span aria-hidden>{level.badgeEmoji}</span>
-        <span>{level.badgeLabel}</span>
+        <span aria-hidden>{theme.badgeEmoji}</span>
+        <span>{name}</span>
       </div>
 
-      <div>
-        <h3 className="text-xl font-bold text-[#1F1F1F]">{level.gradeText}</h3>
-        <p className="text-sm text-[#5B8989] mt-1">{level.description}</p>
+      <div className="mt-auto">
+        <h3 className="text-xl font-bold text-[#1F1F1F]">Grades {grades}</h3>
+        <p className="text-sm font-semibold text-[#999] mt-1">{theme.description}</p>
       </div>
 
-      <div className="flex items-center justify-between mt-auto pt-2">
-        <Button
+      <div className="flex items-center justify-between pt-2">
+        <button
           onClick={onPlay}
-          className="bg-[#FF6A1F] hover:bg-[#FF6A1F]/90 text-white rounded-2xl h-10 px-5 gap-1.5 border-[3px] border-[#F55200]"
-          style={{ boxShadow: "0 4px 8px 0 rgba(255, 106, 31, 0.16)" }}
+          disabled={isLoading}
+          className="inline-flex items-center gap-3 text-white font-bold text-base h-12 px-6 transition disabled:opacity-80 disabled:cursor-not-allowed"
+          style={{
+            backgroundColor: "#FF6A1F",
+            borderWidth: "3px",
+            borderColor: "#F55200",
+            borderRadius: "16px",
+            boxShadow: isLoading
+              ? "none"
+              : "0px 4px 8px 0px #FF6A1F29, inset 0px -4px 0px 0px #FF8547, inset 0px 1px 0px 0px #FF9966",
+          }}
         >
-          <Play className="w-4 h-4 fill-white" />
-          Play
-        </Button>
-        <p className="text-xs text-[#5B8989] font-medium flex items-center gap-1">
-          <span aria-hidden>🚩</span>
-          {level.wordsLearnt} / {level.totalWords} words learnt
+          {isLoading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <Image src="/images/play_btn.png" alt="" width={20} height={20} />
+          )}
+          {isLoading ? "Loading…" : "Play"}
+        </button>
+        <p className="text-xs text-[#404040] font-bold flex items-center gap-1">
+          <Image
+            src={booksImg}
+            alt="books"
+            width={20}
+            height={20}
+            sizes="20px"
+            className="w-5 h-5 object-contain"
+          />
+          {learned} / {total} words learnt
         </p>
       </div>
     </div>

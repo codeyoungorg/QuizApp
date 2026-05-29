@@ -3,114 +3,106 @@ import { Check, CheckCircle2 } from "lucide-react";
 import fireImg from "../../../../../assets/Images/Fire.png";
 import booksImg from "../../../../../assets/Images/Books.png";
 
-const TODAY_DONE = 3;
-const TODAY_TOTAL = 5;
-const STREAK_DAYS = 6;
-const TOTAL_LEARNT = 128;
-const TOTAL_AVAILABLE = 958;
-
-const TODAY_TEXT_STYLE = {
-  fontFamily: "Inter, sans-serif",
-  fontSize: "16px",
-  fontWeight: 700,
-  lineHeight: "24px",
-  letterSpacing: "-0.64px",
-} as const;
+type StatsRowProps = {
+  todayDone: number;
+  todayTotal: number;
+  streakDays: number;
+  totalLearnt: number;
+  totalAvailable: number;
+};
 
 function IncompleteCheck() {
-  return <CheckCircle2 className="w-8 h-8 text-[#CCCCCC]" aria-hidden />;
+  return <CheckCircle2 className="w-7 h-7 text-[#CCCCCC]" aria-hidden />;
 }
 
-function TodayCard() {
+function TodayCard({ done, total }: { done: number; total: number }) {
   return (
     <div
-      className="flex-1 bg-[#F8F8F8] rounded-[24px] p-4"
+      className="col-span-2 md:col-span-1 bg-[#F8F8F8] rounded-[24px] p-5 md:max-w-[330px] w-full"
       style={{ boxShadow: "0px 4px 12px 0px #00000008" }}
     >
-      <p style={{ ...TODAY_TEXT_STYLE, color: "#404040" }}>
+      <p className="text-base font-bold text-[#404040]">
         You&apos;ve learned{" "}
-        <span style={{ color: "#EB4F00" }}>
-          {TODAY_DONE} / {TODAY_TOTAL}
-        </span>{" "}
+        <span className="text-[#EB4F00]">{done} / {total}</span>{" "}
         words today!
       </p>
       <div className="flex items-center gap-2 my-3">
-        {Array.from({ length: TODAY_TOTAL }).map((_, i) => {
-          const filled = i < TODAY_DONE;
+        {Array.from({ length: total }).map((_, i) => {
+          const filled = i < done;
           if (!filled) return <IncompleteCheck key={i} />;
           return (
             <div
               key={i}
-              className="w-8 h-8 rounded-full grid place-items-center bg-[#EB4F00] text-white"
+              className="w-7 h-7 rounded-full grid place-items-center bg-[#EB4F00] text-white"
             >
-              <Check className="w-4 h-4" strokeWidth={3} />
+              <Check className="w-3.5 h-3.5" strokeWidth={3} />
             </div>
           );
         })}
       </div>
-      <p style={{ ...TODAY_TEXT_STYLE, color: "#404040" }}>
-        Complete {TODAY_TOTAL} words to finish today&apos;s streak
+      <p className="text-sm font-semibold text-[#404040]">
+        Complete {total} words to finish today&apos;s streak
       </p>
     </div>
   );
 }
 
-function StreakCard() {
+function StreakCard({ days }: { days: number }) {
   return (
     <div
-      className="flex-1 bg-[#FFF5E1] rounded-2xl p-4 flex items-center gap-3"
+      className="bg-[#F8F8F8] rounded-2xl p-5 flex items-center gap-4 md:max-w-[330px] w-full"
       style={{ boxShadow: "0px 4px 12px 0px #00000008" }}
     >
       <Image
         src={fireImg}
         alt="streak"
-        width={64}
-        height={64}
-        sizes="64px"
-        className="w-16 h-16 object-contain"
+        width={56}
+        height={56}
+        sizes="56px"
+        className="w-14 h-14 object-contain shrink-0"
       />
       <div>
-        <p className="text-base">
-          <span className="text-[#E98451] font-bold">{STREAK_DAYS}-day</span>
-        </p>
-        <p className="text-xs text-[#5B8989]">word learning streak</p>
+        <p className="text-xl font-bold text-[#E98451]">{days}-day</p>
+        <p className="text-base text-[#404040] font-semibold">word learning streak</p>
       </div>
     </div>
   );
 }
 
-function TotalLearntCard() {
+function TotalLearntCard({ learnt, total }: { learnt: number; total: number }) {
   return (
     <div
-      className="flex-1 bg-[#FFEDED] rounded-2xl p-4 flex items-center gap-3"
+      className="bg-[#F8F8F8] rounded-2xl p-5 flex items-center gap-4 md:max-w-[330px] w-full"
       style={{ boxShadow: "0px 4px 12px 0px #00000008" }}
     >
       <Image
         src={booksImg}
         alt="books"
-        width={64}
-        height={64}
-        sizes="64px"
-        className="w-16 h-16 object-contain"
+        width={56}
+        height={56}
+        sizes="56px"
+        className="w-14 h-14 object-contain shrink-0"
       />
       <div>
-        <p className="text-base">
-          <span className="text-[#E98451] font-bold">{TOTAL_LEARNT}</span>
-        </p>
-        <p className="text-xs text-[#5B8989]">
-          / {TOTAL_AVAILABLE} words learned
-        </p>
+        <p className="text-xl font-bold text-[#E98451]">{learnt}</p>
+        <p className="text-base text-[#404040] font-semibold">/ {total} words learned</p>
       </div>
     </div>
   );
 }
 
-export default function StatsRow() {
+export default function StatsRow({
+  todayDone,
+  todayTotal,
+  streakDays,
+  totalLearnt,
+  totalAvailable,
+}: StatsRowProps) {
   return (
-    <div className="px-4 md:px-0 flex flex-col md:flex-row gap-3 md:gap-4">
-      <TodayCard />
-      <StreakCard />
-      <TotalLearntCard />
+    <div className="px-4 md:px-0 grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(330px,330px))] gap-3 md:gap-4">
+      <TodayCard done={todayDone} total={todayTotal} />
+      <StreakCard days={streakDays} />
+      <TotalLearntCard learnt={totalLearnt} total={totalAvailable} />
     </div>
   );
 }
