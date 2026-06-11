@@ -47,9 +47,9 @@ export function PointsProgressStepper({
   const percentage = total === 0 ? 0 : (current / total) * 100;
 
   const badges = {
-    26: goldBadgeImg,
-    27: silverBadgeImg,
-    28: bronzeBadgeImg,
+    30: goldBadgeImg,
+    31: silverBadgeImg,
+    32: bronzeBadgeImg,
   };
 
   return (
