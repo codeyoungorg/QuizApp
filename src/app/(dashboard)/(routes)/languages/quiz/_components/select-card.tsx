@@ -1,9 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, TimerIcon, Volume2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Circle,
+  TimerIcon,
+  Volume2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import booksIcon from "@/assets/Images/Books.png";
 import { FlashcardData } from "../../learn/_types";
 import { cn } from "@/lib/utils";
+
+export type LevelBadge = {
+  label: string;
+  emoji: string;
+  bg: string;
+  text: string;
+};
 
 type QuizCardProps = {
   data: FlashcardData & { id: number };
@@ -15,6 +31,8 @@ type QuizCardProps = {
   resetQuiz: () => void;
   isAnswered: boolean;
   previousAnswer: string | undefined;
+  variant?: "default" | "vocab";
+  levelBadge?: LevelBadge;
 };
 
 export const SelectCard: React.FC<QuizCardProps> = ({
@@ -27,7 +45,10 @@ export const SelectCard: React.FC<QuizCardProps> = ({
   resetQuiz,
   isAnswered,
   previousAnswer,
+  variant = "default",
+  levelBadge,
 }) => {
+  const isVocab = variant === "vocab";
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
   const [timeLeft, setTimeLeft] = useState(45);
@@ -46,13 +67,14 @@ export const SelectCard: React.FC<QuizCardProps> = ({
   }, [data.question, isAnswered, previousAnswer]);
 
   useEffect(() => {
+    if (isVocab) return;
     if (timeLeft > 0 && !showCorrectAnswer) {
       const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timerId);
     } else if (timeLeft === 0) {
       setTimerEnded(true);
     }
-  }, [timeLeft, showCorrectAnswer]);
+  }, [timeLeft, showCorrectAnswer, isVocab]);
 
   const handleAnswerSelect = (answer: string) => {
     if (answer !== selectedAnswer) {
@@ -80,6 +102,134 @@ export const SelectCard: React.FC<QuizCardProps> = ({
     setTimerEnded(false);
     resetQuiz();
   };
+
+  if (isVocab) {
+    const correctAnswer = data.correctAnswer;
+    const badge = levelBadge;
+
+    return (
+      <div className="w-full max-w-2xl mx-auto px-2">
+        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4 md:gap-6 items-start mb-10">
+          <div className="flex flex-col gap-2 pt-1">
+            {badge && (
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold w-fit",
+                  badge.bg,
+                  badge.text
+                )}
+              >
+                <span>{badge.emoji}</span>
+                <span>{badge.label}</span>
+              </span>
+            )}
+            <span className="text-sm text-[#1F1F1F]">
+              <span className="font-bold">{currentCard}</span> of {totalCards}
+            </span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#1F1F1F] leading-snug">
+            {data.question}
+          </h2>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {data.options.map((option) => {
+            const isSelected = selectedAnswer === option.text;
+            const isCorrectOption = option.text === correctAnswer;
+            const revealCorrect = showCorrectAnswer && isCorrectOption;
+            const revealWrong =
+              showCorrectAnswer && isSelected && !isCorrectOption;
+
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => handleAnswerSelect(option.text)}
+                disabled={showCorrectAnswer || isAnswered}
+                className={cn(
+                  "flex items-center gap-3 w-full px-5 py-4 rounded-2xl border bg-white text-left text-base md:text-lg font-medium text-[#1F1F1F] transition-all",
+                  "border-[#E5E7EB] hover:border-[#C8D6D6]",
+                  isSelected && !showCorrectAnswer && "border-[#22C55E] border-2",
+                  revealCorrect && "border-[#22C55E] border-2",
+                  revealWrong && "border-[#E5E7EB]",
+                  (showCorrectAnswer || isAnswered) && "cursor-default"
+                )}
+              >
+                {revealCorrect || (isSelected && !showCorrectAnswer) ? (
+                  <CheckCircle2 className="size-5 shrink-0 fill-[#22C55E] text-white" />
+                ) : revealWrong ? (
+                  <span className="inline-flex items-center justify-center size-5 shrink-0 rounded-full bg-[#F59E0B] text-white text-xs font-bold leading-none">
+                    !
+                  </span>
+                ) : (
+                  <Circle className="size-5 text-[#D1D5DB] shrink-0" />
+                )}
+                <span>{option.text}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="flex justify-center mt-8">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3F4F6] text-sm text-[#1F1F1F]">
+            <Image src={booksIcon} alt="" width={16} height={16} />
+            <span>
+              <span className="font-bold">{currentCard}</span> of {totalCards}
+            </span>
+          </span>
+        </div>
+
+        <div className="mt-6">
+          {showCorrectAnswer ? (
+            <Button
+              type="button"
+              onClick={() => {
+                setShowCorrectAnswer(false);
+                onNextCard();
+              }}
+              className="w-full justify-between bg-[#F5B400] hover:bg-[#E0A500] rounded-xl py-7"
+            >
+              <span className="text-base font-bold leading-6 text-[#1F1F1F]">
+                Next
+              </span>
+              <span className="inline-flex items-center justify-center size-6 rounded-full bg-[#1F1F1F]/20">
+                <ArrowRight className="size-4 text-[#1F1F1F]" />
+              </span>
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              disabled={selectedAnswer === null}
+              onClick={() => {
+                setShowCorrectAnswer(true);
+                if (selectedAnswer) {
+                  onAnswer(
+                    selectedAnswer,
+                    selectedAnswer === data.correctAnswer
+                  );
+                }
+              }}
+              className="w-full justify-between bg-[#F5B400] hover:bg-[#E0A500] disabled:bg-[#F5B400]/60 rounded-xl py-7"
+            >
+              <span className="text-base font-bold leading-6 text-[#1F1F1F]">
+                Check answer
+              </span>
+              <span className="inline-flex items-center justify-center size-6 rounded-full bg-[#1F1F1F]/20">
+                <ArrowRight className="size-4 text-[#1F1F1F]" />
+              </span>
+            </Button>
+          )}
+
+          {showCorrectAnswer && data.explanation && (
+            <div className="mt-4 rounded-xl bg-[#F3F4F6] p-4">
+              <p className="font-bold text-[#1F1F1F] mb-1">Here's why!</p>
+              <p className="text-sm text-[#5B6B6B]">{data.explanation}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Card
