@@ -10,6 +10,10 @@ import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 import { getCookie } from "cookies-next";
 import { stopLoader } from "../../utils/loaderUtils";
+import { HandleQuite } from "@/utils/HandleQuite";
+import { useExitBtn } from './(routes)/practice/useExitBtn';
+import CloseIcon from "@mui/icons-material/Close";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -174,9 +178,22 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <></>
           )}
           {!isWebView && (
+            <>
             <Link href="/" className="mx-auto">
               <Image src={sandboxLogo} alt="sandbox-logo" />
             </Link>
+            <button
+              onClick={() => HandleQuite(false)}
+              className="flex items-center gap-2 rounded-[14px] border px-4 py-3 text-sm font-semibold mr-[32px]"
+              style={{
+                borderColor: "#6C9D9D",
+                color: "#6C9D9D",
+              }}
+              >
+              Exit 
+              <CloseIcon fontSize="small" />
+              </button>
+              </>
           )}
           {isWebView && (
             <IconButton
@@ -187,6 +204,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               <HomeIcon style={{ color: "#569090" }} />
             </IconButton>
           )}
+          
         </div>
       )}
       <main
